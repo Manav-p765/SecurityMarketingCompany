@@ -1,16 +1,30 @@
 /**
- * Emails each new lead to the team through Resend's HTTP API. HTTP rather
- * than SMTP because Render's free tier blocks outbound SMTP ports.
+ * Lead emails through Resend's HTTP API. HTTP rather than SMTP because
+ * Render's free tier blocks outbound SMTP ports.
+ *
+ * Two emails per submission:
+ *  - sendLeadEmail: the lead's details to the team (LEAD_NOTIFY_TO).
+ *  - sendLeadConfirmation: a "we got it" note to the visitor.
  *
  * Needs RESEND_API_KEY and LEAD_NOTIFY_TO. LEAD_NOTIFY_FROM defaults to
  * Resend's shared test sender, which can only deliver to the address the
- * Resend account was created with — verify a domain to send from your own.
+ * Resend account was created with. That is enough for the team email, but
+ * the visitor confirmation needs a verified domain, so it only sends once
+ * LEAD_NOTIFY_FROM is on one.
  */
 
 const DEFAULT_FROM = 'Security Marketing Company <onboarding@resend.dev>';
+const DEFAULT_REPLY_TO = 'andy@securitymarketingcompany.com';
+
+const sender = () => process.env.LEAD_NOTIFY_FROM || DEFAULT_FROM;
 
 export function isEmailConfigured() {
   return Boolean(process.env.RESEND_API_KEY && process.env.LEAD_NOTIFY_TO);
+}
+
+/** Visitor confirmations need a sender on a domain verified in Resend. */
+export function isConfirmationConfigured() {
+  return isEmailConfigured() && !sender().includes('@resend.dev');
 }
 
 const escapeHtml = (value) =>
@@ -20,18 +34,34 @@ const escapeHtml = (value) =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 
-export async function sendLeadEmail(lead) {
-  const rows = [
-    ['Name', lead.name],
-    ['Company', lead.company],
-    ['Email', lead.email],
-    ['Service', lead.service],
-    ['Message', lead.message || '—'],
-  ];
+const FONT = 'font-family:Arial,Helvetica,sans-serif';
 
-  const html = `
-    <h2 style="margin:0 0 16px;font-family:Arial,sans-serif">New quote request</h2>
-    <table cellpadding="8" style="border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px">
+async function send(payload) {
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ from: sender(), ...payload }),
+    signal: AbortSignal.timeout(10000),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Resend ${response.status}: ${await response.text()}`);
+  }
+}
+
+const detailRows = (lead) => [
+  ['Name', lead.name],
+  ['Company', lead.company],
+  ['Email', lead.email],
+  ['Service', lead.service],
+  ['Message', lead.message || '—'],
+];
+
+const detailTable = (rows) => `
+    <table cellpadding="8" style="border-collapse:collapse;${FONT};font-size:14px">
       ${rows
         .map(
           ([label, value]) => `<tr>
@@ -40,29 +70,53 @@ export async function sendLeadEmail(lead) {
       </tr>`
         )
         .join('')}
-    </table>
-    <p style="font-family:Arial,sans-serif;font-size:13px;color:#666">Reply to this email to answer ${escapeHtml(lead.name)} directly.</p>`;
+    </table>`;
 
-  const text = rows.map(([label, value]) => `${label}: ${value}`).join('\n');
+/** The lead's details, to the team. Reply goes straight to the visitor. */
+export async function sendLeadEmail(lead) {
+  const rows = detailRows(lead);
 
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: process.env.LEAD_NOTIFY_FROM || DEFAULT_FROM,
-      to: process.env.LEAD_NOTIFY_TO.split(',').map((address) => address.trim()),
-      reply_to: lead.email,
-      subject: `New quote request — ${lead.name}, ${lead.company}`,
-      html,
-      text,
-    }),
-    signal: AbortSignal.timeout(10000),
+  await send({
+    to: process.env.LEAD_NOTIFY_TO.split(',').map((address) => address.trim()),
+    reply_to: lead.email,
+    subject: `New quote request — ${lead.name}, ${lead.company}`,
+    html: `
+    <h2 style="margin:0 0 16px;${FONT}">New quote request</h2>
+    ${detailTable(rows)}
+    <p style="${FONT};font-size:13px;color:#666">Reply to this email to answer ${escapeHtml(lead.name)} directly.</p>`,
+    text: rows.map(([label, value]) => `${label}: ${value}`).join('\n'),
   });
+}
 
-  if (!response.ok) {
-    throw new Error(`Resend ${response.status}: ${await response.text()}`);
-  }
+/** "We got it" note to the visitor. Replies go to Andy. */
+export async function sendLeadConfirmation(lead) {
+  const firstName = lead.name.split(/\s+/)[0];
+  const rows = detailRows(lead).filter(([label]) => label !== 'Email');
+
+  await send({
+    to: [lead.email],
+    reply_to: process.env.LEAD_REPLY_TO || DEFAULT_REPLY_TO,
+    subject: 'We received your quote request — Security Marketing Company',
+    html: `
+    <p style="${FONT};font-size:15px">Hi ${escapeHtml(firstName)},</p>
+    <p style="${FONT};font-size:15px;line-height:1.6">Thanks for getting in touch. Your request is with us, and Andy will reply the same business day with next steps.</p>
+    <p style="${FONT};font-size:15px;line-height:1.6">Here is what you sent:</p>
+    ${detailTable(rows)}
+    <p style="${FONT};font-size:15px;line-height:1.6">If you have anything to add, just reply to this email.</p>
+    <p style="${FONT};font-size:15px;line-height:1.6">Best,<br />Andy<br />Security Marketing Company</p>`,
+    text: [
+      `Hi ${firstName},`,
+      '',
+      'Thanks for getting in touch. Your request is with us, and Andy will reply the same business day with next steps.',
+      '',
+      'Here is what you sent:',
+      ...rows.map(([label, value]) => `${label}: ${value}`),
+      '',
+      'If you have anything to add, just reply to this email.',
+      '',
+      'Best,',
+      'Andy',
+      'Security Marketing Company',
+    ].join('\n'),
+  });
 }

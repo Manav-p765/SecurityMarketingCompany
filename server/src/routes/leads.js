@@ -2,7 +2,12 @@ import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { Lead, SERVICES } from '../models/Lead.js';
 import { isDatabaseReady } from '../db.js';
-import { isEmailConfigured, sendLeadEmail } from '../notify.js';
+import {
+  isConfirmationConfigured,
+  isEmailConfigured,
+  sendLeadConfirmation,
+  sendLeadEmail,
+} from '../notify.js';
 
 const router = Router();
 
@@ -85,7 +90,15 @@ router.post('/leads', submitLimiter, async (req, res) => {
     });
   }
 
-  return res.status(201).json({ ok: true, id: lead?.id, message: 'Thanks — your request is in.' });
+  res.status(201).json({ ok: true, id: lead?.id, message: 'Thanks — your request is in.' });
+
+  // Visitor confirmation goes out after the response, so it never slows the
+  // form down and a failure here never turns a received lead into an error.
+  if (isConfirmationConfigured()) {
+    sendLeadConfirmation(data).catch((err) =>
+      console.error('[leads] confirmation email failed:', err.message)
+    );
+  }
 });
 
 export default router;

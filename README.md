@@ -146,6 +146,11 @@ received if either succeeds, so a database outage doesn't lose leads.
 
 Emails set Reply-To to the visitor, so replying goes straight to them.
 
+Once `LEAD_NOTIFY_FROM` is on a verified domain, each visitor also gets a confirmation email ("your
+request is in, Andy will reply the same business day") with a copy of what they sent. Their replies go
+to `LEAD_REPLY_TO` (default `andy@securitymarketingcompany.com`). It sends after the form responds,
+so a failure there never shows the visitor an error.
+
 `VITE_API_URL` is baked in at build time, so redeploy Vercel after changing it. Vercel preview
 deployments get their own URLs; add one to `CORS_ORIGIN` if you want to test the form there.
 
