@@ -8,11 +8,12 @@ export default function Services() {
         <div className="section-head section-head--split reveal">
           <div>
             <p className="label">What we do</p>
-            <h2>Four Specialist Units. One Growth System.</h2>
+            <h2>Marketing Services Built for Security Companies</h2>
           </div>
           <p className="section-head__lead">
-            Every engagement is built around the same outcome — more qualified enquiries from the
-            buyers who sign real contracts. Not vanity traffic, and not a channel running on its own.
+            From your website and Google visibility to paid advertising, lead generation and
+            automated follow-up, we build the digital systems security companies need to generate
+            consistent opportunities and grow.
           </p>
         </div>
 
@@ -23,7 +24,7 @@ export default function Services() {
               <article
                 key={service.id}
                 className="service-card surface reveal"
-                style={{ transitionDelay: `${index * 80}ms` }}
+                style={{ transitionDelay: `${(index % 4) * 80}ms` }}
               >
                 <div className="service-card__top">
                   <span className="service-card__icon">
@@ -32,7 +33,6 @@ export default function Services() {
                   <span className="service-card__num">{service.number}</span>
                 </div>
 
-                <p className="service-card__kicker">{service.kicker}</p>
                 <h3>{service.title}</h3>
 
                 <p className="service-card__lead">{service.lead}</p>

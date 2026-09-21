@@ -2,6 +2,7 @@ import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { Lead, SERVICES } from '../models/Lead.js';
 import { isDatabaseReady } from '../db.js';
+import { isEmailConfigured, sendLeadEmail } from '../notify.js';
 
 const router = Router();
 
@@ -28,7 +29,8 @@ function validate(body) {
   if (company.length < 2) errors.company = 'Please enter your company name.';
   if (!EMAIL_RE.test(email)) errors.email = 'Please enter a valid work email address.';
   if (!SERVICES.includes(service)) errors.service = 'Please choose a service.';
-  if (message.length < 10) errors.message = 'Tell us a little more — at least 10 characters.';
+  // Message is optional; only its length is capped.
+  if (message.length > 4000) errors.message = 'Please keep this under 4,000 characters.';
 
   return { errors, data: { name, company, email, service, message } };
 }
@@ -44,7 +46,12 @@ router.post('/leads', submitLimiter, async (req, res) => {
     return res.status(400).json({ ok: false, errors });
   }
 
-  if (!isDatabaseReady()) {
+  // A lead counts as received if it was stored OR emailed, so neither a
+  // database outage nor an email hiccup loses it.
+  const canSave = isDatabaseReady();
+  const canEmail = isEmailConfigured();
+
+  if (!canSave && !canEmail) {
     return res.status(503).json({
       ok: false,
       message:
@@ -52,19 +59,33 @@ router.post('/leads', submitLimiter, async (req, res) => {
     });
   }
 
-  try {
-    const lead = await Lead.create({
-      ...data,
-      userAgent: req.get('user-agent')?.slice(0, 512),
-    });
-    return res.status(201).json({ ok: true, id: lead.id, message: 'Thanks — your request is in.' });
-  } catch (err) {
-    console.error('[leads] save failed:', err.message);
+  let lead = null;
+  if (canSave) {
+    try {
+      lead = await Lead.create({ ...data, userAgent: req.get('user-agent')?.slice(0, 512) });
+    } catch (err) {
+      console.error('[leads] save failed:', err.message);
+    }
+  }
+
+  let emailed = false;
+  if (canEmail) {
+    try {
+      await sendLeadEmail(data);
+      emailed = true;
+    } catch (err) {
+      console.error('[leads] email failed:', err.message);
+    }
+  }
+
+  if (!lead && !emailed) {
     return res.status(500).json({
       ok: false,
       message: 'Something went wrong on our end. Please email andy@securitymarketingcompany.com.',
     });
   }
+
+  return res.status(201).json({ ok: true, id: lead?.id, message: 'Thanks — your request is in.' });
 });
 
 export default router;

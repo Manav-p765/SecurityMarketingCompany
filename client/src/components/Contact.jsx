@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { COMPANY, SERVICE_OPTIONS } from '../data/content.js';
 import { IconAlert, IconArrowRight, IconCheck } from './Icons.jsx';
 
 const EMPTY = { name: '', company: '', email: '', service: '', message: '', website: '' };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+// Where the API lives. Empty = same origin (dev proxy, or Express serving the
+// build). Set VITE_API_URL when the API is hosted separately, e.g. on Render.
+const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 
 /** Mirrors the server-side rules in server/src/routes/leads.js. */
 function validate(values) {
@@ -12,17 +15,22 @@ function validate(values) {
   if (values.company.trim().length < 2) errors.company = 'Please enter your company name.';
   if (!EMAIL_RE.test(values.email.trim())) errors.email = 'Please enter a valid work email address.';
   if (!SERVICE_OPTIONS.includes(values.service)) errors.service = 'Please choose a service.';
-  if (values.message.trim().length < 10) {
-    errors.message = 'Tell us a little more — at least 10 characters.';
+  if (values.message.trim().length > 4000) {
+    errors.message = 'Please keep this under 4,000 characters.';
   }
   return errors;
 }
 
-function Field({ id, label, error, children, full = false }) {
+function Field({ id, label, error, children, full = false, optional = false }) {
   return (
     <div className={`field${error ? ' has-error' : ''}${full ? ' field--full' : ''}`}>
       <label htmlFor={id}>
-        {label} <span aria-hidden="true">*</span>
+        {label}{' '}
+        {optional ? (
+          <em className="field__optional">(optional)</em>
+        ) : (
+          <span aria-hidden="true">*</span>
+        )}
       </label>
       {children}
       {error && (
@@ -40,6 +48,13 @@ export default function Contact() {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle | sending | success | error
   const [serverMessage, setServerMessage] = useState('');
+
+  // A separately hosted API (Render's free tier) sleeps when idle and takes
+  // up to a minute to wake. Nudge it on page load so it is awake by the time
+  // someone finishes the form.
+  useEffect(() => {
+    if (API_URL) fetch(`${API_URL}/api/health`).catch(() => {});
+  }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -63,7 +78,7 @@ export default function Contact() {
 
     setStatus('sending');
     try {
-      const response = await fetch('/api/leads', {
+      const response = await fetch(`${API_URL}/api/leads`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),
@@ -73,7 +88,18 @@ export default function Contact() {
       if (!response.ok) {
         if (payload.errors) setErrors(payload.errors);
         setServerMessage(
-          payload.message || 'We could not send that. Please check the highlighted fields.'
+          payload.message ||
+            (payload.errors ? (
+              'We could not send that. Please check the highlighted fields.'
+            ) : (
+              <>
+                We could not send that just now. Please try again, or email{' '}
+                <a className="text-link" href={`mailto:${COMPANY.email}`}>
+                  {COMPANY.email}
+                </a>
+                .
+              </>
+            ))
         );
         setStatus('error');
         return;
@@ -84,7 +110,13 @@ export default function Contact() {
       setStatus('success');
     } catch {
       setServerMessage(
-        `Network error — please email ${COMPANY.email} and we will pick it up from there.`
+        <>
+          Network error — please email{' '}
+          <a className="text-link" href={`mailto:${COMPANY.email}`}>
+            {COMPANY.email}
+          </a>{' '}
+          and we will pick it up from there.
+        </>
       );
       setStatus('error');
     }
@@ -163,7 +195,6 @@ export default function Contact() {
                     name="name"
                     type="text"
                     autoComplete="name"
-                    placeholder="Anand Kumar"
                     value={values.name}
                     onChange={handleChange}
                     aria-invalid={Boolean(errors.name)}
@@ -177,7 +208,6 @@ export default function Contact() {
                     name="company"
                     type="text"
                     autoComplete="organization"
-                    placeholder="Northgate Security Services"
                     value={values.company}
                     onChange={handleChange}
                     aria-invalid={Boolean(errors.company)}
@@ -191,7 +221,6 @@ export default function Contact() {
                     name="email"
                     type="email"
                     autoComplete="email"
-                    placeholder="you@yourcompany.com"
                     value={values.email}
                     onChange={handleChange}
                     aria-invalid={Boolean(errors.email)}
@@ -217,11 +246,16 @@ export default function Contact() {
                   </select>
                 </Field>
 
-                <Field id="message" label="What do you need?" error={errors.message} full>
+                <Field
+                  id="message"
+                  label="What do you need?"
+                  error={errors.message}
+                  full
+                  optional
+                >
                   <textarea
                     id="message"
                     name="message"
-                    placeholder="We run manned guarding across three counties and want more commercial contracts. Our site gets almost no enquiries."
                     value={values.message}
                     onChange={handleChange}
                     aria-invalid={Boolean(errors.message)}

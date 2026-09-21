@@ -102,6 +102,14 @@
   color: var(--security-red);
 }
 
+.field__optional {
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: var(--medium-gray);
+}
+
 .field input,
 .field select,
 .field textarea {
@@ -144,12 +152,6 @@
   outline: none;
   border-color: var(--security-black);
   box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
-}
-
-.field input::placeholder,
-.field textarea::placeholder {
-  color: var(--medium-gray);
-  opacity: 0.7;
 }
 
 /* Amber is used for inline validation only. */
@@ -325,6 +327,27 @@
 
 .footer__contact a {
   word-break: break-word;
+}
+
+/* Touch screens: grow footer and contact links to a 44px tap target. Footer
+   rows trade their gap for padding; the contact links use a negative margin so
+   the column's spacing stays the same. */
+@media (pointer: coarse) {
+  .footer__col li + li {
+    margin-top: 0;
+  }
+
+  .footer__col a {
+    display: inline-block;
+    min-width: 44px;
+    padding-block: 0.75rem;
+  }
+
+  .contact__direct .text-link {
+    display: inline-block;
+    padding-block: 0.75rem;
+    margin-block: -0.75rem;
+  }
 }
 
 .footer__socials {

@@ -40,7 +40,7 @@ securitymarketingcompany/
 │       ├── App.jsx           # Section order and the two Feature blocks
 │       ├── data/content.js   # ← ALL SITE COPY. Edit text here, not in JSX.
 │       ├── components/
-│       │   ├── Header.jsx Hero.jsx Strip.jsx Services.jsx Band.jsx
+│       │   ├── Header.jsx Hero.jsx Stats.jsx Industries.jsx Services.jsx Band.jsx
 │       │   ├── Feature.jsx   # Reusable split section: copy + tilted screen
 │       │   ├── Mockups.jsx   # The tilted browser / search-results screens
 │       │   ├── WhyUs.jsx Process.jsx Contact.jsx Footer.jsx
@@ -50,7 +50,7 @@ securitymarketingcompany/
 │           ├── tokens.css    # ← COLOURS, TYPE SCALE, SPACING, TEXTURE VALUES
 │           ├── base.css      # Reset, buttons, shared type, layout helpers
 │           ├── texture.css   # ← CONTINUOUS PAGE FIELD. Read the note in it first.
-│           ├── sections.css  # Header, hero, strip, services, band, feature, why, process
+│           ├── sections.css  # Header, hero, stats, industries, services, band, feature, why, process
 │           ├── mockups.css   # Tilted screens and floating cards
 │           └── contact.css   # Contact form + footer
 └── server/
@@ -110,8 +110,47 @@ npm run build      # Builds client/dist
 NODE_ENV=production npm start
 ```
 
-In production Express serves `client/dist` and the API from the same origin. If you host the
-frontend separately (Netlify, Vercel, S3), set `CORS_ORIGIN` in `server/.env` to that domain.
+In production Express serves `client/dist` and the API from the same origin — the simplest option,
+one service. The build also writes `dist/404.html` so static hosts serve the 404 page with a real
+404 status.
+
+#### Split hosting: frontend on Vercel, API on Render
+
+The only backend work is the contact form (`POST /api/leads` into MongoDB), so the frontend can be
+hosted as a static site.
+
+1. **Database — MongoDB Atlas.** Create a free cluster and a database user. Under Network Access,
+   allow `0.0.0.0/0` (Render's free plan has no fixed outbound IP). Copy the `mongodb+srv://…`
+   connection string, with `/security-marketing` as the database name.
+2. **API — Render.** New → Blueprint → select this repo; `render.yaml` sets up the service. Fill in
+   `MONGODB_URI`, and leave `CORS_ORIGIN` as a placeholder until step 4. Once live, check
+   `https://<service>.onrender.com/api/health` returns `"db":"connected"`.
+3. **Frontend — Vercel.** Import the repo, set **Root Directory** to `client` (Vite is
+   auto-detected). Add the environment variable `VITE_API_URL=https://<service>.onrender.com`, then
+   deploy.
+4. **Connect them.** Set `CORS_ORIGIN` on Render to the Vercel site's origin — and the custom domain
+   once added, comma-separated, no trailing slash. Render redeploys on save.
+
+#### Lead notification emails
+
+Every submission is saved to MongoDB and emailed through [Resend](https://resend.com) (an HTTP
+API — Render's free plan blocks SMTP, so Gmail/Nodemailer won't work there). A lead counts as
+received if either succeeds, so a database outage doesn't lose leads.
+
+1. Sign up at resend.com and create an API key.
+2. On Render set `RESEND_API_KEY`, and `LEAD_NOTIFY_TO` to the inbox(es) that should get leads.
+3. Until you verify a domain in Resend, the sender must stay `onboarding@resend.dev` and
+   `LEAD_NOTIFY_TO` can only be the address you signed up to Resend with. Verify
+   `securitymarketingcompany.com` (a few DNS records) to send from e.g.
+   `leads@securitymarketingcompany.com` to any address, then update `LEAD_NOTIFY_FROM`.
+
+Emails set Reply-To to the visitor, so replying goes straight to them.
+
+`VITE_API_URL` is baked in at build time, so redeploy Vercel after changing it. Vercel preview
+deployments get their own URLs; add one to `CORS_ORIGIN` if you want to test the form there.
+
+Render's free plan sleeps after 15 minutes idle and takes up to a minute to wake. The page pings
+`/api/health` on load to wake it early, but a paid instance removes the delay entirely.
 
 ---
 
@@ -197,7 +236,7 @@ stay one sentence and `body` two. Longer copy breaks the row.
 Every section sits on the same continuous field. Variation comes from glow and wash intensity
 rather than background swaps, which is what keeps it seamless:
 
-`Hero (glow) → Strip (quiet) → Services (glow) → Band (gradient, feathered) → Approach (wash) → Build (quiet) → Why us (quiet) → Process (wash) → Contact (glow) → Footer (quiet)`
+`Hero (glow) → Stats (quiet) → Industries (glow) → Services (glow) → Band (gradient, feathered) → Approach (wash) → Build (quiet) → Why us (quiet) → Process (wash) → Contact (glow) → Footer (quiet)`
 
 ---
 
@@ -254,12 +293,10 @@ because each one is a one-off rather than a repeated list.
 
 ## Two things to fill in
 
-### Turning the strip into a logo wall
+### Keeping the stats honest
 
-The strip under the hero is structurally a client logo wall. Until client logos are cleared for
-publication it carries the four buyer segments instead (`AUDIENCE` in `content.js`). To switch it:
-replace the icon + text in `Strip.jsx` with `<img>` tags, keep the `.strip__grid` /
-`.strip__item` classes, and update `STRIP_LABEL`.
+The four figures under the hero (`STATS` in `content.js`) are public claims. Keep them accurate
+and update them as they grow — a trailing "+" is styled in red automatically.
 
 ### Adding real proof
 
@@ -327,7 +364,8 @@ db.leads.find().sort({ createdAt: -1 }).limit(20)
 
 ## Still to do
 
-- Replace the placeholder social URLs in `client/src/data/content.js` with the real profiles.
+- Add the real social profile URLs in `client/src/data/content.js` (`SOCIALS`). Icons with an empty
+  `href` are hidden, so the footer shows no social links until these are filled in.
 - Supply light-on-dark logo originals (SVG if possible) to replace the derived `-light` PNGs.
 - Add client logos, case studies or results figures once cleared — see "Two things to fill in".
 

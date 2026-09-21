@@ -6,7 +6,7 @@ export default function Process() {
       <div className="container">
         <div className="section-head section-head--split reveal">
           <div>
-            <p className="label">How we work</p>
+            <p className="label">How it works</p>
             <h2>Audit. Strategy. Build. Grow.</h2>
           </div>
           <p className="section-head__lead">

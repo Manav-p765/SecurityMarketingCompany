@@ -1,0 +1,29 @@
+# Render Blueprint for the API. The frontend is deployed separately on Vercel.
+# Render dashboard → New → Blueprint → pick this repo. You will be asked for
+# the two `sync: false` values.
+services:
+  - type: web
+    name: smc-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # MongoDB Atlas connection string.
+      - key: MONGODB_URI
+        sync: false
+      # The Vercel site's origin(s), comma-separated, no trailing slash,
+      # e.g. https://www.securitymarketingcompany.com,https://smc.vercel.app
+      - key: CORS_ORIGIN
+        sync: false
+      # Lead notification emails via Resend. LEAD_NOTIFY_TO is comma-separated.
+      - key: RESEND_API_KEY
+        sync: false
+      - key: LEAD_NOTIFY_TO
+        sync: false
+      - key: LEAD_NOTIFY_FROM
+        value: Security Marketing Company <onboarding@resend.dev>

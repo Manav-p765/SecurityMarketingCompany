@@ -24,6 +24,25 @@ export default function Header() {
     };
   }, [menuOpen]);
 
+  // Escape closes the menu; so does widening past the breakpoint, where the
+  // toggle disappears and would otherwise leave the page scroll-locked.
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const onKey = (event) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+    const desktop = window.matchMedia('(min-width: 1000px)');
+    const onChange = (event) => {
+      if (event.matches) setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    desktop.addEventListener('change', onChange);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      desktop.removeEventListener('change', onChange);
+    };
+  }, [menuOpen]);
+
   const close = () => setMenuOpen(false);
 
   return (
@@ -78,7 +97,13 @@ export default function Header() {
       {menuOpen && (
         <nav id="mobile-menu" className="header__mobile" aria-label="Mobile">
           {NAV_LINKS.map((link, index) => (
-            <a key={link.id} href={`#${link.id}`} onClick={close}>
+            <a
+              key={link.id}
+              className={active === link.id ? 'is-active' : undefined}
+              href={`#${link.id}`}
+              aria-current={active === link.id ? 'true' : undefined}
+              onClick={close}
+            >
               {link.label}
               <span>{String(index + 1).padStart(2, '0')}</span>
             </a>

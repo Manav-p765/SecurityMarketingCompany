@@ -1,6 +1,7 @@
 import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
-import Strip from './components/Strip.jsx';
+import Stats from './components/Stats.jsx';
+import Industries from './components/Industries.jsx';
 import Services from './components/Services.jsx';
 import Band from './components/Band.jsx';
 import Feature from './components/Feature.jsx';
@@ -27,7 +28,8 @@ export default function App() {
 
       <main>
         <Hero />
-        <Strip />
+        <Stats />
+        <Industries />
         <Services />
         <Band />
 

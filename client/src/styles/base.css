@@ -13,10 +13,16 @@ html {
   /* Clears the fixed header when jumping to an anchor. */
   scroll-padding-top: calc(var(--header-h) + 24px);
   -webkit-text-size-adjust: 100%;
+  /* Decorative pieces (floating cards, textures) bleed past the edges; stop
+     them adding a horizontal scrollbar. `clip` rather than `hidden` so no
+     scroll container is created and the sticky aside keeps working. */
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
   margin: 0;
+  overflow-x: clip;
   /* Ink, not white — prevents an overscroll flash of white above the hero. */
   background: var(--ink-900);
   color: var(--medium-gray);

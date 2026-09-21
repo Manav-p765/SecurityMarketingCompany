@@ -1,10 +1,14 @@
 import mongoose from 'mongoose';
 
+/** Must match SERVICE_OPTIONS in client/src/data/content.js. */
 export const SERVICES = [
-  'SEO',
-  'WordPress Development',
-  'Shopify Development',
-  'Marketing',
+  'Website Design & Development',
+  'SEO & AI SEO',
+  'Paid Ads',
+  'Social Media Marketing',
+  'Email Marketing & Lead Generation',
+  'GMB Management',
+  'CRM Automation',
   'Not sure yet',
 ];
 
@@ -21,7 +25,7 @@ const leadSchema = new mongoose.Schema(
       match: [/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, 'Invalid email address'],
     },
     service: { type: String, required: true, enum: SERVICES },
-    message: { type: String, required: true, trim: true, maxlength: 4000 },
+    message: { type: String, default: '', trim: true, maxlength: 4000 },
     source: { type: String, default: 'securitymarketingcompany.com' },
     userAgent: { type: String, maxlength: 512 },
   },

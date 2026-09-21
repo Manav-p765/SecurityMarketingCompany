@@ -10,7 +10,7 @@ export default function Hero() {
           <p className="label hero__eyebrow">{HERO.eyebrow}</p>
 
           <h1>
-            {HERO.headlineTop}
+            {HERO.headlineTop}{' '}
             <span className="accent">{HERO.headlineBottom}</span>
           </h1>
 

@@ -39,83 +39,76 @@ export function IconBrowser() {
   );
 }
 
-export function IconStore() {
+export function IconMegaphone() {
   return (
     <svg {...base}>
-      <path d="M4 9h16l-1 11H5L4 9Z" />
-      <path d="M8.5 9V6.5a3.5 3.5 0 0 1 7 0V9" />
+      <path d="M4 10v4a1 1 0 0 0 1 1h2l6 4V5L7 9H5a1 1 0 0 0-1 1Z" />
+      <path d="m7 15 1.5 5h2L9.5 15.8" />
+      <path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11" />
     </svg>
   );
 }
 
-export function IconChart() {
+export function IconSocial() {
   return (
     <svg {...base}>
-      <path d="M4 20V4" />
-      <path d="M4 20h16" />
-      <path d="M8 20v-5M12.5 20v-9M17 20v-6" />
-      <path d="m8 12 4.5-5L17 4" />
+      <circle cx="6" cy="12" r="2.5" />
+      <circle cx="18" cy="6" r="2.5" />
+      <circle cx="18" cy="18" r="2.5" />
+      <path d="m8.2 10.9 7.6-3.8M8.2 13.1l7.6 3.8" />
+    </svg>
+  );
+}
+
+export function IconMail() {
+  return (
+    <svg {...base}>
+      <rect x="3" y="5" width="18" height="14" rx="1.5" />
+      <path d="m3.5 6 8.5 7 8.5-7" />
+    </svg>
+  );
+}
+
+export function IconMapPin() {
+  return (
+    <svg {...base}>
+      <path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" />
+      <path d="m9.5 10 1.75 1.75L14.75 8.5" />
+    </svg>
+  );
+}
+
+export function IconFlow() {
+  return (
+    <svg {...base}>
+      <rect x="3" y="4" width="6" height="5" rx="1" />
+      <rect x="15" y="4" width="6" height="5" rx="1" />
+      <rect x="9" y="15" width="6" height="5" rx="1" />
+      <path d="M6 9v2.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V9M12 12.5V15" />
     </svg>
   );
 }
 
 export const SERVICE_ICONS = {
+  website: IconBrowser,
   seo: IconSearch,
-  wordpress: IconBrowser,
-  shopify: IconStore,
-  marketing: IconChart,
+  ads: IconMegaphone,
+  social: IconSocial,
+  email: IconMail,
+  gmb: IconMapPin,
+  crm: IconFlow,
 };
 
-/* --- Audience / industry icons ------------------------------------------- */
+/* --- Industry icon -------------------------------------------------------- */
 
-export function IconGuard() {
-  return (
-    <svg {...base}>
-      <circle cx="12" cy="7" r="3.25" />
-      <path d="M5.5 20v-1.5A5.5 5.5 0 0 1 11 13h2a5.5 5.5 0 0 1 5.5 5.5V20" />
-      <path d="M9.5 13.5 12 16l2.5-2.5" />
-    </svg>
-  );
-}
-
-export function IconCamera() {
-  return (
-    <svg {...base}>
-      <path d="M3 7.5 16 4.5l1.5 5L4.5 12.5 3 7.5Z" />
-      <path d="M17.5 9.5 21 8.2v4.6l-3.5-1.3" />
-      <path d="M7 12v4.5a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V11" />
-    </svg>
-  );
-}
-
-export function IconAccess() {
-  return (
-    <svg {...base}>
-      <rect x="3" y="4.5" width="12" height="15" rx="1.5" />
-      <path d="M11.5 12h.01" />
-      <path d="M17 9.5h4" />
-      <path d="M19 9.5v10" />
-      <path d="M19 13h2.5M19 16h2" />
-    </svg>
-  );
-}
-
-export function IconCyber() {
+export function IconShieldCheck() {
   return (
     <svg {...base}>
       <path d="M12 3.5 5 6.2v5.4c0 4 2.9 7.5 7 8.9 4.1-1.4 7-4.9 7-8.9V6.2L12 3.5Z" />
-      <rect x="9.5" y="11" width="5" height="4" rx="0.75" />
-      <path d="M10.75 11V9.75a1.25 1.25 0 0 1 2.5 0V11" />
+      <path d="m9 12 2.25 2.25L15.5 10" />
     </svg>
   );
 }
-
-export const AUDIENCE_ICONS = {
-  guarding: IconGuard,
-  cctv: IconCamera,
-  access: IconAccess,
-  cyber: IconCyber,
-};
 
 /* --- UI icons ------------------------------------------------------------- */
 

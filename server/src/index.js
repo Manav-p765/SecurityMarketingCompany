@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import express from 'express';
@@ -26,11 +27,17 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api', leadRoutes);
 
-// In production the Express app also serves the built React bundle.
-if (process.env.NODE_ENV === 'production') {
-  const dist = path.resolve(__dirname, '../../client/dist');
+// Unknown API routes get a JSON 404, not the HTML page.
+app.use('/api', (_req, res) => res.status(404).json({ message: 'Not found.' }));
+
+// In production the Express app also serves the built React bundle — when it
+// exists. Hosted API-only (e.g. Render, with the client on Vercel) it won't.
+const dist = path.resolve(__dirname, '../../client/dist');
+if (process.env.NODE_ENV === 'production' && fs.existsSync(dist)) {
   app.use(express.static(dist));
-  app.get('*', (_req, res) => res.sendFile(path.join(dist, 'index.html')));
+  // The site is one page at "/"; any other path renders the client's 404
+  // screen, and gets a real 404 status so search engines drop it.
+  app.get('*', (_req, res) => res.status(404).sendFile(path.join(dist, 'index.html')));
 }
 
 connectDatabase(MONGODB_URI).catch((err) =>

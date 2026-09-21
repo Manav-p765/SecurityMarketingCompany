@@ -3,6 +3,7 @@ import { SOCIAL_ICONS } from './Icons.jsx';
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const socials = SOCIALS.filter((social) => social.href);
 
   return (
     <footer className="footer dark-field dark-field--quiet">
@@ -56,22 +57,24 @@ export default function Footer() {
             </li>
           </ul>
 
-          <div className="footer__socials">
-            {SOCIALS.map((social) => {
-              const Icon = SOCIAL_ICONS[social.id];
-              return (
-                <a
-                  key={social.id}
-                  href={social.href}
-                  aria-label={social.label}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon />
-                </a>
-              );
-            })}
-          </div>
+          {socials.length > 0 && (
+            <div className="footer__socials">
+              {socials.map((social) => {
+                const Icon = SOCIAL_ICONS[social.id];
+                return (
+                  <a
+                    key={social.id}
+                    href={social.href}
+                    aria-label={social.label}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon />
+                  </a>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 

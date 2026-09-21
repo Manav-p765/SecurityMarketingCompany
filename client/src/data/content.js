@@ -11,7 +11,7 @@ export const NAV_LINKS = [
   { id: 'services', label: 'Services' },
   { id: 'approach', label: 'Approach' },
   { id: 'why-us', label: 'Why Us' },
-  { id: 'process', label: 'Process' },
+  { id: 'process', label: 'How It Works' },
   { id: 'contact', label: 'Contact' },
 ];
 
@@ -21,71 +21,165 @@ export const NAV_LINKS = [
  */
 export const HERO = {
   eyebrow: 'B2B marketing for the security industry',
-  headlineTop: 'Marketing Built for',
-  headlineBottom: 'Security Companies.',
+  headlineTop: 'Marketing Built to Help Security Companies',
+  headlineBottom: 'Win More Contracts',
   paragraphs: [
-    'We are the growth partner for guard firms, CCTV and alarm installers, access control specialists and cybersecurity providers.',
-    'More visibility. Bigger contracts. Nothing else on the invoice.',
+    'We help security companies generate qualified leads, improve online visibility, and build a digital presence that turns prospects into long-term clients.',
   ],
   ctaPrimary: 'Get a Quote',
   ctaSecondary: 'See What We Do',
 };
 
 /**
- * The strip under the hero. This is the structural slot for a client logo
- * wall — until logos are cleared for publication it carries the four buyer
- * segments instead. See README: "Turning the strip into a logo wall".
+ * Proof row directly under the hero. Every figure here is a public claim —
+ * keep them accurate and update them as they grow.
  */
-export const STRIP_LABEL = 'Built for every corner of the security industry';
+export const STATS = [
+  { value: '10+', label: 'Security Companies Served' },
+  { value: '500+', label: 'Leads Generated' },
+  { value: '5+', label: 'Years Marketing Experience' },
+  { value: '50+', label: 'Experienced team' },
+];
 
-export const AUDIENCE = [
-  { id: 'guarding', title: 'Security Guard Firms', note: 'Manned guarding & patrol' },
-  { id: 'cctv', title: 'CCTV & Alarm Installers', note: 'Install, service & monitor' },
-  { id: 'access', title: 'Access Control', note: 'Readers, doors & credentials' },
-  { id: 'cyber', title: 'Cybersecurity Providers', note: 'MSSP & managed detection' },
+/** "Industries we serve" — the security businesses we market. */
+export const INDUSTRIES = [
+  'Security Guard Companies',
+  'Armed & Unarmed Security',
+  'Mobile Patrol',
+  'Corporate Security',
+  'Construction Security',
+  'Event Security',
+  'Retail Security',
+  'Warehouse & Distribution Security',
+  'HOA & Residential Security',
+  'Healthcare Security',
+  'Industrial Security',
 ];
 
 /**
- * Copy here is written short on purpose: the four cards sit in a single row
- * on desktop, in a section sized to one screen. Keep `lead` to one sentence
- * and `body` to two — longer copy breaks the row.
+ * Each service renders as a card: `title`, `lead` (the one-line promise),
+ * `body`, then `points`. `id` picks the icon in Icons.jsx; `title` is also
+ * the contact form option, so keep it in step with server/src/models/Lead.js.
  */
 export const SERVICES = [
   {
-    id: 'seo',
+    id: 'website',
     number: '01',
-    title: 'SEO',
-    kicker: 'Get found first',
-    lead: 'Your buyers search long before they call.',
-    body: 'We rank you for the terms that end in a signed contract, in every town you cover — and keep you there once competitors notice.',
-    points: ['Local & map pack rankings', 'Service-area page architecture', 'Technical SEO and site speed'],
+    title: "Website Design & Development",
+    lead: "Turn Your Website Into a Lead-Generating Asset",
+    body: "Your website is often the first place a potential client evaluates your security company. We build fast, professional, conversion-focused websites designed to communicate trust, experience, services and credibility.",
+    points: [
+      "Security company website design",
+      "Website redesigns",
+      "Service and location pages",
+      "Landing pages",
+      "Mobile optimization",
+      "Conversion-focused layouts",
+      "Lead forms and call tracking",
+      "Ongoing website support",
+    ],
   },
   {
-    id: 'wordpress',
+    id: 'seo',
     number: '02',
-    title: 'WordPress',
-    kicker: 'Sites that sell',
-    lead: 'Your site has one job: book the survey.',
-    body: 'Fast, credible builds around what buyers actually check — licensing, accreditations, coverage and proof you have done this before.',
-    points: ['Lead-focused page structure', 'Quote and survey request flows', 'Easy to update in-house'],
+    title: "SEO & AI SEO",
+    lead: "Get Found on Google and AI Search",
+    body: "We help security companies improve their visibility across traditional search engines and emerging AI search platforms. Our approach combines technical SEO, local SEO, content and AI-focused optimization to help your company get discovered by the right buyers.",
+    points: [
+      "Technical SEO",
+      "Local SEO",
+      "Keyword and competitor research",
+      "Service and location page optimization",
+      "Content strategy",
+      "Google Business Profile optimization",
+      "AI SEO / GEO",
+      "Search visibility tracking",
+    ],
   },
   {
-    id: 'shopify',
+    id: 'ads',
     number: '03',
-    title: 'Shopify',
-    kicker: 'Sell your hardware',
-    lead: 'Cameras, panels, readers, monitoring plans.',
-    body: 'Spec-heavy product pages that answer installer questions up front, trade pricing for resale accounts, and a checkout that holds up at volume.',
-    points: ['Technical product catalogues', 'Trade & B2B pricing tiers', 'Subscription monitoring plans'],
+    title: "Paid Ads",
+    lead: "Put Your Security Services in Front of High-Intent Buyers",
+    body: "We create and manage targeted advertising campaigns designed to reach businesses and decision-makers actively looking for security services.",
+    points: [
+      "Google Ads",
+      "Meta Ads",
+      "Campaign strategy",
+      "Landing pages",
+      "Audience targeting",
+      "Conversion tracking",
+      "Remarketing",
+      "Ongoing campaign optimization",
+    ],
   },
   {
-    id: 'marketing',
+    id: 'social',
     number: '04',
-    title: 'Marketing',
-    kicker: 'Fill the pipeline',
-    lead: 'Aimed at the contracts worth winning.',
-    body: 'Paid search, LSAs, email and content built for the people who sign — facilities managers, property owners, IT directors.',
-    points: ['Google Ads & LSA management', 'Email nurture for long cycles', 'Content that earns trust'],
+    title: "Social Media Marketing",
+    lead: "Build a Security Brand People Remember and Trust",
+    body: "A professional social presence helps demonstrate your company's experience, capabilities and credibility before a prospect ever contacts you. We create consistent, industry-focused content that keeps your company visible and professional.",
+    points: [
+      "Social media strategy",
+      "Content creation",
+      "LinkedIn marketing",
+      "Facebook and Instagram management",
+      "Industry-focused graphics",
+      "Educational content",
+      "Company updates",
+      "Engagement management",
+    ],
+  },
+  {
+    id: 'email',
+    number: '05',
+    title: "Email Marketing & Lead Generation",
+    lead: "Turn Marketing Attention Into Real Opportunities",
+    body: "Generating a lead is only the beginning. We help security companies build targeted lead generation campaigns and email follow-up systems that keep prospects engaged and move qualified opportunities toward a conversation.",
+    points: [
+      "B2B lead generation",
+      "Target account campaigns",
+      "Email outreach",
+      "Lead nurturing",
+      "Follow-up sequences",
+      "Landing pages",
+      "Lead qualification",
+      "Campaign reporting",
+    ],
+  },
+  {
+    id: 'gmb',
+    number: '06',
+    title: "GMB Management",
+    lead: "Improve Your Local Visibility on Google",
+    body: "Your Google Business Profile can play an important role when prospects search for security companies in their area. We optimize and manage your profile to improve local visibility, strengthen credibility and make it easier for prospects to contact you.",
+    points: [
+      "Google Business Profile optimization",
+      "Category and service optimization",
+      "Business information management",
+      "Google Posts",
+      "Review management",
+      "Photo and content updates",
+      "Local visibility monitoring",
+      "Performance reporting",
+    ],
+  },
+  {
+    id: 'crm',
+    number: '07',
+    title: "CRM Automation",
+    lead: "Stop Losing Leads After They Contact You",
+    body: "A good lead is only valuable if your team follows up. We connect your marketing and CRM systems so new inquiries can be captured, organized and followed up automatically.",
+    points: [
+      "CRM setup and optimization",
+      "Lead capture",
+      "Automated email and SMS follow-ups",
+      "Lead routing",
+      "Pipeline management",
+      "Appointment automation",
+      "Lead nurturing",
+      "Marketing and sales reporting",
+    ],
   },
 ];
 
@@ -113,36 +207,32 @@ export const PROCESS = [
   {
     step: '01',
     title: 'Audit',
-    body: 'We review your rankings, site, competitors and current lead flow, then map where your best contracts actually come from today.',
+    body: 'We review your current website, Google visibility, advertising and lead-generation system.',
   },
   {
     step: '02',
     title: 'Strategy',
-    body: 'A written plan: services to lead with, areas to own, buyers to target, and exactly what each channel is accountable for.',
+    body: 'We identify the biggest opportunities and build a marketing plan around your goals.',
   },
   {
     step: '03',
     title: 'Build',
-    body: 'Site, store, content and campaigns built to that plan and engineered to turn enquiries into surveys and quotes.',
+    body: 'We implement the website, SEO, advertising, content, CRM and automation systems you need.',
   },
   {
     step: '04',
     title: 'Grow',
-    body: 'We expand what works — more service areas, more keywords, tighter campaigns — with monthly reporting tied to leads and revenue.',
+    body: 'We continuously optimize campaigns, improve conversion and scale what is working.',
   },
 ];
 
-export const SERVICE_OPTIONS = [
-  'SEO',
-  'WordPress Development',
-  'Shopify Development',
-  'Marketing',
-  'Not sure yet',
-];
+/** Contact form choices. Must match SERVICES in server/src/models/Lead.js. */
+export const SERVICE_OPTIONS = [...SERVICES.map((service) => service.title), 'Not sure yet'];
 
+/** Paste each profile URL into `href`. Entries left empty are not rendered. */
 export const SOCIALS = [
-  { id: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/' },
-  { id: 'x', label: 'X', href: 'https://x.com/' },
-  { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/' },
-  { id: 'youtube', label: 'YouTube', href: 'https://www.youtube.com/' },
+  { id: 'linkedin', label: 'LinkedIn', href: '' },
+  { id: 'x', label: 'X', href: '' },
+  { id: 'instagram', label: 'Instagram', href: '' },
+  { id: 'youtube', label: 'YouTube', href: '' },
 ];
