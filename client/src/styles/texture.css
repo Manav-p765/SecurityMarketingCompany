@@ -1,0 +1,163 @@
+/* ==========================================================================
+   Page field
+
+   The texture belongs to the PAGE, not to each section. Painting it
+   per-section is what produces visible cut lines: every section darkens
+   toward its own edges and restarts its own tile and glow, so each boundary
+   reads as a step.
+
+   So: one continuous ink + particle + grain field spans the whole document,
+   and sections sit on it transparently. A section's only local treatment is
+   a soft glow or wash that fades to nothing well before its edges, which
+   means no boundary ever lands on a hard value change.
+   ========================================================================== */
+
+.page {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--ink-900);
+}
+
+/* Continuous particle field over the full document height. */
+.page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--field-particles);
+  background-size: var(--field-particles-size);
+  background-repeat: repeat;
+}
+
+/* Continuous grain, so large dark areas never band. */
+.page::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--field-grain);
+  background-size: 180px 180px;
+  background-repeat: repeat;
+  opacity: 0.3;
+  mix-blend-mode: soft-light;
+}
+
+.page > main,
+.page > footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Sections on the field
+   -------------------------------------------------------------------------- */
+
+/* Shared base. No background-color and no overflow clipping — an opaque fill
+   would cover the continuous field and reintroduce the seam, and clipping
+   would break the sticky aside in the "Why us" section. */
+.dark-field,
+.light-wash {
+  position: relative;
+  color: var(--on-dark-2);
+}
+
+.dark-field > *,
+.light-wash > * {
+  position: relative;
+  z-index: 1;
+}
+
+.dark-field h2,
+.dark-field h3,
+.dark-field h4,
+.light-wash h2,
+.light-wash h3,
+.light-wash h4 {
+  color: var(--pure-white);
+}
+
+/* Local treatment layer, shared by both variants below. */
+.dark-field::before,
+.light-wash::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* --- Variant 1: red glow ------------------------------------------------- */
+
+.dark-field::before {
+  background-image: var(--field-glow);
+}
+
+/* Dialled back for sections that sit next to a louder one, so the page does
+   not read as one continuous bloom. */
+.dark-field--quiet::before {
+  opacity: 0.5;
+}
+
+/* --- Variant 2: light wash ----------------------------------------------- */
+
+/* Replaces the old opaque light-grey sections. Same tonal lift, but it fades
+   out before the section edge instead of stopping at one. The hairline grid
+   is masked twice over so it never reaches a boundary either. */
+.light-wash::before {
+  background-image: radial-gradient(
+      78% 62% at 50% 50%,
+      rgba(255, 255, 255, 0.062) 0%,
+      rgba(255, 255, 255, 0.022) 45%,
+      rgba(255, 255, 255, 0) 76%
+    ),
+    var(--grid-line-light);
+  background-size: 100% 100%, 76px 76px;
+  background-repeat: no-repeat, repeat;
+  mask-image: radial-gradient(86% 72% at 50% 50%, #000 34%, transparent 82%);
+  -webkit-mask-image: radial-gradient(86% 72% at 50% 50%, #000 34%, transparent 82%);
+}
+
+/* --------------------------------------------------------------------------
+   Shared dark-surface card
+   -------------------------------------------------------------------------- */
+
+.surface {
+  position: relative;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--on-dark-line);
+  border-radius: var(--radius-card);
+  backdrop-filter: blur(2px);
+  transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+
+.surface:hover {
+  border-color: rgba(227, 27, 35, 0.55);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+/* Small uppercase chip. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--on-dark-line);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-dark-2);
+  white-space: nowrap;
+}
+
+.chip__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--security-red);
+  flex: none;
+}

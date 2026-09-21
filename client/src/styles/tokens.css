@@ -1,0 +1,135 @@
+/* ==========================================================================
+   Brand tokens — Security Marketing Company
+   Hex values come from the brand sheet. Do not add colours outside it.
+   ========================================================================== */
+
+:root {
+  /* --- Brand palette ----------------------------------------------------- */
+  --security-black: #111111;
+  --security-red: #e31b23;
+  --pure-white: #ffffff;
+  --dark-gray: #2b2b2b;
+  --medium-gray: #6b6b6b;
+  --light-gray: #f3f4f6;
+  --border-gray: #e5e7eb;
+  --success-green: #16a34a;
+  --warning-amber: #f59e0b;
+  --link-blue: #2563eb; /* inline text links only — never buttons */
+
+  /* Derived strictly from the palette above */
+  --red-dark: #b3151c;
+  --ink-900: #0b0b0b; /* deepest black, for the hero field only */
+
+  /* Alpha steps used on dark sections, so the values stay consistent */
+  --on-dark-1: rgba(255, 255, 255, 0.94);
+  --on-dark-2: rgba(255, 255, 255, 0.68);
+  --on-dark-3: rgba(255, 255, 255, 0.46);
+  --on-dark-line: rgba(255, 255, 255, 0.12);
+  --on-dark-line-soft: rgba(255, 255, 255, 0.07);
+
+  --brand-gradient: linear-gradient(112deg, var(--security-black) 0%, var(--security-black) 46%, var(--security-red) 150%);
+
+  /* --- Type -------------------------------------------------------------- */
+  --font-display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Display scale — set for a tall, confident hero */
+  --fs-display: clamp(2.6rem, 1.4rem + 4.2vw, 4.4rem);
+  --fs-h2: clamp(1.85rem, 1.15rem + 2.4vw, 2.9rem);
+  --fs-h3: clamp(1.3rem, 1.1rem + 0.9vw, 1.75rem);
+  --fs-h4: clamp(1.05rem, 0.98rem + 0.35vw, 1.25rem);
+
+  /* Text scale */
+  --fs-lead: clamp(1.0625rem, 0.99rem + 0.4vw, 1.3125rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.9375rem;
+  --fs-xs: 0.8125rem;
+  --fs-label: 0.75rem;
+
+  --lh-display: 1.02;
+  --lh-heading: 1.14;
+  --lh-body: 1.75; /* roomy paragraphs — the brief asked for breathing room */
+
+  --track-label: 0.2em;
+  --track-nav: 0.12em;
+
+  /* --- Spacing scale ----------------------------------------------------- */
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  /* Vertical rhythm between major sections */
+  --section-y: clamp(5.5rem, 3.5rem + 7.5vw, 10rem);
+  --section-y-tight: clamp(4rem, 3rem + 4vw, 6.5rem);
+
+  /* Gap between a section heading block and its content */
+  --head-gap: clamp(3rem, 2rem + 3.5vw, 5.5rem);
+
+  /* --- Layout ------------------------------------------------------------ */
+  --gutter: clamp(1.25rem, 0.6rem + 2.6vw, 3rem);
+  --maxw: 1240px;
+  --maxw-wide: 1480px;
+  --maxw-text: 68ch;
+
+  --header-h: 88px;
+
+  /* Corners stay near-square on purpose: corporate, not SaaS-bubbly.
+     The one exception is the pill CTA, which uses --radius-pill. */
+  --radius: 2px;
+  --radius-card: 4px;
+  --radius-pill: 999px;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* --- Dark-field texture -------------------------------------------------
+     Dark sections are never flat fill. They stack, bottom to top:
+     base ink -> particle field -> red glow -> fine grain -> vignette.
+     Values live here so every dark section shares the same atmosphere.    */
+
+  /* Irregularly placed points over a large tile, so the repeat never reads
+     as a grid. Opacity is deliberately low — texture, not decoration. */
+  --field-particles:
+    radial-gradient(1.5px 1.5px at 12% 18%, rgba(255, 255, 255, 0.4), transparent 100%),
+    radial-gradient(1px 1px at 27% 62%, rgba(255, 255, 255, 0.28), transparent 100%),
+    radial-gradient(1.5px 1.5px at 41% 9%, rgba(255, 255, 255, 0.34), transparent 100%),
+    radial-gradient(1px 1px at 58% 38%, rgba(255, 255, 255, 0.24), transparent 100%),
+    radial-gradient(2px 2px at 73% 73%, rgba(255, 255, 255, 0.3), transparent 100%),
+    radial-gradient(1px 1px at 88% 24%, rgba(255, 255, 255, 0.26), transparent 100%),
+    radial-gradient(1.5px 1.5px at 94% 57%, rgba(255, 255, 255, 0.22), transparent 100%),
+    radial-gradient(1px 1px at 8% 81%, rgba(255, 255, 255, 0.3), transparent 100%),
+    radial-gradient(1.5px 1.5px at 34% 91%, rgba(255, 255, 255, 0.2), transparent 100%),
+    radial-gradient(1px 1px at 64% 14%, rgba(255, 255, 255, 0.32), transparent 100%),
+    radial-gradient(1px 1px at 79% 96%, rgba(255, 255, 255, 0.18), transparent 100%),
+    radial-gradient(2px 2px at 19% 45%, rgba(227, 27, 35, 0.5), transparent 100%),
+    radial-gradient(1.5px 1.5px at 52% 79%, rgba(227, 27, 35, 0.34), transparent 100%),
+    radial-gradient(1px 1px at 86% 41%, rgba(227, 27, 35, 0.4), transparent 100%);
+  --field-particles-size: 620px 620px;
+
+  /* Soft off-centre red bloom — the only saturated light on dark sections. */
+  --field-glow:
+    radial-gradient(60% 55% at 78% 18%, rgba(227, 27, 35, 0.2) 0%, rgba(227, 27, 35, 0) 68%),
+    radial-gradient(48% 48% at 8% 82%, rgba(227, 27, 35, 0.09) 0%, rgba(227, 27, 35, 0) 70%);
+
+  /* Fine film grain, so large dark areas do not band on wide displays. */
+  --field-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+
+  /* NOTE: there is deliberately no vignette token. A per-section vignette
+     darkens toward each section's own edges, which is exactly what makes
+     boundaries read as cut lines. The field is even end to end instead. */
+
+  /* Hairline grid for the lifted "wash" sections — white on the dark field. */
+  --grid-line-light: linear-gradient(to right, rgba(255, 255, 255, 0.032) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.032) 1px, transparent 1px);
+}
+
+@media (max-width: 720px) {
+  :root {
+    --header-h: 72px;
+  }
+}

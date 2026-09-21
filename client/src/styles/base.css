@@ -1,0 +1,391 @@
+/* ==========================================================================
+   Reset, typography and shared primitives
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Clears the fixed header when jumping to an anchor. */
+  scroll-padding-top: calc(var(--header-h) + 24px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  /* Ink, not white — prevents an overscroll flash of white above the hero. */
+  background: var(--ink-900);
+  color: var(--medium-gray);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  color: var(--security-black);
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: var(--lh-heading);
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  line-height: var(--lh-display);
+  letter-spacing: -0.035em;
+}
+
+p {
+  margin: 0;
+}
+
+/* Stacked paragraphs get real separation rather than a single line break. */
+.prose > p + p {
+  margin-top: var(--space-md);
+}
+
+.prose {
+  max-width: var(--maxw-text);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Blue is reserved for inline text links. Never for buttons. */
+.text-link {
+  color: var(--link-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-thickness 0.15s var(--ease);
+}
+
+.text-link:hover {
+  text-decoration-thickness: 2px;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--security-red);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--security-red);
+  color: var(--pure-white);
+}
+
+/* --------------------------------------------------------------------------
+   Layout
+   -------------------------------------------------------------------------- */
+
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container--wide {
+  max-width: var(--maxw-wide);
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+.section--tight {
+  padding-block: var(--section-y-tight);
+}
+
+/* --------------------------------------------------------------------------
+   One section, one screen.
+
+   Content sections fill the viewport and centre their content, so landing on
+   a section from the nav shows the whole thing without scrolling. The top
+   padding clears the fixed header; `min-height` (not `height`) means a short
+   viewport degrades to scrolling rather than clipping.
+
+   Below 1000px this is switched off — a phone cannot hold a section's worth
+   of content in one screen, and forcing it would only shrink the type.
+   -------------------------------------------------------------------------- */
+
+.section--screen {
+  padding-top: calc(var(--header-h) + clamp(1.5rem, 3vh, 3rem));
+  padding-bottom: clamp(2rem, 5vh, 4rem);
+}
+
+@media (min-width: 1000px) {
+  .section--screen {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .section--screen > .container {
+    width: 100%;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Shared type components
+   -------------------------------------------------------------------------- */
+
+/* Letter-spaced uppercase label, matching the brand sheet's lockup style. */
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--medium-gray);
+}
+
+.label::before {
+  content: '';
+  width: 32px;
+  height: 2px;
+  background: var(--security-red);
+  flex: none;
+}
+
+.label--centered {
+  justify-content: center;
+}
+
+.dark-field .label,
+.light-wash .label,
+.label--on-dark {
+  color: var(--on-dark-3);
+}
+
+/* Section heading block: label, h2, then a lead paragraph. */
+.section-head {
+  max-width: 46ch;
+  margin-bottom: var(--head-gap);
+}
+
+.section-head h2 {
+  font-size: var(--fs-h2);
+  margin-top: var(--space-md);
+  text-transform: uppercase;
+}
+
+.section-head .section-head__lead {
+  margin-top: var(--space-md);
+  font-size: var(--fs-lead);
+  max-width: 54ch;
+}
+
+.section-head--centered {
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* Two-column heading: title left, supporting paragraph right. Gives long
+   sections a wider, more editorial top than a single stacked column. */
+.section-head--split {
+  max-width: none;
+  display: grid;
+  gap: var(--space-lg);
+  align-items: end;
+}
+
+@media (min-width: 900px) {
+  .section-head--split {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--space-3xl);
+  }
+
+  .section-head--split .section-head__lead {
+    margin-top: 0;
+    padding-bottom: 0.5rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 1.0625rem 2rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease),
+    border-color 0.25s var(--ease), transform 0.25s var(--ease);
+}
+
+.btn svg {
+  transition: transform 0.25s var(--ease-out);
+}
+
+.btn:hover svg {
+  transform: translateX(4px);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: var(--security-red);
+  color: var(--pure-white);
+  border-color: var(--security-red);
+}
+
+.btn--primary:hover {
+  background: var(--red-dark);
+  border-color: var(--red-dark);
+}
+
+.btn--ghost-light {
+  background: transparent;
+  color: var(--pure-white);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.btn--ghost-light:hover {
+  border-color: var(--pure-white);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.btn--ghost-dark {
+  background: transparent;
+  color: var(--security-black);
+  border-color: var(--security-black);
+}
+
+.btn--ghost-dark:hover {
+  background: var(--security-black);
+  color: var(--pure-white);
+}
+
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn[disabled]:hover svg {
+  transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   Scroll reveal
+   -------------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   Utilities
+   -------------------------------------------------------------------------- */
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  background: var(--security-red);
+  color: var(--pure-white);
+  padding: 0.85rem 1.4rem;
+  font-weight: 700;
+  border-radius: var(--radius);
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Screen-sized sections get a tighter heading gap — the full --head-gap is
+   tuned for a scrolling page and costs too much height here. */
+.section--screen .section-head {
+  margin-bottom: clamp(1.75rem, 4vh, 3.25rem);
+}

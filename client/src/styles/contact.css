@@ -1,0 +1,378 @@
+/* ==========================================================================
+   Contact / Get a Quote
+   ========================================================================== */
+
+.contact__layout {
+  display: grid;
+  gap: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  align-items: start;
+}
+
+.contact__intro h2 {
+  font-size: var(--fs-h2);
+  margin-top: var(--space-md);
+  text-transform: uppercase;
+}
+
+.contact__intro .prose {
+  margin-top: var(--space-md);
+  font-size: var(--fs-lead);
+  max-width: 44ch;
+}
+
+/* The section sits on the dark field, so the intro column is light-on-dark
+   while the form itself stays a white card. */
+.contact__intro .prose {
+  color: var(--on-dark-2);
+}
+
+.contact__direct {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--on-dark-line);
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.contact__direct dt {
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--on-dark-3);
+  margin-bottom: 0.35rem;
+}
+
+.contact__direct dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--pure-white);
+  word-break: break-word;
+}
+
+/* Blue on near-black fails contrast, so inline links in this column use the
+   brand red instead. Blue is still the inline-link colour on light sections. */
+.contact__intro .text-link,
+.contact__direct .text-link {
+  color: var(--security-red);
+}
+
+/* --------------------------------------------------------------------------
+   Form
+   -------------------------------------------------------------------------- */
+
+.form {
+  position: relative;
+  z-index: 1;
+  /* The card is white inside a dark section, so it has to reset the
+     inherited light-on-dark text colour — otherwise anything without an
+     explicit colour (the note, the success copy) renders white on white. */
+  color: var(--medium-gray);
+  padding: clamp(1.4rem, 1rem + 1.6vw, 2.25rem);
+  background: var(--pure-white);
+  border: 1px solid var(--border-gray);
+  border-top: 3px solid var(--security-red);
+  border-radius: var(--radius-card);
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.8);
+}
+
+.form__grid {
+  display: grid;
+  gap: var(--space-sm) var(--space-md);
+  grid-template-columns: 1fr;
+}
+
+.field--full {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dark-gray);
+}
+
+.field label span {
+  color: var(--security-red);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--pure-white);
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius);
+  font-size: var(--fs-body);
+  line-height: 1.5;
+  color: var(--security-black);
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.field textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.field select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--security-black) 50%),
+    linear-gradient(135deg, var(--security-black) 50%, transparent 50%);
+  background-position: calc(100% - 21px) 50%, calc(100% - 15px) 50%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 2.75rem;
+  cursor: pointer;
+}
+
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  border-color: var(--medium-gray);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--security-black);
+  box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--medium-gray);
+  opacity: 0.7;
+}
+
+/* Amber is used for inline validation only. */
+.field.has-error input,
+.field.has-error select,
+.field.has-error textarea {
+  border-color: var(--warning-amber);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.16);
+}
+
+.field__error {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--warning-amber);
+}
+
+.field__error svg {
+  flex: none;
+}
+
+/* Honeypot — hidden from people, visible to naive bots. */
+.field--trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm) var(--space-md);
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-gray);
+}
+
+.form__note {
+  font-size: var(--fs-xs);
+  max-width: 34ch;
+}
+
+.form__alert {
+  margin-bottom: var(--space-md);
+  padding: 0.9rem 1.1rem;
+  border-left: 3px solid var(--warning-amber);
+  background: rgba(245, 158, 11, 0.08);
+  font-size: var(--fs-small);
+  color: var(--dark-gray);
+}
+
+/* --- Success state ------------------------------------------------------- */
+
+.form__success {
+  display: grid;
+  gap: var(--space-sm);
+  justify-items: start;
+  padding: clamp(1.75rem, 1.2rem + 2.5vw, 3rem) 0;
+}
+
+.form__success-icon {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(22, 163, 74, 0.1);
+  color: var(--success-green);
+}
+
+.form__success h3 {
+  font-size: var(--fs-h3);
+  text-transform: uppercase;
+  color: var(--success-green);
+}
+
+.form__success p {
+  font-size: var(--fs-small);
+  max-width: 46ch;
+}
+
+.form__success button {
+  margin-top: 0.4rem;
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--link-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+@media (min-width: 640px) {
+  .form__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1000px) {
+  .contact__layout {
+    grid-template-columns: 0.78fr 1.22fr;
+  }
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.footer {
+  border-top: 3px solid var(--security-red);
+}
+
+.footer__top {
+  display: grid;
+  gap: var(--space-xl);
+  padding-block: clamp(3.5rem, 2.5rem + 4vw, 5.5rem);
+}
+
+.footer__brand img {
+  /* DROP-IN: /public/logo/logo-lockup-light.png */
+  width: 210px;
+  margin-bottom: var(--space-md);
+}
+
+.footer__tagline {
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pure-white);
+  max-width: 22ch;
+}
+
+.footer__brand > p:last-of-type {
+  margin-top: var(--space-sm);
+  font-size: var(--fs-small);
+  max-width: 34ch;
+  color: var(--on-dark-3);
+}
+
+.footer__col h4 {
+  margin-bottom: var(--space-md);
+  font-family: var(--font-body);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--pure-white);
+}
+
+.footer__col li + li {
+  margin-top: 0.75rem;
+}
+
+.footer__col a {
+  font-size: var(--fs-small);
+  color: var(--on-dark-2);
+  transition: color 0.2s var(--ease);
+}
+
+.footer__col a:hover {
+  color: var(--security-red);
+}
+
+.footer__contact a {
+  word-break: break-word;
+}
+
+.footer__socials {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: var(--space-lg);
+}
+
+.footer__socials a {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--on-dark-line);
+  border-radius: 50%;
+  color: var(--on-dark-2);
+  transition: background-color 0.25s var(--ease), border-color 0.25s var(--ease),
+    color 0.25s var(--ease), transform 0.25s var(--ease);
+}
+
+.footer__socials a:hover {
+  background: var(--security-red);
+  border-color: var(--security-red);
+  color: var(--pure-white);
+  transform: translateY(-2px);
+}
+
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem var(--space-lg);
+  padding-block: var(--space-lg);
+  border-top: 1px solid var(--on-dark-line);
+  font-size: var(--fs-xs);
+  color: var(--on-dark-3);
+}
+
+@media (min-width: 760px) {
+  .footer__top {
+    grid-template-columns: 1.4fr 1fr 1fr;
+  }
+}
+
+@media (min-width: 1000px) {
+  .footer__top {
+    grid-template-columns: 1.6fr 1fr 1fr 1.1fr;
+    gap: var(--space-2xl);
+  }
+}
