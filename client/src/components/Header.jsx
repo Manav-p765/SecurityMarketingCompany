@@ -31,7 +31,7 @@ export default function Header() {
     const onKey = (event) => {
       if (event.key === 'Escape') setMenuOpen(false);
     };
-    const desktop = window.matchMedia('(min-width: 1000px)');
+    const desktop = window.matchMedia('(min-width: 1120px)');
     const onChange = (event) => {
       if (event.matches) setMenuOpen(false);
     };
@@ -77,7 +77,7 @@ export default function Header() {
         </nav>
 
         <a className="btn btn--primary header__cta" href="#contact">
-          Get a Quote
+          Book Strategy Call
         </a>
 
         <button
@@ -109,7 +109,7 @@ export default function Header() {
             </a>
           ))}
           <a className="btn btn--primary" href="#contact" onClick={close}>
-            Get a Quote
+            Book Strategy Call
           </a>
         </nav>
       )}

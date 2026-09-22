@@ -128,13 +128,12 @@ export default function Contact() {
     <section className="section section--screen contact dark-field" id="contact">
       <div className="container contact__layout">
         <div className="contact__intro reveal">
-          <p className="label">Get a quote</p>
+          <p className="label">Book a strategy call</p>
           <h2>Tell us what you want to win</h2>
           <div className="prose">
             <p>
-              Send us the contracts you are chasing and the areas you cover. We will come back with
-              a straight assessment of what it takes to get there — no obligation, and no
-              three-week discovery phase before you hear anything useful.
+              Tell us the contracts you are chasing and the areas you cover. We will come back with
+              a straight assessment of what it takes to win them — no obligation.
             </p>
           </div>
 
@@ -144,14 +143,6 @@ export default function Contact() {
               <dd>
                 <a className="text-link" href={`mailto:${COMPANY.email}`}>
                   {COMPANY.email}
-                </a>
-              </dd>
-            </div>
-            <div>
-              <dt>Website</dt>
-              <dd>
-                <a className="text-link" href={COMPANY.siteUrl}>
-                  {COMPANY.site}
                 </a>
               </dd>
             </div>
@@ -280,7 +271,7 @@ export default function Contact() {
 
               <div className="form__footer">
                 <button type="submit" className="btn btn--primary" disabled={status === 'sending'}>
-                  {status === 'sending' ? 'Sending…' : 'Get a Quote'}
+                  {status === 'sending' ? 'Sending…' : 'Book Strategy Call'}
                   {status !== 'sending' && <IconArrowRight />}
                 </button>
                 <p className="form__note">

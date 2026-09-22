@@ -1,27 +1,45 @@
-import { COMPANY } from '../data/content.js';
+import { INDUSTRIES, SERVICES } from '../data/content.js';
+
+/** One ticker row. The list is rendered twice so the loop has no seam. */
+function Marquee({ items, reverse = false, outline = false }) {
+  const row = (hidden) => (
+    <ul className="marquee__row" aria-hidden={hidden || undefined}>
+      {items.map((item) => (
+        <li key={item}>
+          {item}
+          <span className="marquee__dot" aria-hidden="true" />
+        </li>
+      ))}
+    </ul>
+  );
+
+  return (
+    <div
+      className={`marquee${reverse ? ' marquee--reverse' : ''}${outline ? ' marquee--outline' : ''}`}
+    >
+      <div className="marquee__track">
+        {row(false)}
+        {row(true)}
+      </div>
+    </div>
+  );
+}
 
 /**
- * The single full-width run of the black -> red brand gradient. Keep it to
- * this one band; the hero uses the darker textured field instead.
+ * The single full-width run of the black -> red brand gradient: the promise,
+ * then two ticker rows (services one way, industries the other).
  */
 export default function Band() {
   return (
-    <section className="band">
+    <section className="band" aria-label="Our promise">
       <div className="container band__inner">
         <h2 className="band__promise">
-          More visibility.
-          <em>Bigger contracts.</em>
+          More visibility. <em>Bigger contracts.</em>
         </h2>
-
-        <div className="prose band__note">
-          <p>
-            That is the whole promise, and it is the only thing we measure against. Rankings,
-            sessions and impressions are how we get there — <strong>booked site surveys and signed
-            contracts</strong> are how we know it worked.
-          </p>
-          <p>{COMPANY.tagline}</p>
-        </div>
       </div>
+
+      <Marquee items={SERVICES.map((service) => service.title)} />
+      <Marquee items={INDUSTRIES} reverse outline />
     </section>
   );
 }

@@ -10,9 +10,13 @@ export default function Industries() {
           <h2>Security Companies We Help</h2>
         </div>
 
-        <ul className="industries__grid reveal">
-          {INDUSTRIES.map((industry) => (
-            <li className="industries__item" key={industry}>
+        <ul className="industries__grid">
+          {INDUSTRIES.map((industry, index) => (
+            <li
+              className="industries__item reveal"
+              key={industry}
+              style={{ transitionDelay: `${index * 45}ms` }}
+            >
               <IconShieldCheck />
               <span>{industry}</span>
             </li>

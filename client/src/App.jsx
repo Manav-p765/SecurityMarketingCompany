@@ -39,16 +39,14 @@ export default function App() {
           label="Get found first"
           title="Own the search your buyers already make"
           paragraphs={[
-            'Nobody wakes up and decides to hire a security firm by name. They search — for a guarding company in their town, for a CCTV installer who can be on site this week.',
-            'That search is the whole contest, and it is settled in the first three results and the map pack above them.',
+            'Buyers search for a guarding company in their town or an installer who can be on site this week. That contest is settled in the top three results and the map pack.',
           ]}
           points={[
-            'Map pack and local ranking work, town by town',
+            'Map pack and local rankings, town by town',
             'A service-area page for every place you cover',
-            'Technical SEO, site speed and Core Web Vitals',
             'Reporting tied to enquiries, not keyword screenshots',
           ]}
-          cta={{ label: 'Get a Quote', href: '#contact' }}
+          cta={{ label: 'Book Strategy Call', href: '#contact' }}
           wash
         >
           <div className="tilt tilt--right">
@@ -63,14 +61,12 @@ export default function App() {
           label="Sites that sell"
           title="A site built to book the survey"
           paragraphs={[
-            'Your website has one job, and it is not to look busy. It is to give a facilities manager who has never heard of you enough confidence to ask for a quote.',
-            'So we lead with what they check first — licensing, accreditations, response times, coverage — and put the survey request where the decision gets made.',
+            'Your website has one job: give a buyer who has never heard of you the confidence to ask for a quote.',
           ]}
           points={[
-            'Licensing and accreditation shown up front',
-            'Coverage areas that double as ranking pages',
-            'Quote and survey flows on every service page',
-            'WordPress or Shopify, easy to update in-house',
+            'Licensing and accreditations shown up front',
+            'Quote and survey requests on every service page',
+            'Fast, mobile-first and easy to update in-house',
           ]}
           cta={{ label: 'Start a Project', href: '#contact' }}
           reverse

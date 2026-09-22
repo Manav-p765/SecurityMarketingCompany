@@ -1,5 +1,14 @@
 import { SERVICES } from '../data/content.js';
-import { SERVICE_ICONS } from './Icons.jsx';
+import { IconArrowRight, SERVICE_ICONS } from './Icons.jsx';
+
+/** Feeds the pointer position to the card under it, for the hover glow. */
+function trackPointer(event) {
+  const card = event.target.closest('.service-card');
+  if (!card) return;
+  const rect = card.getBoundingClientRect();
+  card.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+  card.style.setProperty('--my', `${event.clientY - rect.top}px`);
+}
 
 export default function Services() {
   return (
@@ -17,7 +26,7 @@ export default function Services() {
           </p>
         </div>
 
-        <div className="services__grid">
+        <div className="services__grid" onPointerMove={trackPointer}>
           {SERVICES.map((service, index) => {
             const Icon = SERVICE_ICONS[service.id];
             return (
@@ -36,16 +45,23 @@ export default function Services() {
                 <h3>{service.title}</h3>
 
                 <p className="service-card__lead">{service.lead}</p>
-                <p className="service-card__body">{service.body}</p>
-
-                <ul className="service-card__points">
-                  {service.points.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
               </article>
             );
           })}
+
+          {/* Eighth card fills the second row and turns the list into a next step. */}
+          <a
+            className="service-card service-card--cta reveal"
+            href="#contact"
+            style={{ transitionDelay: '240ms' }}
+          >
+            <p className="service-card--cta__kicker">Not sure where to start?</p>
+            <h3>Talk to a specialist</h3>
+            <span className="btn btn--light">
+              Book Strategy Call
+              <IconArrowRight />
+            </span>
+          </a>
         </div>
       </div>
     </section>

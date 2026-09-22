@@ -315,6 +315,34 @@ textarea {
   color: var(--pure-white);
 }
 
+/* White button for red surfaces. */
+.btn--light {
+  background: var(--pure-white);
+  color: var(--security-black);
+  border-color: var(--pure-white);
+}
+
+/* A light sweep across the red button on hover. */
+.btn--primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.btn--primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.7s var(--ease-out);
+}
+
+.btn--primary:hover::after {
+  transform: translateX(120%);
+}
+
 .btn[disabled] {
   opacity: 0.6;
   cursor: not-allowed;

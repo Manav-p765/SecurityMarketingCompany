@@ -1,6 +1,8 @@
+import { Resend } from 'resend';
+
 /**
- * Lead emails through Resend's HTTP API. HTTP rather than SMTP because
- * Render's free tier blocks outbound SMTP ports.
+ * Lead emails through Resend (the `resend` SDK, which calls its HTTP API —
+ * Render's free tier blocks outbound SMTP ports).
  *
  * Two emails per submission:
  *  - sendLeadEmail: the lead's details to the team (LEAD_NOTIFY_TO).
@@ -36,19 +38,15 @@ const escapeHtml = (value) =>
 
 const FONT = 'font-family:Arial,Helvetica,sans-serif';
 
-async function send(payload) {
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ from: sender(), ...payload }),
-    signal: AbortSignal.timeout(10000),
-  });
+// Created on first use, so the API key is read after dotenv has loaded it.
+let client;
+const resend = () => (client ??= new Resend(process.env.RESEND_API_KEY));
 
-  if (!response.ok) {
-    throw new Error(`Resend ${response.status}: ${await response.text()}`);
+async function send(payload) {
+  // The SDK returns errors rather than throwing; throw so callers can log them.
+  const { error } = await resend().emails.send({ from: sender(), ...payload });
+  if (error) {
+    throw new Error(`Resend: ${error.name ?? 'error'} — ${error.message}`);
   }
 }
 
@@ -60,13 +58,19 @@ const detailRows = (lead) => [
   ['Message', lead.message || '—'],
 ];
 
+// The visitor's email renders as a mailto link so it can be clicked.
+const cell = (label, value) =>
+  label === 'Email'
+    ? `<a href="mailto:${escapeHtml(value)}" style="color:#e31b23">${escapeHtml(value)}</a>`
+    : escapeHtml(value);
+
 const detailTable = (rows) => `
     <table cellpadding="8" style="border-collapse:collapse;${FONT};font-size:14px">
       ${rows
         .map(
           ([label, value]) => `<tr>
         <td style="border:1px solid #ddd;font-weight:bold;vertical-align:top">${label}</td>
-        <td style="border:1px solid #ddd;white-space:pre-wrap">${escapeHtml(value)}</td>
+        <td style="border:1px solid #ddd;white-space:pre-wrap">${cell(label, value)}</td>
       </tr>`
         )
         .join('')}
@@ -78,10 +82,10 @@ export async function sendLeadEmail(lead) {
 
   await send({
     to: process.env.LEAD_NOTIFY_TO.split(',').map((address) => address.trim()),
-    reply_to: lead.email,
-    subject: `New quote request — ${lead.name}, ${lead.company}`,
+    replyTo: lead.email,
+    subject: `New strategy call request — ${lead.name}, ${lead.company}`,
     html: `
-    <h2 style="margin:0 0 16px;${FONT}">New quote request</h2>
+    <h2 style="margin:0 0 16px;${FONT}">New strategy call request</h2>
     ${detailTable(rows)}
     <p style="${FONT};font-size:13px;color:#666">Reply to this email to answer ${escapeHtml(lead.name)} directly.</p>`,
     text: rows.map(([label, value]) => `${label}: ${value}`).join('\n'),
@@ -95,11 +99,11 @@ export async function sendLeadConfirmation(lead) {
 
   await send({
     to: [lead.email],
-    reply_to: process.env.LEAD_REPLY_TO || DEFAULT_REPLY_TO,
-    subject: 'We received your quote request — Security Marketing Company',
+    replyTo: process.env.LEAD_REPLY_TO || DEFAULT_REPLY_TO,
+    subject: 'We received your strategy call request — Security Marketing Company',
     html: `
     <p style="${FONT};font-size:15px">Hi ${escapeHtml(firstName)},</p>
-    <p style="${FONT};font-size:15px;line-height:1.6">Thanks for getting in touch. Your request is with us, and Andy will reply the same business day with next steps.</p>
+    <p style="${FONT};font-size:15px;line-height:1.6">Thanks for getting in touch. Your request is with us, and Andy will reply the same business day to arrange a time for your strategy call.</p>
     <p style="${FONT};font-size:15px;line-height:1.6">Here is what you sent:</p>
     ${detailTable(rows)}
     <p style="${FONT};font-size:15px;line-height:1.6">If you have anything to add, just reply to this email.</p>
@@ -107,7 +111,7 @@ export async function sendLeadConfirmation(lead) {
     text: [
       `Hi ${firstName},`,
       '',
-      'Thanks for getting in touch. Your request is with us, and Andy will reply the same business day with next steps.',
+      'Thanks for getting in touch. Your request is with us, and Andy will reply the same business day to arrange a time for your strategy call.',
       '',
       'Here is what you sent:',
       ...rows.map(([label, value]) => `${label}: ${value}`),

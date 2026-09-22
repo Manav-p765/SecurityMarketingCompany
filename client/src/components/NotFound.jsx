@@ -50,7 +50,7 @@ export default function NotFound() {
               <IconArrowRight />
             </a>
             <a className="btn btn--ghost-light" href="/#contact">
-              Get a Quote
+              Book Strategy Call
             </a>
           </div>
         </div>
