@@ -1,6 +1,6 @@
 /* ==========================================================================
    Brand tokens — Security Marketing Company
-   Hex values come from the brand sheet. Do not add colours outside it.
+   Hex values come from the brand sheet. Do not add colors outside it.
    ========================================================================== */
 
 :root {
@@ -111,7 +111,7 @@
     radial-gradient(1px 1px at 86% 41%, rgba(227, 27, 35, 0.4), transparent 100%);
   --field-particles-size: 620px 620px;
 
-  /* Soft off-centre red bloom — the only saturated light on dark sections. */
+  /* Soft off-center red bloom — the only saturated light on dark sections. */
   --field-glow:
     radial-gradient(60% 55% at 78% 18%, rgba(227, 27, 35, 0.2) 0%, rgba(227, 27, 35, 0) 68%),
     radial-gradient(48% 48% at 8% 82%, rgba(227, 27, 35, 0.09) 0%, rgba(227, 27, 35, 0) 70%);

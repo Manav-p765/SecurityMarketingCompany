@@ -280,11 +280,12 @@
   margin-top: var(--space-xl);
 }
 
-/* Proof block beside the CTA. */
+/* Proof block under the two CTAs. */
 .hero__proof {
   display: flex;
   align-items: center;
   gap: 0.85rem;
+  margin-top: var(--space-lg);
   padding-left: var(--space-md);
   border-left: 1px solid var(--on-dark-line);
 }
@@ -377,7 +378,9 @@
 
 @media (min-width: 860px) {
   .stats__grid {
-    grid-template-columns: repeat(4, 1fr);
+    /* --stat-count is set by Stats.jsx, so however many stats are filled in
+       span the row evenly. */
+    grid-template-columns: repeat(var(--stat-count, 4), 1fr);
   }
 }
 
@@ -938,7 +941,8 @@
 
 @media (min-width: 1000px) {
   .process__grid {
-    grid-template-columns: repeat(4, 1fr);
+    /* --step-count is set by Process.jsx: four steps on home, five on /services. */
+    grid-template-columns: repeat(var(--step-count, 4), 1fr);
     column-gap: var(--space-lg);
   }
 }
@@ -1055,6 +1059,10 @@
 
 .hero__inner > div:first-child > :nth-child(4) {
   animation-delay: 0.34s;
+}
+
+.hero__inner > div:first-child > :nth-child(5) {
+  animation-delay: 0.44s;
 }
 
 .hero__visual {

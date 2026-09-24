@@ -53,7 +53,7 @@
 }
 
 /* Blue on near-black fails contrast, so inline links in this column use the
-   brand red instead. Blue is still the inline-link colour on light sections. */
+   brand red instead. Blue is still the inline-link color on light sections. */
 .contact__intro .text-link,
 .contact__direct .text-link {
   color: var(--security-red);
@@ -67,8 +67,8 @@
   position: relative;
   z-index: 1;
   /* The card is white inside a dark section, so it has to reset the
-     inherited light-on-dark text colour — otherwise anything without an
-     explicit colour (the note, the success copy) renders white on white. */
+     inherited light-on-dark text color — otherwise anything without an
+     explicit color (the note, the success copy) renders white on white. */
   color: var(--medium-gray);
   padding: clamp(1.4rem, 1rem + 1.6vw, 2.25rem);
   background: var(--pure-white);

@@ -35,9 +35,12 @@ app.use('/api', (_req, res) => res.status(404).json({ message: 'Not found.' }));
 const dist = path.resolve(__dirname, '../../client/dist');
 if (process.env.NODE_ENV === 'production' && fs.existsSync(dist)) {
   app.use(express.static(dist));
-  // The site is one page at "/"; any other path renders the client's 404
-  // screen, and gets a real 404 status so search engines drop it.
-  app.get('*', (_req, res) => res.status(404).sendFile(path.join(dist, 'index.html')));
+  // /services has its own prerendered HTML (see client/scripts/prerender.js)
+  // so it gets its own meta tags on a direct load or refresh.
+  app.get('/services', (_req, res) => res.sendFile(path.join(dist, 'services.html')));
+  // The only real pages are "/" and "/services"; any other path renders the
+  // client's 404 screen with a real 404 status so search engines drop it.
+  app.get('*', (_req, res) => res.status(404).sendFile(path.join(dist, '404.html')));
 }
 
 connectDatabase(MONGODB_URI).catch((err) =>

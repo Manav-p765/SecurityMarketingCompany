@@ -3,42 +3,54 @@ import { IconLock, IconSearchSmall } from './Icons.jsx';
 /**
  * Illustrative screen mockups, built in markup rather than dropped in as
  * screenshots. They show the kind of work we do — they are not captures of
- * a real client site or a real search results page.
+ * a real client site or a real search results page. The example firm,
+ * "Summit Guard Co.", is fictional (".example" is a reserved domain), and
+ * each window carries a visible "Example illustration" tag so no visitor
+ * reads it as a client result.
  */
+
+const EXAMPLE_TAG = 'Example illustration';
+
+function WindowBar({ children }) {
+  return (
+    <div className="window__bar">
+      <div className="window__dots">
+        <i />
+        <i />
+        <i />
+      </div>
+      <div className="window__url">{children}</div>
+      <span className="window__tag">{EXAMPLE_TAG}</span>
+    </div>
+  );
+}
 
 /** A security firm's website, as we would build it. */
 export function SiteMockup() {
   return (
     <div className="window">
-      <div className="window__bar">
-        <div className="window__dots">
-          <i />
-          <i />
-          <i />
-        </div>
-        <div className="window__url">
-          <IconLock />
-          northgatesecurity.co.uk
-        </div>
-      </div>
+      <WindowBar>
+        <IconLock />
+        summitguardco.example
+      </WindowBar>
 
       <div className="window__body site-mock">
         <div className="site-mock__nav">
           <div className="site-mock__logo">
             <span />
-            Northgate
+            Summit Guard Co.
           </div>
           <div className="site-mock__navlinks">
             <i />
             <i />
             <i />
           </div>
-          <div className="site-mock__pill">Get a Survey</div>
+          <div className="site-mock__pill">Get a Quote</div>
         </div>
 
         <div className="site-mock__hero">
           <h4>
-            Manned Guarding <em>Across Three Counties</em>
+            Licensed Security Officers <em>Serving the Greater Dallas Area</em>
           </h4>
           <div className="site-mock__lines">
             <i />
@@ -47,7 +59,7 @@ export function SiteMockup() {
           </div>
           <div className="site-mock__cta">
             <b>Book a Site Survey</b>
-            <s>Our Accreditations</s>
+            <s>Licenses &amp; Certifications</s>
           </div>
         </div>
 
@@ -65,25 +77,16 @@ export function SiteMockup() {
   );
 }
 
-/** Search results, illustrating what ranking work is aiming at. */
+/** Search results, illustrating what local search work is aiming at. */
 export function SerpMockup() {
   return (
     <div className="window window--light">
-      <div className="window__bar">
-        <div className="window__dots">
-          <i />
-          <i />
-          <i />
-        </div>
-        <div className="window__url">
-          <IconLock />
-          security guard company near me
-        </div>
-      </div>
+      <WindowBar>
+        <IconLock />
+        security guard company near me
+      </WindowBar>
 
       <div className="window__body serp-mock">
-        <span className="serp-mock__rank">Position 1</span>
-
         <div className="serp-mock__search">
           <IconSearchSmall />
           <span>security guard company near me</span>
@@ -100,7 +103,7 @@ export function SerpMockup() {
 
           <div className="serp-mock__listings">
             <div className="serp-mock__listing serp-mock__listing--active">
-              <b>Northgate Security Services</b>
+              <b>Summit Guard Co.</b>
               <div className="serp-mock__stars">
                 <u />
                 <u />
@@ -111,7 +114,7 @@ export function SerpMockup() {
               </div>
             </div>
             <div className="serp-mock__listing">
-              <b>Competitor Security Ltd</b>
+              <b>Example Security LLC</b>
               <div className="serp-mock__stars">
                 <u />
                 <u />
@@ -124,8 +127,8 @@ export function SerpMockup() {
         </div>
 
         <div className="serp-mock__result serp-mock__result--active">
-          <p className="serp-mock__url">northgatesecurity.co.uk › manned-guarding</p>
-          <p className="serp-mock__title">Manned Guarding &amp; Security Officers | Northgate</p>
+          <p className="serp-mock__url">summitguardco.example › security-guard-services</p>
+          <p className="serp-mock__title">Security Guard Services in Dallas, TX | Summit Guard Co.</p>
           <div className="serp-mock__snippet">
             <i />
             <i />
@@ -133,7 +136,7 @@ export function SerpMockup() {
         </div>
 
         <div className="serp-mock__result">
-          <p className="serp-mock__url">competitor-security.co.uk › services</p>
+          <p className="serp-mock__url">examplesecurity.example › services</p>
           <p className="serp-mock__title">Security Services</p>
           <div className="serp-mock__snippet">
             <i />
@@ -145,7 +148,7 @@ export function SerpMockup() {
   );
 }
 
-/** Small stat card that overlaps a mockup's edge. */
+/** Small card that overlaps a mockup's edge. `value` is text, not a figure. */
 export function FloatCard({ className, label, value, suffix, bars = false }) {
   return (
     <div className={`float-card ${className}`}>

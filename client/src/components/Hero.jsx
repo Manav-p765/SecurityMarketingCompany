@@ -1,5 +1,7 @@
+import { Link } from 'react-router-dom';
 import { HERO } from '../data/content.js';
 import { IconArrowRight } from './Icons.jsx';
+import { StrategyCallLink } from './Links.jsx';
 import { FloatCard, SiteMockup } from './Mockups.jsx';
 
 export default function Hero() {
@@ -21,19 +23,23 @@ export default function Hero() {
           </div>
 
           <div className="hero__actions">
-            <a className="btn btn--primary" href="#contact">
+            <StrategyCallLink className="btn btn--primary">
               {HERO.ctaPrimary}
               <IconArrowRight />
-            </a>
+            </StrategyCallLink>
 
-            {/* Proof block. This is where a real Clutch or Google rating goes
-                once you have one — see README, "Adding real proof". */}
-            <div className="hero__proof">
-              <img src="/logo/logo-mark-light.png" alt="" aria-hidden="true" />
-              <div className="hero__proof-text">
-                <strong>One industry. One focus.</strong>
-                <span>We market security companies — we never sell security.</span>
-              </div>
+            <Link className="btn btn--ghost-light" to="/services">
+              {HERO.ctaSecondary}
+            </Link>
+          </div>
+
+          {/* Proof block. This is where a real Clutch or Google rating goes
+              once you have one — see README, "Adding real proof". */}
+          <div className="hero__proof">
+            <img src="/logo/logo-mark-light.png" alt="" aria-hidden="true" />
+            <div className="hero__proof-text">
+              <strong>One industry. One focus.</strong>
+              <span>We market security companies — we never sell security.</span>
             </div>
           </div>
         </div>
@@ -45,14 +51,12 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Belongs to the illustrated example site above, not to us — the
-              label carries the example firm's name so it cannot be read as a
-              claim about our own results. */}
+          {/* Part of the example illustration above, not a claim about our
+              results — so it carries no figure, only a sample chart. */}
           <FloatCard
             className="float-card--bl"
-            label="Northgate · local pack"
-            value="Top 3"
-            suffix="in-area"
+            label="Sample report"
+            value="Monthly inquiries"
             bars
           />
         </div>

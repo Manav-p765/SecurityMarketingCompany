@@ -1,9 +1,11 @@
 import { IconArrowRight, IconCheckSmall } from './Icons.jsx';
+import { StrategyCallLink } from './Links.jsx';
 
 /**
  * Split section: copy on one side, a tilted screen on the other.
  * Used twice with `reverse` alternating so the page does not fall into a
- * single repeated rhythm.
+ * single repeated rhythm. Copy comes from FEATURES in content.js; `cta` is a
+ * button label, and the button goes wherever "Book Strategy Call" goes.
  */
 export default function Feature({
   id,
@@ -46,10 +48,10 @@ export default function Feature({
 
           {cta && (
             <div className="feature__actions">
-              <a className="btn btn--primary" href={cta.href}>
-                {cta.label}
+              <StrategyCallLink className="btn btn--primary">
+                {cta}
                 <IconArrowRight />
-              </a>
+              </StrategyCallLink>
             </div>
           )}
         </div>

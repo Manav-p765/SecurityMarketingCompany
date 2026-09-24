@@ -139,7 +139,7 @@ textarea {
 /* --------------------------------------------------------------------------
    One section, one screen.
 
-   Content sections fill the viewport and centre their content, so landing on
+   Content sections fill the viewport and center their content, so landing on
    a section from the nav shows the whole thing without scrolling. The top
    padding clears the fixed header; `min-height` (not `height`) means a short
    viewport degrades to scrolling rather than clipping.

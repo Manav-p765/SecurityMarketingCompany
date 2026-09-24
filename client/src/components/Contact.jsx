@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { COMPANY, SERVICE_OPTIONS } from '../data/content.js';
 import { IconAlert, IconArrowRight, IconCheck } from './Icons.jsx';
+import { telHref } from './Links.jsx';
 
 const EMPTY = { name: '', company: '', email: '', service: '', message: '', website: '' };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -146,6 +147,31 @@ export default function Contact() {
                 </a>
               </dd>
             </div>
+            {COMPANY.phone && (
+              <div>
+                <dt>Phone</dt>
+                <dd>
+                  <a className="text-link" href={telHref(COMPANY.phone)}>
+                    {COMPANY.phone}
+                  </a>
+                </dd>
+              </div>
+            )}
+            {COMPANY.calendarUrl && (
+              <div>
+                <dt>Prefer to pick a time?</dt>
+                <dd>
+                  <a
+                    className="text-link"
+                    href={COMPANY.calendarUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Book on our calendar
+                  </a>
+                </dd>
+              </div>
+            )}
             <div>
               <dt>Response time</dt>
               <dd>Same business day</dd>

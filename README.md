@@ -1,7 +1,10 @@
 # Security Marketing Company
 
-Single-page marketing site for **Security Marketing Company** — a B2B digital marketing agency for
-the security industry.
+Marketing site for **Security Marketing Company** — a B2B digital marketing agency for US security
+companies: guard and patrol services, alarm installers, CCTV/video surveillance providers, access
+control integrators and security systems integrators.
+
+Two pages: the home page (`/`) and a Services page (`/services`). Anything else shows a 404.
 
 > **Positioning note for anyone editing copy:** we are the *marketing partner* for security
 > companies. We do not provide guarding, installation, monitoring or cybersecurity services. Every
@@ -16,7 +19,7 @@ the security industry.
 
 | Layer | Technology |
 | --- | --- |
-| Frontend | React 18 + Vite (single page, smooth-scroll nav) |
+| Frontend | React 18 + Vite + React Router (`/` and `/services`) |
 | Backend | Node + Express (contact-form endpoint) |
 | Database | MongoDB via Mongoose (stores leads) |
 | Styling | Hand-written CSS with brand tokens — no UI framework, no icon library |
@@ -29,30 +32,38 @@ the security industry.
 securitymarketingcompany/
 ├── package.json              # Root scripts — runs client + server together
 ├── .env.example              # Copy to server/.env
-├── client/                   # Vite + React single-page app
-│   ├── index.html            # Meta tags, fonts, JSON-LD
+├── client/                   # Vite + React app
+│   ├── index.html            # Home page meta tags, fonts, site-wide JSON-LD
 │   ├── vite.config.js        # Dev proxy: /api -> localhost:5000
+│   ├── vercel.json           # cleanUrls: serves dist/services.html at /services
+│   ├── scripts/prerender.js  # Post-build: writes dist/services.html and dist/404.html
 │   ├── public/
 │   │   ├── logo/             # ← LOGO FILES (see logo/README.md)
 │   │   └── hero/             # ← OPTIONAL HERO PHOTO (see hero/README.md)
 │   └── src/
-│       ├── main.jsx          # Stylesheet import order lives here
-│       ├── App.jsx           # Section order and the two Feature blocks
+│       ├── main.jsx          # Router + stylesheet import order
+│       ├── App.jsx           # Routes and hash-link scrolling
+│       ├── seo.js            # Service JSON-LD builder (used by the app and prerender.js)
 │       ├── data/content.js   # ← ALL SITE COPY. Edit text here, not in JSX.
+│       ├── pages/
+│       │   ├── HomePage.jsx      # Home section order
+│       │   └── ServicesPage.jsx  # /services: hero, service blocks, process, industries, FAQ, CTA
 │       ├── components/
 │       │   ├── Header.jsx Hero.jsx Stats.jsx Industries.jsx Services.jsx Band.jsx
 │       │   ├── Feature.jsx   # Reusable split section: copy + tilted screen
 │       │   ├── Mockups.jsx   # The tilted browser / search-results screens
-│       │   ├── WhyUs.jsx Process.jsx Contact.jsx Footer.jsx
+│       │   ├── WhyUs.jsx Process.jsx Contact.jsx Footer.jsx NotFound.jsx
+│       │   ├── Links.jsx     # StrategyCallLink (calendar or contact form) + helpers
 │       │   └── Icons.jsx     # All inline SVG icons
-│       ├── hooks/            # Scroll reveal + active-nav tracking
+│       ├── hooks/            # Scroll reveal, active-nav tracking, per-page meta tags
 │       └── styles/
-│           ├── tokens.css    # ← COLOURS, TYPE SCALE, SPACING, TEXTURE VALUES
+│           ├── tokens.css    # ← COLORS, TYPE SCALE, SPACING, TEXTURE VALUES
 │           ├── base.css      # Reset, buttons, shared type, layout helpers
 │           ├── texture.css   # ← CONTINUOUS PAGE FIELD. Read the note in it first.
 │           ├── sections.css  # Header, hero, stats, industries, services, band, feature, why, process
 │           ├── mockups.css   # Tilted screens and floating cards
-│           └── contact.css   # Contact form + footer
+│           ├── contact.css   # Contact form + footer
+│           └── services-page.css # /services only
 └── server/
     ├── src/index.js          # Express app
     ├── src/db.js             # Mongo connection
@@ -66,7 +77,7 @@ securitymarketingcompany/
 
 ### 1. Prerequisites
 
-- Node 18 or newer (developed on Node 20)
+- Node 20 or newer (React Router 7 requires it)
 - MongoDB — a local `mongod`, or a free MongoDB Atlas cluster
 
 ### 2. Install
@@ -111,8 +122,19 @@ NODE_ENV=production npm start
 ```
 
 In production Express serves `client/dist` and the API from the same origin — the simplest option,
-one service. The build also writes `dist/404.html` so static hosts serve the 404 page with a real
-404 status.
+one service.
+
+**Routes on a direct load or refresh.** The build runs `client/scripts/prerender.js` after Vite. It
+writes `dist/services.html` (index.html with the Services page title, description, canonical, Open
+Graph tags and `Service` JSON-LD swapped in) and `dist/404.html`. Then:
+
+- **Express** serves `services.html` for `/services` (200) and `404.html` for anything else (404).
+- **Vercel** serves `services.html` at `/services` through `cleanUrls` in `client/vercel.json`, and
+  its built-in `404.html` handling covers unknown paths.
+- **Vite dev / preview** fall back to index.html; React Router then renders the right page.
+
+If you add a page, add it to the routes in `App.jsx`, give it meta in `content.js`, and extend
+`prerender.js` and the Express route the same way.
 
 #### Split hosting: frontend on Vercel, API on Render
 
@@ -161,9 +183,9 @@ Render's free plan sleeps after 15 minutes idle and takes up to a minute to wake
 
 ## Design system
 
-### Colours
+### Colors
 
-Defined once in `client/src/styles/tokens.css`. **Do not add colours outside this set.**
+Defined once in `client/src/styles/tokens.css`. **Do not add colors outside this set.**
 
 | Variable | Hex | Use |
 | --- | --- | --- |
@@ -183,7 +205,7 @@ it. On the dark contact column, inline links use brand red instead of blue — b
 fails contrast.
 
 The black → red gradient runs full width in exactly one place: the accent band between Services and
-the first Feature. Keep it that way.
+the first Feature on the home page. The Services page closes with a red card instead. Keep it that way.
 
 ### Type
 
@@ -192,10 +214,10 @@ the first Feature. Keep it that way.
 
 ### Background texture — and why sections have no edges
 
-**The texture belongs to the page, not to each section.** `.page` in `App.jsx` carries one
+**The texture belongs to the page, not to each section.** `.page` (the wrapper in each file under `pages/`) carries one
 continuous field for the whole document:
 
-1. base ink colour (`.page`)
+1. base ink color (`.page`)
 2. particle field (`.page::before`, a tiled 620px pattern)
 3. fine grain (`.page::after`, soft-light blended)
 
@@ -205,7 +227,7 @@ them are seamless. Two rules keep it that way:
 - **No section gets an opaque background-color.** An opaque fill covers the continuous field and
   puts a hard edge back at every boundary.
 - **No section gets a vignette.** A per-section vignette darkens toward that section's own edges,
-  so the boundary reads as a step even when both sides are the same colour. There is deliberately
+  so the boundary reads as a step even when both sides are the same color. There is deliberately
   no vignette token any more.
 
 A section's only local treatment is `::before`, which must fade to fully transparent well before
@@ -224,7 +246,7 @@ seam grid across the page.
 
 ### One section, one screen
 
-`.section--screen` makes a section fill the viewport and centre its content, so landing on it from
+`.section--screen` makes a section fill the viewport and center its content, so landing on it from
 the nav shows the whole thing without scrolling. It uses `min-height`, so a short viewport degrades
 to scrolling rather than clipping, and it is switched off below 1000px — a phone cannot hold a
 section's worth of content in one screen, and forcing it would only shrink the type.
@@ -251,10 +273,11 @@ rather than background swaps, which is what keeps it seamless:
 results page — built in markup and CSS rather than dropped in as screenshots. They stay sharp at any
 size and theme with the brand tokens.
 
-**They are illustrative devices, not evidence.** The example firm ("Northgate Security Services") is
-fictional, and the floating stat card is labelled with that firm's name so it cannot be read as a
-claim about our own results. If you replace them with real screenshots or real client data, make
-sure you have permission and that the figures are accurate.
+**They are illustrative devices, not evidence.** The example firm ("Summit Guard Co.",
+`summitguardco.example` — `.example` is a reserved domain) is fictional. Every window bar carries a
+visible **"Example illustration"** tag, and the floating card reads "Sample report" with no figure, so
+nothing can be read as a claim about our results. If you replace them with real screenshots or
+client data, make sure you have permission and that the figures are accurate.
 
 Tilt angles are CSS custom properties on `.tilt` (`--tilt-x/y/z`), with `.tilt--right` and
 `.tilt--flat` variants. Perspective is switched off below 900px, where it costs legibility.
@@ -287,12 +310,56 @@ If you want the guard photo somewhere, `client/public/hero/README.md` has the no
 
 ## Editing the copy
 
-All site text lives in **`client/src/data/content.js`** — hero lines, services, the "why us"
-reasons, process steps, nav labels, contact details and social links. Components read from it, so
-you can rewrite the site without touching JSX.
+Site copy lives in **`client/src/data/content.js`**. Components read from it, so you can rewrite
+the site without touching JSX.
 
-The two Feature sections (Approach and Build) have their copy inline in `client/src/App.jsx`,
-because each one is a one-off rather than a repeated list.
+| Export in content.js | What it controls |
+| --- | --- |
+| `COMPANY` | Name, tagline, promise, email, site URL, optional `phone` and `calendarUrl` |
+| `NAV_LINKS` | Header nav and the footer "Company" column |
+| `HOME_META` | Home page title/description re-applied on in-app navigation (mirror of `index.html`) |
+| `HERO` | Home hero, including both buttons |
+| `STATS` | Proof row under the hero (blank values are hidden) |
+| `INDUSTRIES` | "Industries we serve" grid (home and /services) and the band ticker |
+| `SERVICES` | **The service list**: home cards, /services blocks and anchors, footer, contact dropdown |
+| `FEATURES` | The two split sections on the home page (search and website) |
+| `REASONS` | "Why us" |
+| `PROCESS`, `PROCESS_SECTION` | Home "How it works" |
+| `SOCIALS` | Footer social icons (empty `href` = hidden) |
+| `servicesPage` | Everything on /services: meta, hero, pricing, per-service detail, process, FAQ, CTA |
+
+Still inline in JSX: the section headings for home Services, Industries, Why us and Contact, the
+contact form labels and messages, the footer blurb, and the 404 copy.
+
+### Services — the source of truth
+
+`SERVICES` in content.js lists seven services. The `id` is the anchor on the Services page:
+
+| Service | Anchor |
+| --- | --- |
+| Website Design & Development | `/services#website` |
+| SEO & AI SEO | `/services#seo` |
+| Paid Ads | `/services#paid-ads` |
+| Social Media Marketing | `/services#social-media` |
+| Email Marketing & Lead Generation | `/services#email-marketing` |
+| Google Business Profile Management | `/services#google-business-profile` |
+| CRM Automation | `/services#crm-automation` |
+
+To add or rename a service, change it in **three places**: `SERVICES`, a matching entry in
+`servicesPage.details` (keyed by `id`), and `SERVICES` in `server/src/models/Lead.js` (the contact
+form's allowed values). A new `id` also needs an icon in `SERVICE_ICONS` in `Icons.jsx`.
+
+### Pricing on /services
+
+`servicesPage.pricing` controls the pricing line on every service block. It currently shows
+"Custom quote". To publish prices, set `showPrices: true` and add `prices: { seo: '$1,500/mo', … }` —
+each shows as "Starting at …", and services without an entry keep "Custom quote".
+
+### Phone and calendar
+
+Set `COMPANY.phone` to show it in the contact section and footer. Set `COMPANY.calendarUrl` (e.g. a
+Calendly link) and every "Book Strategy Call" button opens it in a new tab instead of scrolling to the
+contact form; the contact section also gets a calendar link. Both are empty now.
 
 ---
 
@@ -300,8 +367,9 @@ because each one is a one-off rather than a repeated list.
 
 ### Keeping the stats honest
 
-The four figures under the hero (`STATS` in `content.js`) are public claims. Keep them accurate
-and update them as they grow — a trailing "+" is styled in red automatically.
+The figures under the hero (`STATS` in `content.js`) are public claims. All four values are
+currently **empty**, so the row is hidden. Fill in only the ones you can stand behind — each filled
+value appears, and the row resizes to fit. A trailing "+" is styled in red automatically.
 
 ### Adding real proof
 
@@ -319,15 +387,14 @@ When you have a genuine Google or Clutch rating, awards, or client numbers, that
 ```json
 {
   "name": "Anand Kumar",
-  "company": "Northgate Security Services",
+  "company": "Summit Guard Co.",
   "email": "you@yourcompany.com",
-  "service": "SEO",
+  "service": "SEO & AI SEO",
   "message": "We want more commercial guarding contracts."
 }
 ```
 
-`service` must be one of: `SEO`, `WordPress Development`, `Shopify Development`, `Marketing`,
-`Not sure yet`.
+`service` must be one of the seven service titles above, or `Not sure yet`.
 
 | Status | Meaning |
 | --- | --- |
@@ -369,8 +436,11 @@ db.leads.find().sort({ createdAt: -1 }).limit(20)
 
 ## Still to do
 
-- Add the real social profile URLs in `client/src/data/content.js` (`SOCIALS`). Icons with an empty
-  `href` are hidden, so the footer shows no social links until these are filled in.
+- Social profiles: LinkedIn, Instagram and Facebook are live. X and YouTube are set up but empty
+  (hidden) — add URLs in `SOCIALS` if you open those accounts.
+- Fill in `STATS`, `COMPANY.phone` and `COMPANY.calendarUrl` when ready.
+- Review the FAQ answers on /services (contract terms in particular) against how you actually sell.
+- No `sitemap.xml` or `robots.txt` exists yet; add both listing `/` and `/services`.
 - Supply light-on-dark logo originals (SVG if possible) to replace the derived `-light` PNGs.
 - Add client logos, case studies or results figures once cleared — see "Two things to fill in".
 

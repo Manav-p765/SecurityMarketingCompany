@@ -49,8 +49,16 @@ function Stat({ stat, start }) {
   );
 }
 
-/** Proof row directly under the hero. */
+/** Only stats with a value are public; see STATS in content.js. */
+const VISIBLE_STATS = STATS.filter((stat) => stat.value.trim() !== '');
+
+/** Proof row directly under the hero. Hidden entirely while no stat is filled in. */
 export default function Stats() {
+  if (VISIBLE_STATS.length === 0) return null;
+  return <StatsRow />;
+}
+
+function StatsRow() {
   const ref = useRef(null);
   const [start, setStart] = useState(false);
 
@@ -77,8 +85,12 @@ export default function Stats() {
   return (
     <section className="stats dark-field dark-field--quiet" aria-label="Results at a glance">
       <div className="container container--wide">
-        <dl className="stats__grid" ref={ref}>
-          {STATS.map((stat) => (
+        <dl
+          className="stats__grid"
+          ref={ref}
+          style={{ '--stat-count': VISIBLE_STATS.length }}
+        >
+          {VISIBLE_STATS.map((stat) => (
             <Stat key={stat.label} stat={stat} start={start} />
           ))}
         </dl>

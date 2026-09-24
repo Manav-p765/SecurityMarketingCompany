@@ -38,7 +38,7 @@ export default function WhyUs() {
 
             <p className="why__aside-title">One industry. One focus.</p>
             <p>
-              We work only with companies that protect people, property and data — and we never
+              We work only with companies that protect people and property — and we never
               compete with our clients for their work.
             </p>
           </aside>

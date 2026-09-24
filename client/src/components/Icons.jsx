@@ -92,11 +92,11 @@ export function IconFlow() {
 export const SERVICE_ICONS = {
   website: IconBrowser,
   seo: IconSearch,
-  ads: IconMegaphone,
-  social: IconSocial,
-  email: IconMail,
-  gmb: IconMapPin,
-  crm: IconFlow,
+  'paid-ads': IconMegaphone,
+  'social-media': IconSocial,
+  'email-marketing': IconMail,
+  'google-business-profile': IconMapPin,
+  'crm-automation': IconFlow,
 };
 
 /* --- Industry icon -------------------------------------------------------- */
@@ -215,8 +215,17 @@ export function IconYouTube() {
   );
 }
 
+export function IconFacebook() {
+  return (
+    <svg {...brand}>
+      <path d="M13.5 21v-7.5h2.53l.38-2.94H13.5V8.69c0-.85.24-1.43 1.46-1.43h1.56V4.63A20.9 20.9 0 0 0 14.25 4.5c-2.25 0-3.8 1.37-3.8 3.9v2.16H7.9v2.94h2.55V21h3.05Z" />
+    </svg>
+  );
+}
+
 export const SOCIAL_ICONS = {
   linkedin: IconLinkedIn,
+  facebook: IconFacebook,
   x: IconX,
   instagram: IconInstagram,
   youtube: IconYouTube,

@@ -1,13 +1,25 @@
 import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { NAV_LINKS } from '../data/content.js';
 import { useActiveSection } from '../hooks/useActiveSection.js';
+import { StrategyCallLink, sectionPath } from './Links.jsx';
 
-const SECTION_IDS = NAV_LINKS.map((link) => link.id);
+const SECTION_IDS = NAV_LINKS.filter((link) => link.section).map((link) => link.section);
+const NO_SECTIONS = [];
+
+/** Page links go to their route; section links go to "/#section" from any page. */
+const linkTarget = (link) => link.to ?? sectionPath(link.section);
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const active = useActiveSection(SECTION_IDS);
+  const { pathname } = useLocation();
+  const onHome = pathname === '/' || pathname === '/index.html';
+  // Section tracking only means something on the page that has the sections.
+  const activeSection = useActiveSection(onHome ? SECTION_IDS : NO_SECTIONS);
+
+  const isActive = (link) =>
+    link.to ? pathname.startsWith(link.to) : onHome && activeSection === link.section;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -48,9 +60,9 @@ export default function Header() {
   return (
     <header className={`header${scrolled || menuOpen ? ' is-scrolled' : ''}`}>
       <div className="container container--wide header__inner">
-        <a
+        <Link
           className="header__logo"
-          href="#top"
+          to="/"
           onClick={close}
           aria-label="Security Marketing Company — home"
         >
@@ -62,23 +74,22 @@ export default function Header() {
             width="260"
             height="87"
           />
-        </a>
+        </Link>
 
         <nav className="header__nav" aria-label="Primary">
           {NAV_LINKS.map((link) => (
-            <a
+            <Link
               key={link.id}
-              className={`header__link${active === link.id ? ' is-active' : ''}`}
-              href={`#${link.id}`}
+              className={`header__link${isActive(link) ? ' is-active' : ''}`}
+              to={linkTarget(link)}
+              aria-current={link.to && isActive(link) ? 'page' : undefined}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
-        <a className="btn btn--primary header__cta" href="#contact">
-          Book Strategy Call
-        </a>
+        <StrategyCallLink className="btn btn--primary header__cta">Book Strategy Call</StrategyCallLink>
 
         <button
           type="button"
@@ -97,20 +108,20 @@ export default function Header() {
       {menuOpen && (
         <nav id="mobile-menu" className="header__mobile" aria-label="Mobile">
           {NAV_LINKS.map((link, index) => (
-            <a
+            <Link
               key={link.id}
-              className={active === link.id ? 'is-active' : undefined}
-              href={`#${link.id}`}
-              aria-current={active === link.id ? 'true' : undefined}
+              className={isActive(link) ? 'is-active' : undefined}
+              to={linkTarget(link)}
+              aria-current={isActive(link) ? (link.to ? 'page' : 'true') : undefined}
               onClick={close}
             >
               {link.label}
               <span>{String(index + 1).padStart(2, '0')}</span>
-            </a>
+            </Link>
           ))}
-          <a className="btn btn--primary" href="#contact" onClick={close}>
+          <StrategyCallLink className="btn btn--primary" onClick={close}>
             Book Strategy Call
-          </a>
+          </StrategyCallLink>
         </nav>
       )}
     </header>

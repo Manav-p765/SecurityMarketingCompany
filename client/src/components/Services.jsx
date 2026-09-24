@@ -1,5 +1,7 @@
+import { Link } from 'react-router-dom';
 import { SERVICES } from '../data/content.js';
 import { IconArrowRight, SERVICE_ICONS } from './Icons.jsx';
+import { StrategyCallLink } from './Links.jsx';
 
 /** Feeds the pointer position to the card under it, for the hover glow. */
 function trackPointer(event) {
@@ -30,8 +32,10 @@ export default function Services() {
           {SERVICES.map((service, index) => {
             const Icon = SERVICE_ICONS[service.id];
             return (
-              <article
+              /* Each card deep-links to its block on /services. */
+              <Link
                 key={service.id}
+                to={`/services#${service.id}`}
                 className="service-card surface reveal"
                 style={{ transitionDelay: `${(index % 4) * 80}ms` }}
               >
@@ -45,14 +49,18 @@ export default function Services() {
                 <h3>{service.title}</h3>
 
                 <p className="service-card__lead">{service.lead}</p>
-              </article>
+
+                <span className="service-card__more">
+                  Learn more
+                  <IconArrowRight />
+                </span>
+              </Link>
             );
           })}
 
           {/* Eighth card fills the second row and turns the list into a next step. */}
-          <a
+          <StrategyCallLink
             className="service-card service-card--cta reveal"
-            href="#contact"
             style={{ transitionDelay: '240ms' }}
           >
             <p className="service-card--cta__kicker">Not sure where to start?</p>
@@ -61,7 +69,7 @@ export default function Services() {
               Book Strategy Call
               <IconArrowRight />
             </span>
-          </a>
+          </StrategyCallLink>
         </div>
       </div>
     </section>

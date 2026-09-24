@@ -447,18 +447,24 @@
   width: 54%;
 }
 
-.serp-mock__rank {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  padding: 0.2rem 0.5rem;
+/* --------------------------------------------------------------------------
+   "Example illustration" tag in every window bar. It has to be readable, not
+   decorative: it is what tells a visitor the screen is not a client result.
+   -------------------------------------------------------------------------- */
+
+.window__tag {
+  flex: none;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: var(--radius-pill);
-  background: var(--security-red);
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #fff;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* --------------------------------------------------------------------------
@@ -493,7 +499,7 @@
 
 .float-card__value {
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: 0.95rem;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -556,6 +562,6 @@
   }
 
   .float-card__value {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
   }
 }

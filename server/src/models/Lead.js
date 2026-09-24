@@ -7,7 +7,7 @@ export const SERVICES = [
   'Paid Ads',
   'Social Media Marketing',
   'Email Marketing & Lead Generation',
-  'GMB Management',
+  'Google Business Profile Management',
   'CRM Automation',
   'Not sure yet',
 ];
