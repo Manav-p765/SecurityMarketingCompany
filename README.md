@@ -126,7 +126,9 @@ one service.
 
 **Routes on a direct load or refresh.** The build runs `client/scripts/prerender.js` after Vite. It
 writes `dist/services.html` (index.html with the Services page title, description, canonical, Open
-Graph tags and `Service` JSON-LD swapped in) and `dist/404.html`. Then:
+Graph tags and `Service` JSON-LD swapped in), `dist/404.html`, and `dist/sitemap.xml` (every page
+in its `PAGES` list). `client/public/robots.txt` allows everything except `/api/` and points to the
+sitemap. Then:
 
 - **Express** serves `services.html` for `/services` (200) and `404.html` for anything else (404).
 - **Vercel** serves `services.html` at `/services` through `cleanUrls` in `client/vercel.json`, and
@@ -367,9 +369,10 @@ contact form; the contact section also gets a calendar link. Both are empty now.
 
 ### Keeping the stats honest
 
-The figures under the hero (`STATS` in `content.js`) are public claims. All four values are
-currently **empty**, so the row is hidden. Fill in only the ones you can stand behind — each filled
-value appears, and the row resizes to fit. A trailing "+" is styled in red automatically.
+The figures under the hero (`STATS` in `content.js`) are public claims: "10+" security companies
+served, "500+" leads generated, "5+" years of experience and a "50+" team. Keep them accurate and
+update them as they grow. Blanking a value hides that stat and the row resizes to fit; blanking all
+four hides the row. A trailing "+" is styled in red automatically.
 
 ### Adding real proof
 
@@ -438,9 +441,10 @@ db.leads.find().sort({ createdAt: -1 }).limit(20)
 
 - Social profiles: LinkedIn, Instagram and Facebook are live. X and YouTube are set up but empty
   (hidden) — add URLs in `SOCIALS` if you open those accounts.
-- Fill in `STATS`, `COMPANY.phone` and `COMPANY.calendarUrl` when ready.
+- Fill in `COMPANY.phone` and `COMPANY.calendarUrl` when ready.
 - Review the FAQ answers on /services (contract terms in particular) against how you actually sell.
-- No `sitemap.xml` or `robots.txt` exists yet; add both listing `/` and `/services`.
+- When you add a page, add its meta object to `PAGES` in `client/scripts/prerender.js` so it lands
+  in `sitemap.xml`.
 - Supply light-on-dark logo originals (SVG if possible) to replace the derived `-light` PNGs.
 - Add client logos, case studies or results figures once cleared — see "Two things to fill in".
 

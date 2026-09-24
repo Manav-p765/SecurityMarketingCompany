@@ -9,13 +9,16 @@
  *    via an explicit route), so a direct load or refresh gets a 200 and the
  *    right meta even for crawlers and link previews that do not run JS.
  *
+ * 3. dist/sitemap.xml — every indexable page, built from the same meta
+ *    objects. robots.txt (static, in public/) points crawlers at it.
+ *
  * The values come from content.js through seo.js — the same source the app
  * uses at runtime — so there is nothing to keep in sync by hand.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { servicesPage } from '../src/data/content.js';
+import { HOME_META, servicesPage } from '../src/data/content.js';
 import { absoluteUrl, servicesSchema } from '../src/seo.js';
 
 const dist = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../dist');
@@ -57,4 +60,17 @@ html = html.replace(
 );
 
 fs.writeFileSync(path.join(dist, 'services.html'), html);
-console.log('prerender: wrote dist/404.html and dist/services.html');
+
+// Every indexable page. Add a page's meta object here when you add a page.
+const PAGES = [HOME_META, servicesPage.meta];
+const urls = PAGES.map((page) => `  <url><loc>${escapeAttr(absoluteUrl(page.path))}</loc></url>`);
+const sitemap = [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  ...urls,
+  '</urlset>',
+  '',
+].join('\n');
+fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap);
+
+console.log('prerender: wrote dist/404.html, dist/services.html and dist/sitemap.xml');

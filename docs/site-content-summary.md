@@ -233,7 +233,7 @@ None. The softer commitments are:
 ## 4. Social Proof
 
 - **Testimonials, case studies, client logos:** none yet.
-- **Stats row:** hidden. All four values in `STATS` are blank, so nothing is claimed. The labels are ready: "Security Companies Served", "Leads Generated", "Years Marketing Experience", "Team Members". Each value appears as soon as it's filled in.
+- **Stats row (under the home hero):** "10+" Security Companies Served · "500+" Leads Generated · "5+" Years Marketing Experience · "50+" Experienced Team. These are public claims; keep them accurate.
 - **Example mockups:** these show a fictional firm, "Summit Guard Co." (`summitguardco.example`). Its example site reads "Licensed Security Officers Serving the Greater Dallas Area", with "Get a Quote", "Book a Site Survey" and "Licenses & Certifications". The search mockup shows the "security guard company near me" query against "Example Security LLC". Every window shows a visible **"Example illustration"** tag. The "Position 1" and "Top 3" claims are gone, and the floating card now reads "Sample report — Monthly inquiries" with no figure.
 
 ---
@@ -291,7 +291,7 @@ None. The softer commitments are:
 
 The Services page meta is written into `dist/services.html` at build time, so it's present on a direct load, including for crawlers and link previews that don't run JavaScript.
 
-> **⚠ No sitemap or robots.txt.** Neither `sitemap.xml` nor `robots.txt` exists, so there was nothing to add `/services` to.
+**Crawling:** `/robots.txt` allows everything except `/api/` and points to `/sitemap.xml`. The sitemap is generated at build time and lists `/` and `/services`.
 
 ---
 
@@ -301,7 +301,7 @@ The Services page meta is written into `dist/services.html` at build time, so it
 | --- | --- | --- |
 | 1 | Social URLs empty | **Done.** LinkedIn, Instagram and Facebook are live. X and YouTube stay hidden until they have URLs. |
 | 2 | No testimonials, case studies, logos or ratings | **Still open.** Needs real, cleared proof. |
-| 3 | The four stats need checking | **Changed.** All values are blank, so the stats row is hidden. Still open until you supply real figures. |
+| 3 | The four stats need checking | **Changed.** Restored at your request: 10+, 500+, 5+ and 50+. The last label is now "Experienced Team" (Title Case, like the others). Make sure all four stay accurate. |
 | 4 | Fictional "Northgate" mockups with UK domains | **Done.** Replaced with "Summit Guard Co." on a `.example` domain, with a visible "Example illustration" tag and no ranking claims. |
 | 5 | ICP left out electronic security | **Done.** Industries now include alarm, CCTV, access control and systems integration (12 in total). |
 | 6 | US market not reflected | **Done.** US English throughout ("inquiries", "city by city", "guard-service margins"), a Dallas example, `areaServed` set to United States, and "US" in the eyebrow and meta. |

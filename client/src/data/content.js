@@ -62,10 +62,10 @@ export const HERO = {
  * Format: '25+' or '120' — a trailing "+" is styled in red automatically.
  */
 export const STATS = [
-  { value: '', label: 'Security Companies Served' },
-  { value: '', label: 'Leads Generated' },
-  { value: '', label: 'Years Marketing Experience' },
-  { value: '', label: 'Team Members' },
+  { value: '10+', label: 'Security Companies Served' },
+  { value: '500+', label: 'Leads Generated' },
+  { value: '5+', label: 'Years Marketing Experience' },
+  { value: '50+', label: 'Experienced Team' },
 ];
 
 /** "Industries we serve" — the US security businesses we market. */
