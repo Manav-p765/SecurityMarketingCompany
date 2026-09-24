@@ -1,4 +1,4 @@
-import { INDUSTRIES, SERVICES } from '../data/content.js';
+import { INDUSTRIES, services } from '../data/content.js';
 
 /** One ticker row. The list is rendered twice so the loop has no seam. */
 function Marquee({ items, reverse = false, outline = false }) {
@@ -38,7 +38,7 @@ export default function Band() {
         </h2>
       </div>
 
-      <Marquee items={SERVICES.map((service) => service.title)} />
+      <Marquee items={services.map((service) => service.name)} />
       <Marquee items={INDUSTRIES} reverse outline />
     </section>
   );

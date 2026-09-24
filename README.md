@@ -4,7 +4,8 @@ Marketing site for **Security Marketing Company** — a B2B digital marketing ag
 companies: guard and patrol services, alarm installers, CCTV/video surveillance providers, access
 control integrators and security systems integrators.
 
-Two pages: the home page (`/`) and a Services page (`/services`). Anything else shows a 404.
+Pages: the home page (`/`), a Services overview (`/services`) and a detail page for each service
+(`/services/:slug`, e.g. `/services/seo`). Anything else, including an unknown slug, shows a 404.
 
 > **Positioning note for anyone editing copy:** we are the *marketing partner* for security
 > companies. We do not provide guarding, installation, monitoring or cybersecurity services. Every
@@ -43,17 +44,22 @@ securitymarketingcompany/
 │   └── src/
 │       ├── main.jsx          # Router + stylesheet import order
 │       ├── App.jsx           # Routes and hash-link scrolling
-│       ├── seo.js            # Service JSON-LD builder (used by the app and prerender.js)
+│       ├── seo.js            # Page meta + Service/BreadcrumbList JSON-LD (app and prerender.js)
 │       ├── data/content.js   # ← ALL SITE COPY. Edit text here, not in JSX.
 │       ├── pages/
 │       │   ├── HomePage.jsx      # Home section order
-│       │   └── ServicesPage.jsx  # /services: hero, service blocks, process, industries, FAQ, CTA
+│       │   ├── ServicesPage.jsx  # /services: hero, service blocks, process, industries, FAQ, CTA
+│       │   └── ServiceDetailPage.jsx # /services/:slug template (unknown slug → 404)
 │       ├── components/
 │       │   ├── Header.jsx Hero.jsx Stats.jsx Industries.jsx Services.jsx Band.jsx
 │       │   ├── Feature.jsx   # Reusable split section: copy + tilted screen
 │       │   ├── Mockups.jsx   # The tilted browser / search-results screens
 │       │   ├── WhyUs.jsx Process.jsx Contact.jsx Footer.jsx NotFound.jsx
 │       │   ├── Links.jsx     # StrategyCallLink (calendar or contact form) + helpers
+│       │   ├── ServiceCard.jsx # Service card (home grid, related services)
+│       │   ├── Faq.jsx       # Accessible FAQ accordion section
+│       │   ├── CtaPanel.jsx  # Closing red CTA card (/services and detail pages)
+│       │   └── Breadcrumb.jsx
 │       │   └── Icons.jsx     # All inline SVG icons
 │       ├── hooks/            # Scroll reveal, active-nav tracking, per-page meta tags
 │       └── styles/
@@ -63,7 +69,7 @@ securitymarketingcompany/
 │           ├── sections.css  # Header, hero, stats, industries, services, band, feature, why, process
 │           ├── mockups.css   # Tilted screens and floating cards
 │           ├── contact.css   # Contact form + footer
-│           └── services-page.css # /services only
+│           └── services-page.css # /services and /services/:slug
 └── server/
     ├── src/index.js          # Express app
     ├── src/db.js             # Mongo connection
@@ -125,18 +131,28 @@ In production Express serves `client/dist` and the API from the same origin — 
 one service.
 
 **Routes on a direct load or refresh.** The build runs `client/scripts/prerender.js` after Vite. It
-writes `dist/services.html` (index.html with the Services page title, description, canonical, Open
-Graph tags and `Service` JSON-LD swapped in), `dist/404.html`, and `dist/sitemap.xml` (every page
-in its `PAGES` list). `client/public/robots.txt` allows everything except `/api/` and points to the
-sitemap. Then:
+writes, from `content.js`:
 
-- **Express** serves `services.html` for `/services` (200) and `404.html` for anything else (404).
-- **Vercel** serves `services.html` at `/services` through `cleanUrls` in `client/vercel.json`, and
-  its built-in `404.html` handling covers unknown paths.
-- **Vite dev / preview** fall back to index.html; React Router then renders the right page.
+- `dist/services.html` and `dist/services/<slug>.html` for every service — index.html with that
+  page's title, description, canonical, Open Graph tags and JSON-LD (`Service`, plus
+  `BreadcrumbList` on detail pages) swapped in;
+- `dist/404.html`;
+- `dist/sitemap.xml` — the home page, `/services` and every service page.
 
-If you add a page, add it to the routes in `App.jsx`, give it meta in `content.js`, and extend
-`prerender.js` and the Express route the same way.
+It also **fails the build** if the contact form options in `server/src/models/Lead.js` no longer match
+the service names in `content.js`. `client/public/robots.txt` allows everything except `/api/` and
+points to the sitemap. Then:
+
+- **Express** serves `services.html` for `/services`, `services/<slug>.html` for each known slug
+  (200) and `404.html` for anything else, including unknown slugs (404).
+- **Vercel** serves the same files at `/services` and `/services/<slug>` through `cleanUrls` in
+  `client/vercel.json`; an unknown slug has no file, so Vercel's `404.html` handling covers it.
+- **Vite dev / preview** fall back to index.html; React Router then renders the right page, and
+  `ServiceDetailPage` renders the 404 page for an unknown slug.
+
+A new service needs no routing work — adding it to `services` creates its page, prerendered HTML and
+sitemap entry. For a new *kind* of page, add a route in `App.jsx`, meta in `content.js`, and extend
+`prerender.js` and the Express routes the same way.
 
 #### Split hosting: frontend on Vercel, API on Render
 
@@ -323,39 +339,66 @@ the site without touching JSX.
 | `HERO` | Home hero, including both buttons |
 | `STATS` | Proof row under the hero (blank values are hidden) |
 | `INDUSTRIES` | "Industries we serve" grid (home and /services) and the band ticker |
-| `SERVICES` | **The service list**: home cards, /services blocks and anchors, footer, contact dropdown |
+| `services` | **The service list and all per-service copy** — see below |
+| `serviceDetail` | Section labels and headings shared by every /services/:slug page |
 | `FEATURES` | The two split sections on the home page (search and website) |
 | `REASONS` | "Why us" |
 | `PROCESS`, `PROCESS_SECTION` | Home "How it works" |
 | `SOCIALS` | Footer social icons (empty `href` = hidden) |
-| `servicesPage` | Everything on /services: meta, hero, pricing, per-service detail, process, FAQ, CTA |
+| `servicesPage` | /services overview: meta, hero, pricing label/note, block labels, process, FAQ, closing CTA |
 
 Still inline in JSX: the section headings for home Services, Industries, Why us and Contact, the
 contact form labels and messages, the footer blurb, and the 404 copy.
 
 ### Services — the source of truth
 
-`SERVICES` in content.js lists seven services. The `id` is the anchor on the Services page:
+`services` in content.js is an array with one entry per service. It feeds the home page cards, the
+/services overview, every detail page, the footer, the band ticker, the contact form dropdown, the
+sitemap and the `Service` schema. Nothing else lists services (apart from the server copy below).
 
-| Service | Anchor |
-| --- | --- |
-| Website Design & Development | `/services#website` |
-| SEO & AI SEO | `/services#seo` |
-| Paid Ads | `/services#paid-ads` |
-| Social Media Marketing | `/services#social-media` |
-| Email Marketing & Lead Generation | `/services#email-marketing` |
-| Google Business Profile Management | `/services#google-business-profile` |
-| CRM Automation | `/services#crm-automation` |
+```js
+{
+  slug: 'google-business-profile',     // URL: /services/google-business-profile (and /services#slug)
+  name: 'Google Business Profile Management', // also the contact form option
+  shortDescription: '…',               // one line, used on cards
+  icon: 'map-pin',                     // key in SERVICE_ICONS (Icons.jsx)
+  hero: { headline: '… for Security Companies', subheadline: '…' }, // H1; text after " for " is red
+  problem: { heading: '…', body: '…' },
+  included: [{ title: '…', description: '…' }],   // 4–6 cards
+  process: [{ step: 'Audit', description: '…' }], // 3–5 numbered steps
+  deliverables: ['…'],                  // "What you get" list
+  bestFor: ['…'],                       // segments this suits
+  faqs: [{ q: '…', a: '…' }],           // 4–5, accordion
+  relatedSlugs: ['seo', 'paid-ads'],    // 2–3 other services
+  pricing: 'Custom quote',              // or e.g. 'Starting at $1,500/mo'
+  seo: { title: '{Service} for Security Companies | Security Marketing Company', description: '…' },
+  proof: [{ quote, name, company }],    // OPTIONAL — real, cleared testimonials only
+}
+```
 
-To add or rename a service, change it in **three places**: `SERVICES`, a matching entry in
-`servicesPage.details` (keyed by `id`), and `SERVICES` in `server/src/models/Lead.js` (the contact
-form's allowed values). A new `id` also needs an icon in `SERVICE_ICONS` in `Icons.jsx`.
+The detail page shows its sections in order: breadcrumb, hero, problem, what's included, how it
+works, what you get (with pricing), best for, proof (**only when `proof` is set**), FAQ, related
+services, closing CTA.
 
-### Pricing on /services
+| Service | Detail page | Overview anchor |
+| --- | --- | --- |
+| Website Design & Development | `/services/website` | `/services#website` |
+| SEO & AI SEO | `/services/seo` | `/services#seo` |
+| Paid Ads | `/services/paid-ads` | `/services#paid-ads` |
+| Social Media Marketing | `/services/social-media` | `/services#social-media` |
+| Email Marketing & Lead Generation | `/services/email-marketing` | `/services#email-marketing` |
+| Google Business Profile Management | `/services/google-business-profile` | `/services#google-business-profile` |
+| CRM Automation | `/services/crm-automation` | `/services#crm-automation` |
 
-`servicesPage.pricing` controls the pricing line on every service block. It currently shows
-"Custom quote". To publish prices, set `showPrices: true` and add `prices: { seo: '$1,500/mo', … }` —
-each shows as "Starting at …", and services without an entry keep "Custom quote".
+**Adding or renaming a service:** add or edit its entry in `services`, then update `SERVICES` in
+`server/src/models/Lead.js` to match (the API deploys on its own and cannot import `content.js`; the
+client build fails until the two lists agree). A new `icon` value needs an entry in `SERVICE_ICONS`.
+Changing a `slug` changes the page URL, so avoid it once a page is live.
+
+### Pricing
+
+Each service's `pricing` string is shown on its overview block and on its detail page, under the
+label and note in `servicesPage.pricing`. All seven currently say "Custom quote".
 
 ### Phone and calendar
 
@@ -442,9 +485,11 @@ db.leads.find().sort({ createdAt: -1 }).limit(20)
 - Social profiles: LinkedIn, Instagram and Facebook are live. X and YouTube are set up but empty
   (hidden) — add URLs in `SOCIALS` if you open those accounts.
 - Fill in `COMPANY.phone` and `COMPANY.calendarUrl` when ready.
-- Review the FAQ answers on /services (contract terms in particular) against how you actually sell.
-- When you add a page, add its meta object to `PAGES` in `client/scripts/prerender.js` so it lands
-  in `sitemap.xml`.
+- Review the FAQ answers on /services (contract terms in particular) and the per-service copy in
+  `services` (inclusions, process, deliverables, FAQs) against how you actually deliver.
+- Add real testimonials or results as `proof` on a service when you have cleared ones.
+- New services land in `sitemap.xml` automatically. A new kind of page needs its meta added to
+  `PAGES` in `client/scripts/prerender.js`.
 - Supply light-on-dark logo originals (SVG if possible) to replace the derived `-light` PNGs.
 - Add client logos, case studies or results figures once cleared — see "Two things to fill in".
 

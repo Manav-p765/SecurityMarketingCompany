@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage.jsx';
 import ServicesPage from './pages/ServicesPage.jsx';
+import ServiceDetailPage from './pages/ServiceDetailPage.jsx';
 import NotFound from './components/NotFound.jsx';
 
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -31,11 +32,26 @@ function ScrollManager() {
       return undefined;
     }
 
-    // Wait a frame so the page that owns the section has rendered.
-    const frame = requestAnimationFrame(() => {
+    const scrollToTarget = () =>
       document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView({ behavior });
-    });
-    return () => cancelAnimationFrame(frame);
+
+    // Wait a frame so the page that owns the section has rendered.
+    const frame = requestAnimationFrame(scrollToTarget);
+
+    // On a direct load the web fonts are usually still arriving; when they
+    // swap in, text above the target reflows and pushes it off position.
+    // Land on it again once they are ready.
+    let cancelled = false;
+    if (firstLoad) {
+      document.fonts?.ready.then(() => {
+        if (!cancelled) requestAnimationFrame(scrollToTarget);
+      });
+    }
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frame);
+    };
   }, [pathname, hash, key]);
 
   return null;
@@ -49,6 +65,8 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/index.html" element={<HomePage />} />
         <Route path="/services" element={<ServicesPage />} />
+        {/* Unknown slugs render the 404 page from inside ServiceDetailPage. */}
+        <Route path="/services/:slug" element={<ServiceDetailPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

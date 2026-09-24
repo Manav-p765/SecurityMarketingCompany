@@ -376,3 +376,228 @@
     white-space: normal;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Overview extras: "Learn more" link and best-for list on each block
+   -------------------------------------------------------------------------- */
+
+.svc__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: var(--space-md);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--security-red);
+}
+
+.svc__more svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.25s var(--ease-out);
+}
+
+.svc__more:hover svg {
+  transform: translateX(4px);
+}
+
+.svc__bestfor {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: var(--space-2xs);
+}
+
+.svc__bestfor li {
+  position: relative;
+  padding-left: 1.1rem;
+  color: var(--on-dark-2);
+}
+
+.svc__bestfor li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 6px;
+  height: 6px;
+  background: var(--security-red);
+  transform: rotate(45deg);
+}
+
+/* ==========================================================================
+   /services/:slug — service detail pages
+   ========================================================================== */
+
+/* The detail page stacks several short sections. Their shared glow is sized
+   to each section, so it would still be lit at the edges and draw a seam at
+   every boundary. Fade each one out top and bottom (the hero keeps its own
+   bottom-only fade). */
+.detail-page main > .dark-field:not(.svc-hero)::before {
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 25%, #000 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 25%, #000 70%, transparent 100%);
+}
+
+/* Breadcrumb. The global reset only covers <ul>, so clear the <ol> numbering. */
+.breadcrumb ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--on-dark-3);
+}
+
+.breadcrumb li + li::before {
+  content: '/';
+  margin-inline: 0.6rem;
+  color: var(--on-dark-3);
+}
+
+.breadcrumb a {
+  color: var(--on-dark-2);
+  transition: color 0.2s var(--ease);
+}
+
+.breadcrumb a:hover {
+  color: var(--security-red);
+}
+
+.breadcrumb [aria-current='page'] {
+  color: var(--pure-white);
+}
+
+@media (pointer: coarse) {
+  .breadcrumb a {
+    display: inline-block;
+    padding-block: 0.75rem;
+    margin-block: -0.75rem;
+  }
+}
+
+/* Hero */
+.detail-hero__icon {
+  margin-top: var(--space-xl);
+}
+
+.detail-hero h1 {
+  max-width: 22ch;
+}
+
+.detail-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-xl);
+}
+
+/* Problem: the split heading sits on its own, so no gap below it. */
+.detail-problem .section-head {
+  margin-bottom: 0;
+}
+
+/* What's included */
+.detail-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+.detail-card {
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+  margin: 0;
+  padding: clamp(1.25rem, 1rem + 0.8vw, 1.6rem);
+}
+
+.detail-card > svg {
+  color: var(--security-red);
+}
+
+.detail-card h3 {
+  font-size: clamp(1.05rem, 0.98rem + 0.25vw, 1.2rem);
+  line-height: 1.25;
+}
+
+.detail-card p,
+.detail-card blockquote {
+  margin: 0;
+  font-size: var(--fs-small);
+  color: var(--on-dark-2);
+}
+
+.detail-card figcaption {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--pure-white);
+}
+
+@media (min-width: 700px) {
+  .detail-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1000px) {
+  .detail-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* What you get: list beside the pricing card */
+.detail-split {
+  display: grid;
+  gap: var(--space-xl);
+  align-items: center;
+}
+
+.detail-split .section-head {
+  margin-bottom: 0;
+}
+
+.detail-deliverables li {
+  font-size: var(--fs-body);
+}
+
+.detail-price {
+  display: grid;
+  gap: var(--space-sm);
+  justify-items: start;
+}
+
+.detail-price .svc__note {
+  margin: 0 0 var(--space-xs);
+}
+
+@media (min-width: 1000px) {
+  .detail-split {
+    grid-template-columns: 1.4fr 0.8fr;
+    gap: var(--space-3xl);
+  }
+}
+
+/* Best for: longer phrases than the industry tiles, so two across at most. */
+@media (min-width: 800px) {
+  .detail-bestfor {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Related services */
+.related__grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 700px) {
+  .related__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

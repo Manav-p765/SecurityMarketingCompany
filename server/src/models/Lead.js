@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
 
-/** Must match SERVICE_OPTIONS in client/src/data/content.js. */
+/**
+ * Must match SERVICE_OPTIONS in client/src/data/content.js (the `name` of each
+ * entry in `services`, plus "Not sure yet"). The API deploys separately, so it
+ * keeps its own copy; the client build fails if the two drift apart.
+ */
 export const SERVICES = [
   'Website Design & Development',
   'SEO & AI SEO',

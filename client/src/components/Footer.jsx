@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { COMPANY, NAV_LINKS, SERVICES, SOCIALS } from '../data/content.js';
+import { COMPANY, NAV_LINKS, SOCIALS, services } from '../data/content.js';
 import { SOCIAL_ICONS } from './Icons.jsx';
 import { sectionPath, telHref } from './Links.jsx';
 
@@ -44,9 +44,9 @@ export default function Footer() {
             <Link to="/services">Services</Link>
           </h4>
           <ul>
-            {SERVICES.map((service) => (
-              <li key={service.id}>
-                <Link to={`/services#${service.id}`}>{service.title}</Link>
+            {services.map((service) => (
+              <li key={service.slug}>
+                <Link to={`/services/${service.slug}`}>{service.name}</Link>
               </li>
             ))}
           </ul>

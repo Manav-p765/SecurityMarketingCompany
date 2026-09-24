@@ -89,14 +89,15 @@ export function IconFlow() {
   );
 }
 
+/** Keyed by the `icon` field on each entry in `services` (content.js). */
 export const SERVICE_ICONS = {
-  website: IconBrowser,
-  seo: IconSearch,
-  'paid-ads': IconMegaphone,
-  'social-media': IconSocial,
-  'email-marketing': IconMail,
-  'google-business-profile': IconMapPin,
-  'crm-automation': IconFlow,
+  browser: IconBrowser,
+  search: IconSearch,
+  megaphone: IconMegaphone,
+  social: IconSocial,
+  mail: IconMail,
+  'map-pin': IconMapPin,
+  flow: IconFlow,
 };
 
 /* --- Industry icon -------------------------------------------------------- */

@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
-import { SERVICES } from '../data/content.js';
-import { IconArrowRight, SERVICE_ICONS } from './Icons.jsx';
+import { services } from '../data/content.js';
+import { IconArrowRight } from './Icons.jsx';
 import { StrategyCallLink } from './Links.jsx';
+import ServiceCard from './ServiceCard.jsx';
 
 /** Feeds the pointer position to the card under it, for the hover glow. */
 function trackPointer(event) {
@@ -28,35 +28,15 @@ export default function Services() {
           </p>
         </div>
 
+        {/* Each card links to its detail page at /services/:slug. */}
         <div className="services__grid" onPointerMove={trackPointer}>
-          {SERVICES.map((service, index) => {
-            const Icon = SERVICE_ICONS[service.id];
-            return (
-              /* Each card deep-links to its block on /services. */
-              <Link
-                key={service.id}
-                to={`/services#${service.id}`}
-                className="service-card surface reveal"
-                style={{ transitionDelay: `${(index % 4) * 80}ms` }}
-              >
-                <div className="service-card__top">
-                  <span className="service-card__icon">
-                    <Icon />
-                  </span>
-                  <span className="service-card__num">{service.number}</span>
-                </div>
-
-                <h3>{service.title}</h3>
-
-                <p className="service-card__lead">{service.lead}</p>
-
-                <span className="service-card__more">
-                  Learn more
-                  <IconArrowRight />
-                </span>
-              </Link>
-            );
-          })}
+          {services.map((service, index) => (
+            <ServiceCard
+              key={service.slug}
+              service={service}
+              style={{ transitionDelay: `${(index % 4) * 80}ms` }}
+            />
+          ))}
 
           {/* Eighth card fills the second row and turns the list into a next step. */}
           <StrategyCallLink

@@ -34,12 +34,22 @@ app.use('/api', (_req, res) => res.status(404).json({ message: 'Not found.' }));
 // exists. Hosted API-only (e.g. Render, with the client on Vercel) it won't.
 const dist = path.resolve(__dirname, '../../client/dist');
 if (process.env.NODE_ENV === 'production' && fs.existsSync(dist)) {
-  app.use(express.static(dist));
-  // /services has its own prerendered HTML (see client/scripts/prerender.js)
-  // so it gets its own meta tags on a direct load or refresh.
+  // /services and each /services/:slug have their own prerendered HTML (see
+  // client/scripts/prerender.js), so they get their own meta tags on a direct
+  // load or refresh. Registered before the static handler: dist/services/ is
+  // a folder, and express.static would otherwise redirect /services to
+  // /services/.
   app.get('/services', (_req, res) => res.sendFile(path.join(dist, 'services.html')));
-  // The only real pages are "/" and "/services"; any other path renders the
-  // client's 404 screen with a real 404 status so search engines drop it.
+  app.get('/services/:slug', (req, res, next) => {
+    const { slug } = req.params;
+    const file = path.join(dist, 'services', `${slug}.html`);
+    // Only slugs the build wrote a page for; anything else falls through to the 404.
+    if (/^[a-z0-9-]+$/.test(slug) && fs.existsSync(file)) return res.sendFile(file);
+    return next();
+  });
+  app.use(express.static(dist, { redirect: false }));
+  // Any other path renders the client's 404 screen with a real 404 status so
+  // search engines drop it.
   app.get('*', (_req, res) => res.status(404).sendFile(path.join(dist, '404.html')));
 }
 
