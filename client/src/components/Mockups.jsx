@@ -11,7 +11,8 @@ import { IconLock, IconSearchSmall } from './Icons.jsx';
 
 const EXAMPLE_TAG = 'Example illustration';
 
-function WindowBar({ children }) {
+/** Window chrome with the "Example illustration" tag. Also used by ServiceGraphics.jsx. */
+export function WindowBar({ children }) {
   return (
     <div className="window__bar">
       <div className="window__dots">

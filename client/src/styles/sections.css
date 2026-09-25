@@ -172,6 +172,273 @@
   width: 100%;
 }
 
+/* --------------------------------------------------------------------------
+   Services dropdown (desktop). The panel is opaque ink with its own border,
+   so it reads the same over the transparent header on the dark hero and over
+   the solid header further down the page.
+   -------------------------------------------------------------------------- */
+
+.nav-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-menu__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 0;
+  background: none;
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.nav-menu__trigger svg {
+  transition: transform 0.25s var(--ease);
+}
+
+.nav-menu.is-open .nav-menu__trigger {
+  color: var(--pure-white);
+}
+
+.nav-menu.is-open .nav-menu__trigger svg {
+  transform: rotate(180deg);
+}
+
+/* The panel's top padding is a transparent bridge, so moving the pointer
+   from the button down to the list never crosses a gap that closes it. */
+.nav-menu__panel {
+  position: absolute;
+  top: 100%;
+  left: -1.25rem;
+  z-index: 10;
+  width: 360px;
+  padding-top: 1.1rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease), visibility 0s linear 0.2s;
+}
+
+.nav-menu.is-open .nav-menu__panel {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.2s var(--ease), transform 0.25s var(--ease-out), visibility 0s;
+}
+
+.nav-menu__card {
+  padding: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 2px solid var(--security-red);
+  border-radius: var(--radius-card);
+  background: rgba(14, 14, 14, 0.98);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.95), 0 18px 40px -30px rgba(227, 27, 35, 0.45);
+}
+
+.nav-menu__list {
+  display: grid;
+  gap: 2px;
+}
+
+.nav-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: var(--radius-card);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--on-dark-2);
+  transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.nav-menu__item-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(227, 27, 35, 0.35);
+  border-radius: 8px;
+  background: rgba(227, 27, 35, 0.1);
+  color: var(--security-red);
+  transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease);
+}
+
+.nav-menu__item-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.nav-menu__item:hover,
+.nav-menu__item:focus-visible {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--pure-white);
+}
+
+.nav-menu__item:hover .nav-menu__item-icon {
+  border-color: var(--security-red);
+}
+
+/* Current service: red rule on the left, white text, filled icon tile. */
+.nav-menu__item.is-active {
+  background: rgba(227, 27, 35, 0.1);
+  box-shadow: inset 2px 0 0 var(--security-red);
+  color: var(--pure-white);
+}
+
+.nav-menu__item.is-active .nav-menu__item-icon {
+  border-color: var(--security-red);
+  background: var(--security-red);
+  color: var(--pure-white);
+}
+
+.nav-menu__all {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  padding: 0.8rem 0.7rem 0.6rem;
+  border-top: 1px solid var(--on-dark-line);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--security-red);
+}
+
+.nav-menu__all svg {
+  width: 15px;
+  height: 15px;
+  transition: transform 0.25s var(--ease-out);
+}
+
+.nav-menu__all:hover svg,
+.nav-menu__all:focus-visible svg {
+  transform: translateX(4px);
+}
+
+/* --------------------------------------------------------------------------
+   Services accordion (mobile menu)
+   -------------------------------------------------------------------------- */
+
+.header__mobile-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--on-dark-line);
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--pure-white);
+  transition: color 0.2s var(--ease);
+}
+
+.header__mobile-toggle:hover,
+.header__mobile-toggle.is-active {
+  color: var(--security-red);
+}
+
+.header__mobile-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--security-red);
+}
+
+.header__mobile-meta span {
+  font-family: var(--font-body);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.header__mobile-meta svg {
+  transition: transform 0.25s var(--ease);
+}
+
+.header__mobile-toggle[aria-expanded='true'] .header__mobile-meta svg {
+  transform: rotate(180deg);
+}
+
+.header__mobile-sub {
+  display: grid;
+  padding: 0.5rem 0 0.75rem;
+  border-bottom: 1px solid var(--on-dark-line);
+  animation: menu-in 0.22s var(--ease-out);
+}
+
+/* Beats the big uppercase `.header__mobile a:not(.btn)` rows above. */
+.header__mobile .header__mobile-sub a:not(.btn) {
+  justify-content: flex-start;
+  gap: 0.75rem;
+  padding: 0.6rem 0.25rem;
+  border-bottom: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--on-dark-2);
+}
+
+.header__mobile .header__mobile-sub a:not(.btn):hover,
+.header__mobile .header__mobile-sub a.is-active {
+  color: var(--pure-white);
+}
+
+.header__mobile .header__mobile-sub a.is-active {
+  box-shadow: inset 2px 0 0 var(--security-red);
+  padding-left: 0.75rem;
+  background: rgba(227, 27, 35, 0.08);
+}
+
+.header__mobile .header__sub-link-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(227, 27, 35, 0.35);
+  border-radius: 8px;
+  background: rgba(227, 27, 35, 0.1);
+  color: var(--security-red);
+  letter-spacing: 0;
+}
+
+.header__sub-link-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.header__mobile .header__sub-link-name {
+  font: inherit;
+  letter-spacing: 0;
+  color: inherit;
+}
+
+.header__mobile .header__mobile-sub a.header__sub-all:not(.btn) {
+  justify-content: space-between;
+  margin-top: 0.25rem;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--security-red);
+}
+
 /* Desktop nav from 1120px: below that, five links plus the longer
    "Book Strategy Call" button do not fit on one line. */
 @media (min-width: 1120px) {

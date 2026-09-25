@@ -601,3 +601,372 @@
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+/* --------------------------------------------------------------------------
+   Detail hero: copy on the left, the service's illustration on the right.
+   Below 1000px the illustration drops under the copy.
+   -------------------------------------------------------------------------- */
+
+.detail-hero__inner {
+  display: grid;
+  gap: clamp(3rem, 2rem + 4vw, 4.5rem);
+  align-items: center;
+}
+
+/* Grid items default to `min-width: auto`; the mockup windows would
+   otherwise push the single mobile column wider than a phone. */
+.detail-hero__inner > * {
+  min-width: 0;
+}
+
+@media (min-width: 1000px) {
+  .detail-hero__inner--visual {
+    grid-template-columns: 1.05fr 0.95fr;
+  }
+}
+
+.detail-visual {
+  position: relative;
+  animation: rise-in 1.1s 0.25s var(--ease-out) both;
+}
+
+/* The screen and its card drift gently, out of step, like the home hero. */
+.detail-visual .tilt {
+  animation: float 7s ease-in-out 1.4s infinite;
+}
+
+.detail-visual .float-card,
+.detail-visual .gfx-card {
+  animation: float 5.5s ease-in-out 2s infinite;
+}
+
+@media (max-width: 999px) {
+  .detail-visual {
+    width: 100%;
+    max-width: 560px;
+    padding-bottom: var(--space-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .detail-visual,
+  .detail-visual .tilt,
+  .detail-visual .float-card,
+  .detail-visual .gfx-card {
+    animation: none;
+  }
+}
+
+/* Problem: several paragraphs beside the heading, so align to the top. */
+.detail-problem .section-head--split {
+  align-items: start;
+}
+
+.detail-problem__body p + p {
+  margin-top: var(--space-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Why it matters: one card per kind of security company
+   -------------------------------------------------------------------------- */
+
+.why-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.why-card {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+}
+
+.why-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: 0.25rem;
+}
+
+.why-card .chip {
+  white-space: normal;
+}
+
+.why-card__num {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: rgba(227, 27, 35, 0.55);
+}
+
+.why-card h3 {
+  font-size: clamp(1.1rem, 1rem + 0.35vw, 1.3rem);
+  line-height: 1.25;
+}
+
+.why-card p {
+  margin: 0;
+  font-size: var(--fs-small);
+  color: var(--on-dark-2);
+}
+
+@media (min-width: 800px) {
+  .why-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* "What's included" card icon — the same tile as the service card icon. */
+.detail-card__icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 0.35rem;
+  border: 1px solid rgba(227, 27, 35, 0.35);
+  border-radius: 10px;
+  background: rgba(227, 27, 35, 0.1);
+  color: var(--security-red);
+  transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease),
+    color 0.3s var(--ease), transform 0.3s var(--ease-out);
+}
+
+.detail-card__icon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.detail-card:hover .detail-card__icon {
+  border-color: var(--security-red);
+  background: var(--security-red);
+  color: var(--pure-white);
+  transform: rotate(-6deg) scale(1.06);
+}
+
+/* --------------------------------------------------------------------------
+   How it works, `track` variant: each number in a ring on a connecting line.
+   Down a rail below 1000px, across the row above it.
+   -------------------------------------------------------------------------- */
+
+.process--track .process__step {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  column-gap: 1.25rem;
+  align-content: start;
+  padding: 0 0 var(--space-lg);
+  border-top: 0;
+}
+
+.process--track .process__step::before {
+  content: none;
+}
+
+/* The rail between rings. */
+.process--track .process__step::after {
+  content: '';
+  position: absolute;
+  left: 28px;
+  top: 58px;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, rgba(227, 27, 35, 0.75), var(--on-dark-line));
+}
+
+.process--track .process__step:last-child::after {
+  content: none;
+}
+
+.process__node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  grid-row: span 2;
+  align-self: start;
+}
+
+.process--track .process__num {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 58px;
+  height: 58px;
+  border: 2px solid var(--security-red);
+  border-radius: 50%;
+  background: var(--ink-900);
+  box-shadow: 0 0 0 6px rgba(227, 27, 35, 0.1);
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+  transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+.process--track .process__step:hover .process__num {
+  background: var(--security-red);
+  color: var(--pure-white);
+}
+
+.process--track .process__step h3 {
+  margin: 0.95rem 0 0.5rem;
+}
+
+@media (max-width: 999px) {
+  .process--track .process__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1000px) {
+  .process--track .process__step {
+    display: block;
+    padding: 0 clamp(0px, 1vw, 1.5rem) 0 0;
+  }
+
+  .process--track .process__step::after {
+    content: none;
+  }
+
+  .process__node {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Connector from this ring to the next one, across the column gap. */
+  .process__node::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    margin-right: calc(-1 * var(--space-lg) - clamp(0px, 1vw, 1.5rem));
+    background: linear-gradient(to right, rgba(227, 27, 35, 0.75), var(--on-dark-line));
+  }
+
+  .process--track .process__step:last-child .process__node::after {
+    visibility: hidden;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   What to expect: first month / months 2–3 / ongoing
+   -------------------------------------------------------------------------- */
+
+.timeline {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline__phase {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 var(--space-lg) 2.5rem;
+}
+
+.timeline__phase::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 12px;
+  bottom: -12px;
+  width: 2px;
+  background: linear-gradient(to bottom, rgba(227, 27, 35, 0.75), var(--on-dark-line));
+}
+
+.timeline__phase:last-child::before {
+  content: none;
+}
+
+.timeline__marker {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--security-red);
+  border-radius: 50%;
+  background: var(--ink-900);
+  box-shadow: 0 0 0 5px rgba(227, 27, 35, 0.12);
+}
+
+.timeline__phase:first-child .timeline__marker {
+  background: var(--security-red);
+}
+
+.timeline__period {
+  margin: 0 0 0.85rem;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  line-height: 22px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--security-red);
+}
+
+.timeline__card {
+  flex: 1;
+  padding: clamp(1.25rem, 1rem + 0.8vw, 1.6rem);
+}
+
+.timeline__card h3 {
+  font-size: clamp(1.05rem, 0.98rem + 0.25vw, 1.2rem);
+  line-height: 1.25;
+}
+
+.timeline__list {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+
+.timeline__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: var(--fs-small);
+  color: var(--on-dark-2);
+}
+
+.timeline__list svg {
+  flex: none;
+  margin-top: 0.3em;
+  color: var(--security-red);
+}
+
+@media (min-width: 900px) {
+  .timeline {
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: var(--space-lg);
+  }
+
+  .timeline__phase {
+    padding: 2.25rem 0 0;
+  }
+
+  .timeline__phase::before,
+  .timeline__phase:last-child::before {
+    content: '';
+    left: 0;
+    right: calc(-1 * var(--space-lg));
+    top: 8px;
+    bottom: auto;
+    width: auto;
+    height: 2px;
+    background: linear-gradient(to right, rgba(227, 27, 35, 0.75), var(--on-dark-line));
+  }
+
+  .timeline__phase:last-child::before {
+    right: 0;
+  }
+
+  .timeline__marker {
+    top: 0;
+  }
+
+  .timeline__period {
+    margin-top: 0.4rem;
+  }
+}

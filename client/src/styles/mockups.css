@@ -551,6 +551,18 @@
   }
 }
 
+/* Bottom-right twin, for screens tilted the other way (service pages). */
+.float-card--br {
+  bottom: 4%;
+  right: -8%;
+}
+
+@media (max-width: 1100px) {
+  .float-card--br {
+    right: -3%;
+  }
+}
+
 @media (max-width: 680px) {
   .float-card {
     padding: 0.6rem 0.75rem;
@@ -561,7 +573,638 @@
     left: 0;
   }
 
+  .float-card--br {
+    bottom: -5%;
+    right: 0;
+  }
+
   .float-card__value {
     font-size: 0.85rem;
   }
+}
+
+/* ==========================================================================
+   Service page graphics (ServiceGraphics.jsx) — same window shell, same
+   rules: fictional firms, "Example illustration" tag, no figures.
+   ========================================================================== */
+
+/* Placeholder text rows. Widths are set inline. */
+.gfx-lines {
+  display: grid;
+  gap: 4px;
+}
+
+.gfx-lines i {
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.window--light .gfx-lines i {
+  background: var(--border-gray);
+}
+
+.gfx-stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.gfx-stars u {
+  text-decoration: none;
+  display: block;
+  width: 7px;
+  height: 7px;
+  background: var(--warning-amber);
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+/* Larger overlapping card (dashboard, sequence, text reply). Same surface as
+   .float-card. Below 680px it stops floating and tucks under the window, so
+   it never covers the content or runs off a phone screen. */
+.gfx-card {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  gap: 0.6rem;
+  width: 260px;
+  padding: 0.9rem 1rem;
+  border-radius: 6px;
+  background: rgba(23, 23, 23, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 24px 50px -24px rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(8px);
+}
+
+/* Low enough to overlap only the window's bottom edge, not its content. */
+.gfx-card--bl {
+  left: -10%;
+  bottom: -24%;
+}
+
+.gfx-card--br {
+  right: -8%;
+  bottom: -26%;
+}
+
+@media (max-width: 1100px) {
+  .gfx-card--bl {
+    left: -3%;
+  }
+
+  .gfx-card--br {
+    right: -3%;
+  }
+}
+
+@media (max-width: 680px) {
+  .gfx-card,
+  .gfx-card--bl,
+  .gfx-card--br {
+    position: relative;
+    inset: auto;
+    width: min(88%, 280px);
+    margin-top: -1.75rem;
+  }
+
+  .gfx-card--bl {
+    margin-right: auto;
+  }
+
+  .gfx-card--br {
+    margin-left: auto;
+  }
+}
+
+/* --- paid-ads: sponsored result and campaign card ------------------------ */
+
+.ads-mock__ad {
+  display: grid;
+  gap: 4px;
+  padding: 0.6rem 0.55rem;
+  border: 1px solid rgba(227, 27, 35, 0.35);
+  border-radius: 3px;
+  background: rgba(227, 27, 35, 0.04);
+}
+
+.ads-mock__ad .serp-mock__title {
+  color: var(--security-red);
+}
+
+.ads-mock__sponsored {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--security-black);
+}
+
+.ads-mock__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 3px;
+}
+
+.ads-mock__links span {
+  padding: 2px 7px;
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-pill);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--security-black);
+}
+
+.dash-card {
+  width: 270px;
+}
+
+.dash-card__title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--pure-white);
+}
+
+.dash-card__rows {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.dash-card__rows li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 4px 0.5rem;
+}
+
+.dash-card__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--on-dark-1);
+}
+
+.dash-card__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--on-dark-3);
+}
+
+.dash-card__status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success-green);
+}
+
+.dash-card__bar {
+  grid-column: 1 / -1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dash-card__bar i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.dash-card__rows li:first-child .dash-card__bar i {
+  background: var(--security-red);
+}
+
+/* --- social-media: company feed ------------------------------------------ */
+
+.social-mock {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 0.75rem;
+  padding: 1.1rem;
+  background: linear-gradient(165deg, #1a1a1a 0%, #111111 55%, #141414 100%);
+}
+
+.social-post {
+  display: grid;
+  gap: 0.55rem;
+  min-width: 0;
+  padding: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.social-post--offset {
+  margin-top: 1.75rem;
+}
+
+.social-post__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.social-post__head b {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--pure-white);
+  white-space: nowrap;
+}
+
+.social-post__head small {
+  display: block;
+  font-size: 9px;
+  color: var(--on-dark-3);
+}
+
+.social-post__avatar {
+  flex: none;
+  width: 18px;
+  height: 20px;
+  background: var(--security-red);
+  clip-path: polygon(50% 0, 100% 22%, 100% 62%, 50% 100%, 0 62%, 0 22%);
+}
+
+.social-post__media {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.35rem;
+  aspect-ratio: 4 / 3;
+  border-radius: 4px;
+  background: radial-gradient(80% 80% at 70% 20%, rgba(227, 27, 35, 0.35), transparent 70%), #1d1d1d;
+  color: var(--security-red);
+}
+
+.social-post__media svg {
+  width: 30px;
+  height: 30px;
+}
+
+.social-post__media span {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-dark-2);
+}
+
+.social-post__media--hiring {
+  padding: 0.6rem;
+  text-align: center;
+  background: linear-gradient(150deg, var(--red-dark) 0%, var(--security-red) 100%);
+}
+
+.social-post__media--hiring small {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.social-post__media--hiring strong {
+  font-family: var(--font-display);
+  font-size: clamp(11px, 1.1vw, 14px);
+  font-weight: 800;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--pure-white);
+}
+
+.social-post__actions {
+  display: flex;
+  gap: 0.6rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.social-post__actions i {
+  display: block;
+  width: 18px;
+  height: 5px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.social-post__cta {
+  justify-self: start;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-pill);
+  background: var(--security-red);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pure-white);
+}
+
+/* --- email-marketing: inbox and sequence --------------------------------- */
+
+.mail-mock {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  min-height: 230px;
+  background: linear-gradient(165deg, #1a1a1a 0%, #111111 55%, #141414 100%);
+}
+
+.mail-mock__list {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mail-mock__list li {
+  display: grid;
+  gap: 3px;
+  padding: 0.7rem 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.mail-mock__list li.is-active {
+  background: rgba(227, 27, 35, 0.08);
+  box-shadow: inset 2px 0 0 var(--security-red);
+}
+
+.mail-mock__list b {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--pure-white);
+}
+
+.mail-mock__list span {
+  font-size: 10px;
+  color: var(--on-dark-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mail-mock__open {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+}
+
+.mail-mock__subject {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--pure-white);
+}
+
+.mail-mock__from {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--on-dark-3);
+}
+
+.mail-mock__cta {
+  justify-self: start;
+  margin-top: 0.3rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-pill);
+  background: var(--security-red);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pure-white);
+}
+
+@media (max-width: 560px) {
+  /* Phone width: the inbox alone reads better than two cramped panes. */
+  .mail-mock {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .mail-mock__list {
+    border-right: 0;
+  }
+
+  .mail-mock__open {
+    display: none;
+  }
+}
+
+.seq-card__steps {
+  position: relative;
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0 0 0 1rem;
+  list-style: none;
+}
+
+.seq-card__steps::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--security-red), rgba(255, 255, 255, 0.15));
+}
+
+.seq-card__steps li {
+  position: relative;
+  display: grid;
+  gap: 1px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--on-dark-1);
+}
+
+.seq-card__steps li::before {
+  content: '';
+  position: absolute;
+  left: calc(-1rem + 0px);
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #171717;
+  border: 2px solid var(--security-red);
+}
+
+.seq-card__steps b {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--security-red);
+}
+
+/* --- google-business-profile: map results and profile -------------------- */
+
+.gbp-mock__map {
+  min-height: 92px;
+}
+
+.gbp-mock__profile {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border-gray);
+  border-radius: 4px;
+}
+
+.gbp-mock__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--medium-gray);
+}
+
+.gbp-mock__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-gray);
+}
+
+.gbp-mock__actions span {
+  padding: 3px 9px;
+  border: 1px solid var(--border-gray);
+  border-radius: var(--radius-pill);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--security-black);
+}
+
+.gbp-mock__actions span:first-child {
+  border-color: var(--security-red);
+  background: var(--security-red);
+  color: var(--pure-white);
+}
+
+.gbp-mock__review {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 0.5rem;
+}
+
+.gbp-mock__review > div {
+  display: grid;
+  gap: 4px;
+}
+
+.gbp-mock__avatar {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--light-gray);
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--dark-gray);
+}
+
+.gbp-mock__reply {
+  padding-left: 0.4rem;
+  border-left: 2px solid var(--security-red);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--medium-gray);
+}
+
+/* --- crm-automation: pipeline and text reply ----------------------------- */
+
+.crm-mock {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  min-height: 230px;
+  padding: 1rem;
+  background: linear-gradient(165deg, #1a1a1a 0%, #111111 55%, #141414 100%);
+}
+
+.crm-mock__col {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  min-width: 0;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.crm-mock__stage {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--on-dark-3);
+}
+
+.crm-mock__card {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* The newest inquiry, just arrived. */
+.crm-mock__col:first-child .crm-mock__card:first-of-type {
+  border-color: rgba(227, 27, 35, 0.6);
+  box-shadow: 0 0 0 3px rgba(227, 27, 35, 0.12);
+}
+
+.crm-mock__source {
+  justify-self: start;
+  padding: 1px 5px;
+  border: 1px solid rgba(227, 27, 35, 0.45);
+  border-radius: var(--radius-pill);
+  font-size: 8px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--on-dark-1);
+}
+
+@media (max-width: 560px) {
+  .crm-mock {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .crm-mock__col:nth-child(4) {
+    display: none;
+  }
+}
+
+.sms-card__bubble {
+  padding: 0.6rem 0.75rem;
+  border-radius: 12px 12px 12px 3px;
+  background: rgba(255, 255, 255, 0.09);
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--on-dark-1);
+}
+
+.sms-card__meta {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--on-dark-3);
 }

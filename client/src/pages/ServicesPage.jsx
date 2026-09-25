@@ -43,7 +43,7 @@ function ServiceBlock({ service }) {
       <div className="svc__body">
         <div className="svc__copy">
           <h3 className="svc__label">{blockLabels.problem}</h3>
-          <p>{service.problem.body}</p>
+          <p>{service.problem.paragraphs[0]}</p>
 
           <h3 className="svc__label">{blockLabels.bestFor}</h3>
           <ul className="svc__bestfor">

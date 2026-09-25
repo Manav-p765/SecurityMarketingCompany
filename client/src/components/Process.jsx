@@ -3,12 +3,14 @@ import { PROCESS_SECTION } from '../data/content.js';
 /**
  * Numbered steps. Home uses the four-step copy; /services passes its own five;
  * each /services/:slug page passes that service's steps. `lead` is optional.
+ * `track` (detail pages) sets each number in a ring on a connecting line:
+ * across the row on desktop, down a rail on smaller screens.
  */
-export default function Process({ id = 'process', copy = PROCESS_SECTION }) {
+export default function Process({ id = 'process', copy = PROCESS_SECTION, track = false }) {
   const { label, title, lead, steps } = copy;
 
   return (
-    <section className="section section--screen light-wash" id={id}>
+    <section className={`section section--screen light-wash${track ? ' process--track' : ''}`} id={id}>
       <div className="container">
         <div className="section-head section-head--split reveal">
           <div>
@@ -25,7 +27,13 @@ export default function Process({ id = 'process', copy = PROCESS_SECTION }) {
               className="process__step reveal"
               style={{ transitionDelay: `${index * 80}ms` }}
             >
-              <span className="process__num">{item.step}</span>
+              {track ? (
+                <div className="process__node">
+                  <span className="process__num">{item.step}</span>
+                </div>
+              ) : (
+                <span className="process__num">{item.step}</span>
+              )}
               <h3>{item.title}</h3>
               <p>{item.body}</p>
             </div>

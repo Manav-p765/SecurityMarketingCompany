@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage.jsx';
 import ServicesPage from './pages/ServicesPage.jsx';
 import ServiceDetailPage from './pages/ServiceDetailPage.jsx';
 import NotFound from './components/NotFound.jsx';
+import { trackPageView } from './analytics.js';
 
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -57,6 +58,30 @@ function ScrollManager() {
   return null;
 }
 
+// Module scope rather than a ref, so StrictMode's double run of effects in
+// development cannot count the same page twice either.
+let lastTrackedPage = null;
+
+/**
+ * One GA4 page_view per page. Rendered after <Routes>, so its effect runs
+ * after the page's own effects: usePageMeta (or NotFound) has already set
+ * document.title for the new page. A hash-only change (a jump to a section
+ * on the same page) or a click on the link to the current page is not a new
+ * page and sends nothing.
+ */
+function PageViews() {
+  const { pathname, search } = useLocation();
+
+  useEffect(() => {
+    const page = pathname + search;
+    if (page === lastTrackedPage) return;
+    lastTrackedPage = page;
+    trackPageView();
+  }, [pathname, search]);
+
+  return null;
+}
+
 export default function App() {
   return (
     <>
@@ -69,6 +94,7 @@ export default function App() {
         <Route path="/services/:slug" element={<ServiceDetailPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <PageViews />
     </>
   );
 }

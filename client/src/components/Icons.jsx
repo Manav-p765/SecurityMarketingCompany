@@ -100,6 +100,182 @@ export const SERVICE_ICONS = {
   flow: IconFlow,
 };
 
+/* --- Feature icons ("What's included" cards on detail pages) ------------- */
+
+const feature = (paths) =>
+  function FeatureIcon() {
+    return <svg {...base}>{paths}</svg>;
+  };
+
+/**
+ * Keyed by the optional `icon` field on each `included` item in content.js.
+ * An item without one (or with an unknown key) falls back to a check mark.
+ */
+export const FEATURE_ICONS = {
+  layout: feature(
+    <>
+      <rect x="3" y="4" width="18" height="16" rx="1.5" />
+      <path d="M3 9h18M9 9v11" />
+    </>
+  ),
+  pages: feature(
+    <>
+      <path d="M8 3h8l4 4v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" />
+      <path d="M16 3v4h4M10 12h7M10 15h5" />
+      <path d="M4 7v13a1 1 0 0 0 1 1h10" />
+    </>
+  ),
+  form: feature(
+    <>
+      <rect x="4" y="3" width="16" height="18" rx="1.5" />
+      <path d="M8 8h8M8 12h8" />
+      <rect x="8" y="15.5" width="5" height="2.5" rx="0.5" />
+    </>
+  ),
+  badge: feature(
+    <>
+      <circle cx="12" cy="9" r="5.5" />
+      <path d="m9.75 9 1.5 1.5 3-3" />
+      <path d="m8.5 13.5-1.5 7 5-2.5 5 2.5-1.5-7" />
+    </>
+  ),
+  mobile: feature(
+    <>
+      <rect x="6.5" y="2.5" width="11" height="19" rx="2" />
+      <path d="M11 18.5h2" />
+      <path d="m10.5 7.5-1.5 3.5h3l-1.5 3.5" />
+    </>
+  ),
+  chart: feature(
+    <>
+      <path d="M4 20h16" />
+      <path d="M7 16v-4M11.5 16V8M16 16v-6" />
+      <path d="m6 8.5 5-4 3.5 2.5L19 4" />
+    </>
+  ),
+  wrench: feature(
+    <path d="M14.5 6.5a4 4 0 0 0 5 5L21 13l-2.5 2.5-1.5-1.5-8 8-3-3 8-8-1.5-1.5L15 7l-.5-.5ZM14.5 6.5 17 4" />
+  ),
+  target: feature(
+    <>
+      <circle cx="12" cy="12" r="8" />
+      <circle cx="12" cy="12" r="4.5" />
+      <circle cx="12" cy="12" r="1" />
+    </>
+  ),
+  map: feature(
+    <>
+      <path d="m3 6.5 6-2.5 6 2.5 6-2.5v13.5l-6 2.5-6-2.5-6 2.5V6.5Z" />
+      <path d="M9 4v13.5M15 6.5V20" />
+    </>
+  ),
+  sparkle: feature(
+    <>
+      <path d="M12 3.5 13.9 9l5.6 2-5.6 2L12 18.5 10.1 13 4.5 11l5.6-2L12 3.5Z" />
+      <path d="M19 17.5v3M17.5 19h3" />
+    </>
+  ),
+  list: feature(
+    <>
+      <path d="M9 6h11M9 12h11M9 18h11" />
+      <path d="M4 6h.01M4 12h.01M4 18h.01" />
+    </>
+  ),
+  search: IconSearch,
+  layers: feature(
+    <>
+      <path d="m12 3.5 9 4.5-9 4.5L3 8l9-4.5Z" />
+      <path d="m3 12 9 4.5 9-4.5M3 16l9 4.5 9-4.5" />
+    </>
+  ),
+  filter: feature(<path d="M3.5 5h17l-6.5 8v5.5l-4 2V13L3.5 5Z" />),
+  user: feature(
+    <>
+      <rect x="3" y="4" width="18" height="16" rx="1.5" />
+      <circle cx="9" cy="10.5" r="2.25" />
+      <path d="M5.5 16.5c.6-1.9 2-3 3.5-3s2.9 1.1 3.5 3M15 9.5h3M15 13h3" />
+    </>
+  ),
+  calendar: feature(
+    <>
+      <rect x="3.5" y="5" width="17" height="15" rx="1.5" />
+      <path d="M3.5 10h17M8 3v4M16 3v4" />
+      <path d="M8 14h2M12 14h2M8 17h2" />
+    </>
+  ),
+  users: feature(
+    <>
+      <circle cx="9" cy="8.5" r="3" />
+      <path d="M3.5 19c.7-3 2.9-4.75 5.5-4.75S13.8 16 14.5 19" />
+      <path d="M15.5 5.75a3 3 0 0 1 0 5.5M17.5 14.5c1.5.6 2.6 2.1 3 4.5" />
+    </>
+  ),
+  chat: feature(
+    <>
+      <path d="M4 5h16v11H9l-5 4V5Z" />
+      <path d="M8 9.5h8M8 12.5h5" />
+    </>
+  ),
+  magnet: feature(
+    <>
+      <path d="M6 4v7a6 6 0 0 0 12 0V4" />
+      <path d="M6 4h3.5v7a2.5 2.5 0 0 0 5 0V4H18" />
+      <path d="M6 8h3.5M14.5 8H18" />
+    </>
+  ),
+  flow: IconFlow,
+  mail: IconMail,
+  send: feature(
+    <>
+      <path d="M21 3 3 10.5l7 3 3 7L21 3Z" />
+      <path d="m10 13.5 4.5-4.5" />
+    </>
+  ),
+  shield: IconShieldCheck,
+  store: feature(
+    <>
+      <path d="M4 9.5 5.5 4h13L20 9.5" />
+      <path d="M4 9.5a2.67 2.67 0 0 0 5.33 0 2.67 2.67 0 0 0 5.34 0 2.67 2.67 0 0 0 5.33 0" />
+      <path d="M5 12v8h14v-8M10 20v-4.5h4V20" />
+    </>
+  ),
+  tag: feature(
+    <>
+      <path d="M3.5 12.5V4.5a1 1 0 0 1 1-1h8L21 12l-9 9-8.5-8.5Z" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+    </>
+  ),
+  camera: feature(
+    <>
+      <path d="M4 7.5h3.5L9 5h6l1.5 2.5H20a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8.5a1 1 0 0 1 1-1Z" />
+      <circle cx="12" cy="13" r="3.5" />
+    </>
+  ),
+  star: feature(
+    <path d="m12 3.5 2.6 5.3 5.9.85-4.25 4.15 1 5.85L12 16.9l-5.25 2.75 1-5.85L3.5 9.65l5.9-.85L12 3.5Z" />
+  ),
+  eye: feature(
+    <>
+      <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
+  database: feature(
+    <>
+      <ellipse cx="12" cy="5.5" rx="7.5" ry="2.5" />
+      <path d="M4.5 5.5v13c0 1.4 3.4 2.5 7.5 2.5s7.5-1.1 7.5-2.5v-13" />
+      <path d="M4.5 12c0 1.4 3.4 2.5 7.5 2.5s7.5-1.1 7.5-2.5" />
+    </>
+  ),
+  bolt: feature(<path d="M13.5 2.5 5 13.5h6l-1 8 8.5-11h-6l1-8Z" />),
+  bell: feature(
+    <>
+      <path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15l1.5-2Z" />
+      <path d="M10 20.5a2 2 0 0 0 4 0" />
+    </>
+  ),
+};
+
 /* --- Industry icon -------------------------------------------------------- */
 
 export function IconShieldCheck() {
@@ -152,6 +328,14 @@ export function IconArrowRight() {
     <svg {...base} width="18" height="18">
       <path d="M4 12h15" />
       <path d="m13 6 6 6-6 6" />
+    </svg>
+  );
+}
+
+export function IconChevronDown() {
+  return (
+    <svg {...base} width="14" height="14" strokeWidth={2.25}>
+      <path d="m6 9 6 6 6-6" />
     </svg>
   );
 }

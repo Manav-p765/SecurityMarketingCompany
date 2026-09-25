@@ -20,7 +20,8 @@ Pages: the home page (`/`), a Services overview (`/services`) and a detail page 
 
 | Layer | Technology |
 | --- | --- |
-| Frontend | React 18 + Vite + React Router (`/` and `/services`) |
+| Frontend | React 18 + Vite + React Router (`/`, `/services`, `/services/:slug`) |
+| Analytics | Google Analytics 4 (gtag.js), production domain only — see "Google Analytics (GA4)" |
 | Backend | Node + Express (contact-form endpoint) |
 | Database | MongoDB via Mongoose (stores leads) |
 | Styling | Hand-written CSS with brand tokens — no UI framework, no icon library |
@@ -199,6 +200,49 @@ Render's free plan sleeps after 15 minutes idle and takes up to a minute to wake
 
 ---
 
+## Google Analytics (GA4)
+
+Measurement ID **`G-CBBT708R7T`**. It lives in one place, `client/src/analytics.js`, together with
+the list of production hostnames (`securitymarketingcompany.com` and
+`www.securitymarketingcompany.com`).
+
+**How the tag gets onto every page.** A small Vite plugin in `client/vite.config.js` writes the
+Google tag snippet into the `<head>` of `index.html`, right after the charset and viewport tags.
+`prerender.js` copies the built `index.html` for `/services`, every `/services/<slug>` and
+`404.html`, so every page carries the snippet in its static HTML.
+
+**Production only.** The snippet checks `window.location.hostname` first. On any other host
+(localhost, `vite preview`, Vercel preview deployments on `*.vercel.app`, the Render URL) it returns
+straight away: no `gtag.js` request, no `window.gtag`, and nothing sent. To add a domain, add it to
+`GA_HOSTNAMES`.
+
+**Page views in a single-page app.** The config call sets `send_page_view: false`, so the tag does
+not count the first load by itself. `PageViews` in `client/src/App.jsx` sends one `page_view`
+(`page_path`, `page_title`, `page_location`) on the first load and on every route change. It runs
+after the page has set its title, so the title always matches the page. It only fires when the
+path or query string changes. A jump to a section on the same page (`/#process` while on `/`) or a
+click on the link to the page you are already on is not counted, and React StrictMode's double
+effects in development cannot count a page twice.
+
+**Required GA admin setting.** In GA4, go to Admin → Data streams → (the web stream) → Enhanced
+measurement → Page views → Show advanced settings, and **turn off "Page changes based on browser
+history events"**. While it is on, GA sends its own `page_view` on every route change *in addition
+to* the app's, so every page after the first one is counted twice. Leave the other enhanced
+measurement options (scrolls, outbound clicks and so on) as you like.
+
+**Content Security Policy.** The site does not set one at the moment (no `helmet`, no `headers`
+in `vercel.json`). If you add one, allow `https://www.googletagmanager.com` in `script-src` and
+`https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com` in
+`connect-src` and `img-src`. The inline snippet also needs a nonce or hash in `script-src`.
+
+**Checking it.** Run `npm run build`, then confirm the snippet is in the `<head>` of
+`client/dist/index.html`, `dist/services.html` and `dist/services/*.html`. On the live domain, open
+DevTools → Network, filter on `collect`, and click through the site: each new page sends one
+request with `en=page_view` (once the admin setting above is off). Google Tag Assistant
+(tagassistant.google.com) or GA4 → Admin → DebugView show the same thing.
+
+---
+
 ## Design system
 
 ### Colors
@@ -300,6 +344,15 @@ client data, make sure you have permission and that the figures are accurate.
 Tilt angles are CSS custom properties on `.tilt` (`--tilt-x/y/z`), with `.tilt--right` and
 `.tilt--flat` variants. Perspective is switched off below 900px, where it costs legibility.
 
+**Service page graphics.** `client/src/components/ServiceGraphics.jsx` holds one hero graphic per
+service, keyed by slug and styled in `mockups.css`. Website and SEO reuse the two home page
+mockups. The others are a search ad with a campaign card (Paid Ads), a company feed (Social), an
+inbox with a nurture sequence (Email), map results with a Business Profile and reviews (Google
+Business Profile), and a pipeline board with an automated text reply (CRM). The same rules apply:
+fictional firms only (Summit Guard Co., Ridgeline Alarm & Video, Keystone Access Systems) on
+`.example` domains, the "Example illustration" tag on every window, and no figures, rankings or
+ratings. A new service without an entry gets a text-only hero.
+
 ---
 
 ## Brand assets
@@ -363,9 +416,13 @@ sitemap and the `Service` schema. Nothing else lists services (apart from the se
   shortDescription: '…',               // one line, used on cards
   icon: 'map-pin',                     // key in SERVICE_ICONS (Icons.jsx)
   hero: { headline: '… for Security Companies', subheadline: '…' }, // H1; text after " for " is red
-  problem: { heading: '…', body: '…' },
-  included: [{ title: '…', description: '…' }],   // 4–6 cards
+  problem: { heading: '…', paragraphs: ['…', '…'] }, // 2–3; the first also shows on /services
+  whyItMatters: [{ audience: 'Guard services', title: '…', body: '…' }], // 3–4 cards
+  included: [{ icon: 'chart', title: '…', description: '…' }], // 4–6 cards, 2–3 sentences each;
+                                        // icon = key in FEATURE_ICONS (Icons.jsx), optional
   process: [{ step: 'Audit', description: '…' }], // 3–5 numbered steps
+  timeline: [{ period: 'First month', title: '…', activities: ['…'] }], // "What to expect":
+                                        // activities, never promised results
   deliverables: ['…'],                  // "What you get" list
   bestFor: ['…'],                       // segments this suits
   faqs: [{ q: '…', a: '…' }],           // 4–5, accordion
@@ -376,9 +433,14 @@ sitemap and the `Service` schema. Nothing else lists services (apart from the se
 }
 ```
 
-The detail page shows its sections in order: breadcrumb, hero, problem, what's included, how it
-works, what you get (with pricing), best for, proof (**only when `proof` is set**), FAQ, related
-services, closing CTA.
+The detail page shows its sections in order: breadcrumb, hero (with the service's illustration),
+problem, why it matters, what's included, how it works, what to expect, what you get (with
+pricing), best for, proof (**only when `proof` is set**), FAQ, related services, closing CTA. Any
+section whose data is missing or empty is left out. The shared section headings are in
+`serviceDetail`.
+
+The header's "Services" item is a dropdown (desktop) and an accordion (mobile menu), generated
+from `services`. It comes from `menu: true` on the Services entry in `NAV_LINKS`.
 
 | Service | Detail page | Overview anchor |
 | --- | --- | --- |
@@ -475,8 +537,12 @@ db.leads.find().sort({ createdAt: -1 }).limit(20)
 - Visible focus rings in brand red.
 - `prefers-reduced-motion` disables the scroll reveal, the smooth scrolling and the tilt transition.
 - Scroll reveal uses one `IntersectionObserver` and unobserves each element after it fires.
-- No UI framework and no icon library — every icon is inline SVG. Production bundle is ~177kb JS and
-  ~35kb CSS before gzip (~56kb / ~8kb gzipped).
+- No UI framework and no icon library — every icon is inline SVG. Production bundle is ~300kb JS and
+  ~68kb CSS before gzip (~93kb / ~13kb gzipped).
+- Header "Services" dropdown: a disclosure button with `aria-expanded`, `aria-haspopup` and
+  `aria-controls`. It opens on hover (mouse only) and on click, Enter or Space, and ArrowDown
+  moves into the list. Escape closes it and returns focus to the button, and so do a click outside,
+  tabbing out and any navigation. The current service carries `aria-current="page"`.
 
 ---
 

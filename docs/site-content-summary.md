@@ -1,6 +1,6 @@
 # Security Marketing Company: Site Content Summary
 
-Updated on 2026-09-24 for the US retargeting, the Services page and the individual service pages. The first version was compiled on 2026-09-23 from commit `da29ff0`.
+Updated on 2026-09-26 for the expanded service page copy (problem, why it matters, what's included, what to expect), the service page graphics, the header Services dropdown and Google Analytics. Earlier update: 2026-09-24, for the US retargeting, the Services page and the individual service pages. The first version was compiled on 2026-09-23 from commit `da29ff0`.
 
 **Sources:** `client/src/data/content.js` (almost all copy: every service and its detail page under `services`, the overview under `servicesPage`), the components in `client/src/components/` and `client/src/pages/`, `client/index.html` (home page meta and site-wide JSON-LD), `client/scripts/prerender.js` (meta for `/services` and each service page), and the server's lead routes and email templates.
 
@@ -76,25 +76,52 @@ All seven services are defined once, in the `services` array in `content.js`. Th
 
 ### Service detail pages (`/services/:slug`)
 
-Every detail page uses one template, in this order: breadcrumb (Home / Services / {Service}), hero (H1, subheadline, "Book Strategy Call" and "View All Services"), the problem, what's included (cards), how it works (numbered steps), what you get (deliverables plus pricing), best for, proof (**hidden**: no real testimonials or results have been supplied), FAQ (accordion), related services (cards), closing CTA.
+Every detail page uses one template, in this order: breadcrumb (Home / Services / {Service}), hero (H1, subheadline, "Book Strategy Call" and "View All Services", with the service's illustration on the right, or below the copy on phones and tablets), the problem (2–3 paragraphs), why it matters for security companies (4 cards, one per type of security company), what's included (6 cards, each with an icon), how it works (numbered steps on a connecting line), what to expect (first month / months 2–3 / ongoing), what you get (deliverables plus pricing), best for, proof (**hidden**: no real testimonials or results have been supplied), FAQ (accordion), related services (cards), closing CTA. Any section a service has no data for is left out.
 
-Shared section headings (from `serviceDetail`): "What’s included" / "Everything in the service"; "How it works" / "How we deliver it"; "What you get" / "What you receive"; "Best for" / "Who this service suits"; "FAQ" / "Common questions"; "Related services" / "Often paired with". The closing CTA reuses the overview's "Tell us what you want to win" card.
+Shared section headings (from `serviceDetail`): "Why it matters" / "Why it matters for security companies"; "What’s included" / "Everything in the service"; "How it works" / "How we deliver it"; "What to expect" / "The first months, step by step", with the lead "The work we do in each phase. Exact timing depends on your starting point and scope, and is confirmed on the strategy call."; "What you get" / "What you receive"; "Best for" / "Who this service suits"; "FAQ" / "Common questions"; "Related services" / "Often paired with". The closing CTA reuses the overview's "Tell us what you want to win" card.
 
-On the `/services` overview, each block shows the name, short description, "Learn more" link, problem body, best-for list, the included titles, the pricing line and "Book Strategy Call".
+On the `/services` overview, each block shows the name, short description, "Learn more" link, the first problem paragraph, best-for list, the included titles, the pricing line and "Book Strategy Call".
+
+### Service page graphics
+
+Each hero has an illustration built in markup, in the same style as the home page mockups. Every window carries the visible "Example illustration" tag. The companies are fictional (Summit Guard Co., Ridgeline Alarm & Video, Keystone Access Systems, all on `.example` domains), and no graphic shows a ranking position, rating, count or any other result figure.
+
+| Service | Graphic | Text shown |
+| --- | --- | --- |
+| Website | Security company homepage (the home page mockup) + "Sample report" card | "Summit Guard Co.", "Licensed Security Officers Serving the Greater Dallas Area", "Book a Site Survey"; card "Quote requests" |
+| SEO & AI SEO | Search results for "security guard company near me" with the example listing near the top (the home page mockup) + "Sample report" card | Card "Search inquiries" |
+| Paid Ads | Sponsored search result + "Sample dashboard" campaign card | "Commercial Access Control Installation \| Keystone Access Systems", sitelinks "Request a Quote", "Card & Mobile Access", "Service Areas"; campaigns "Search · Access control", "Search · Video surveillance", "Local Services Ads", each "Active" |
+| Social Media | Company feed with two posts | "Summit Guard Co.", "Site team briefing", "Now hiring — Licensed Security Officers", "Apply now" |
+| Email Marketing | Inbox + "Nurture sequence" card | Subjects "Your site security checklist", "What a site survey covers", "Quarterly security update"; "Book a Site Survey"; sequence "Day 0 Thanks for your inquiry", "Day 3 Site security checklist", "Day 10 Ready for a site survey?" |
+| Google Business Profile | Map results + Business Profile with reviews | Search "alarm installer near me", "Ridgeline Alarm & Video", "Security system installer", Call / Directions / Website, star shapes (no rating), "Response from the owner" |
+| CRM Automation | Pipeline board + "Automated text reply" card | Stages "New inquiry", "Contacted", "Survey booked", "Proposal sent"; sources "Web form", "Missed call", "Ad lead", "Referral", "Call"; text "Thanks for contacting Ridgeline Alarm & Video. We received your request and will call you to schedule a site survey." |
 
 #### Website Design & Development — `/services/website`
 
 - **H1:** "Website Design & Development for Security Companies"
 - **Subheadline:** "A fast, credible website built to turn property managers, business owners and homeowners into quote requests — not a brochure with a phone number."
-- **Problem — Your website is where buyers decide whether to call:** "Most security company websites list services and a phone number, then stop. A property manager comparing three guard companies, or a business owner pricing a camera system, leaves without a reason to call — or an easy way to ask for a quote. For a guard company, that is a lost bid. For an alarm or CCTV installer, it is an install that went to the competitor with the clearer site."
+- **Hero graphic:** see "Service page graphics" above
+- **Problem — Your website is where buyers decide whether to call:**
+  - "Most security company websites list services and a phone number, then stop. A property manager comparing three guard companies, or a business owner pricing a camera system, leaves without a reason to call — or an easy way to ask for a quote."
+  - "Buyers rarely tell you why they chose someone else. The company whose site looked current, explained the service clearly and made the next step obvious simply got the call. For a guard company, that is a lost bid. For an alarm or CCTV installer, it is an install that went to a competitor."
+  - "Referrals check your website too. An outdated or slow site can undo a strong recommendation before the first conversation starts."
+- **Why it matters for security companies:**
+  - **Guard services — Commercial bids start with a website check:** Property managers and facilities directors usually look at a guard company’s site before inviting it to bid. Clear service pages, licensing and the types of posts you staff help you make the shortlist instead of being screened out.
+  - **Alarm & CCTV installers — Residential buyers compare quickly:** Homeowners and small business owners often check several installers in one sitting. A site that explains packages, monitoring and the install process plainly gives them a reason to request your quote first.
+  - **Access control & integrators — Complex systems need clear explanations:** Access control, video management and integration projects involve IT, facilities and management. A dedicated page for each system type helps every stakeholder find what they need and shows you have done this work before.
+  - **Every security company — Your site supports every other channel:** Ads, search, social posts and referrals all send buyers to your website. If the site does not turn visitors into inquiries, every other marketing dollar has to work harder.
 - **What's included:**
-  - **Custom design** — Built around your services, your service area and your brand — not a generic template.
-  - **Service and city pages** — A page for each service you sell and each area you cover, written for how your buyers search.
-  - **Quote and survey forms** — Quote, site survey and consultation requests on every key page, so a ready buyer never has to hunt for the next step.
-  - **Trust signals up front** — Licenses, certifications and insurance shown where commercial and residential buyers look for them.
-  - **Fast, mobile-first build** — Quick to load on a phone and easy for your team to update in-house.
-  - **Call and form tracking** — Every call and form submission is recorded, so you can see which pages produce inquiries.
+  - **Custom design** — Built around your services, your service area and your brand — not a generic template. The layout is planned for the buyers you sell to, whether that is a facilities director reviewing vendors or a homeowner comparing alarm companies. Every page ends with a clear next step.
+  - **Service and city pages** — A page for each service you sell and each area you cover, written for how your buyers search. Guard services, patrol, alarm monitoring, video surveillance and access control each get their own explanation instead of sharing one list. The same pages give search engines something specific to rank.
+  - **Quote and survey forms** — Quote, site survey and consultation requests on every key page, so a ready buyer never has to hunt for the next step. Forms ask for the details your team needs to respond, such as property type and service needed, without becoming a chore to fill in.
+  - **Trust signals up front** — Licenses, certifications and insurance shown where commercial and residential buyers look for them. Industry memberships and the states you are licensed in can sit alongside them. For a buyer trusting you with their property, this is often what earns the call.
+  - **Fast, mobile-first build** — Quick to load on a phone and easy for your team to update in-house. Many buyers first look you up on a phone, often between other tasks. The site stays fast and readable on any screen.
+  - **Call and form tracking** — Every call and form submission is recorded, so you can see which pages produce inquiries. Tracking is set up in analytics from launch. That gives you a baseline to judge the site by and a clear view of what to improve next.
 - **How it works:** 1. Discovery — We review your current site, your services, your service area and the buyers you want more of. 2. Structure and copy — We plan the pages and write the copy for each service and area, built around quote and survey requests. 3. Design and build — We design and build the site, set up forms and tracking, and share it with you for review. 4. Launch — We launch, redirect your old URLs so existing search visibility carries over, and test every form and call path.
+- **What to expect:**
+  - **First month — Discovery and planning:** Review of your current site, services and service area; Page structure and sitemap agreed with you; Copy drafted for the key service pages.
+  - **Months 2–3 — Design, build and launch:** Design and build, with review rounds; Forms, call tracking and analytics set up; Launch, redirects and a test of every form and call path.
+  - **Ongoing — Support and improvement:** Page updates as your services change; Review of which pages produce inquiries; Recommendations for new service or city pages.
 - **What you get:**
   - A custom, mobile-first website on your domain
   - Service and service-area pages with written copy
@@ -121,15 +148,28 @@ On the `/services` overview, each block shows the name, short description, "Lear
 
 - **H1:** "SEO & AI SEO for Security Companies"
 - **Subheadline:** "Show up when facilities managers, property owners and homeowners search Google — or ask an AI assistant — for security services in your area."
-- **Problem — The shortlist is set before anyone visits your website:** "When a facilities manager searches “security guard company near me” or a homeowner asks an AI assistant for an alarm installer, the shortlist is set before anyone visits a website. Buyers search by service and city, and the companies that rank for those searches get the calls. If you are not in the top results or the answer, you are not in the running."
+- **Hero graphic:** see "Service page graphics" above
+- **Problem — The shortlist is set before anyone visits your website:**
+  - "When a facilities manager searches “security guard company near me” or a homeowner asks an AI assistant for an alarm installer, the shortlist is set before anyone visits a website. Buyers search by service and city, and the companies that show up for those searches get the calls."
+  - "A competitor that appears above you does not need to be better at security. It only needs clearer service pages and a stronger presence in the cities you both cover. Over time, it collects the inquiries — and the contracts — that you never hear about."
+  - "Relying on referrals alone ties growth to the people who already know you. Search reaches the buyers who do not, at the moment they are looking."
+- **Why it matters for security companies:**
+  - **Guard services — Commercial buyers search by city and service:** Facilities and property managers search for guard, patrol and event security in specific areas. A page for each service and city puts you in front of them while they are building a vendor list.
+  - **Alarm & CCTV installers — Steady inquiries without paying per click:** Search visibility keeps bringing in installation and monitoring inquiries without a cost for every visit. It pairs well with paid ads, which can cover demand while search builds.
+  - **Access control & integrators — Technical buyers research before they call:** IT and facilities teams often read in depth before contacting an integrator. Detailed content on systems, integrations and project types helps you show up in that research and answer their questions early.
+  - **Every security company — AI assistants are a new shortlist:** More buyers now ask AI tools for recommendations. Clear, well-structured content makes it easier for those tools to understand what you do and where you do it.
 - **What's included:**
-  - **Technical SEO audit** — Site speed, indexing, structure and errors reviewed and fixed so search engines can crawl every page.
-  - **Keyword research** — The searches your buyers actually use, mapped by service and by city.
-  - **Service-area pages** — A dedicated page for each city and county you cover, so you can be found beyond your office address.
-  - **AI search optimization** — Content structured to be understood and cited by AI search tools such as Google AI Overviews and ChatGPT.
-  - **Local citations** — Consistent business listings across local and security industry directories.
-  - **Monthly reporting** — Rankings and traffic for context — and the inquiries search actually produces.
+  - **Technical SEO audit** — Site speed, indexing, structure and errors reviewed and fixed so search engines can crawl every page. Issues are ranked by impact, so the fixes that matter most happen first. You get a plain-English summary of what was found and what changed.
+  - **Keyword research** — The searches your buyers actually use, mapped by service and by city. Commercial guard services, alarm monitoring and access control are searched for differently, so each gets its own targets. Terms that attract job seekers or DIY shoppers are flagged and left out.
+  - **Service-area pages** — A dedicated page for each city and county you cover, so you can be found beyond your office address. Each page is written for that area and the services you offer there. They are built to be useful to a buyer, not copies with the city name swapped.
+  - **AI search optimization** — Content structured to be understood and cited by AI search tools such as Google AI Overviews and ChatGPT. That means clear service descriptions, locations, licensing and direct answers to the questions buyers ask. The same clarity supports traditional search as well.
+  - **Local citations** — Consistent business listings across local and security industry directories. Your name, address, phone number and services match everywhere they appear. Outdated or conflicting listings are found and corrected.
+  - **Monthly reporting** — Rankings and traffic for context — and the inquiries search actually produces. Each report explains what was done that month and what comes next. You see how search contributes to calls and form submissions, not just visits.
 - **How it works:** 1. Audit — We review your site’s technical health, your current rankings and the competitors that outrank you. 2. Plan — We map the searches to target by service and city, and plan the pages and content to win them. 3. Build — We fix technical issues, optimize existing pages and publish new service-area pages and content. 4. Grow — We keep publishing, build citations, track rankings and inquiries, and adjust the plan each month.
+- **What to expect:**
+  - **First month — Audit and plan:** Technical audit, with the most pressing fixes made first; Keyword and competitor research by service and city; A page and content plan agreed with you.
+  - **Months 2–3 — Build the foundation:** Existing service pages optimized; First service-area pages published; Citations built and conflicting listings corrected.
+  - **Ongoing — Publish, track and adjust:** New pages and content each month; Rankings, traffic and inquiries tracked; The plan adjusted to what the data shows.
 - **What you get:**
   - Technical SEO fixes on your site
   - New and optimized service and service-area pages
@@ -155,15 +195,28 @@ On the `/services` overview, each block shows the name, short description, "Lear
 
 - **H1:** "Paid Ads for Security Companies"
 - **Subheadline:** "Reach buyers who are searching right now, with campaigns built around your services, your service area and your cost per lead."
-- **Problem — Urgent buyers call whoever shows up first:** "SEO takes time to build. Buyers with an urgent need — a break-in, a new site opening, a failed inspection — search today and call whoever shows up first. And without careful targeting, security ads also attract job seekers looking for guard positions and DIY shoppers pricing cameras: clicks you pay for that never turn into work."
+- **Hero graphic:** see "Service page graphics" above
+- **Problem — Urgent buyers call whoever shows up first:**
+  - "SEO takes time to build. Buyers with an urgent need — a break-in, a new site opening, a failed inspection — search today and call whoever shows up first."
+  - "Without careful targeting, security ads also attract job seekers looking for guard positions and DIY shoppers pricing cameras. Those are clicks you pay for that never turn into work, and they can use up a day’s budget before a real buyer searches."
+  - "Many security companies try ads once, watch the budget disappear and decide ads do not work for them. Usually the problem is the setup: broad keywords, one generic landing page and no way to tell which clicks became calls."
+- **Why it matters for security companies:**
+  - **Guard services — Reach buyers with an urgent need:** Break-ins, new construction sites and upcoming events often need coverage quickly. Ads put your company in front of those buyers while they are still deciding who to call.
+  - **Alarm & CCTV installers — Keep the install calendar full:** Installation work can be seasonal and uneven. Ads let you turn spend up when your technicians have capacity and down when they are booked.
+  - **Access control & integrators — Target commercial projects precisely:** Campaigns can focus on specific systems, building types and areas, rather than broad security terms that attract homeowners and DIY buyers.
+  - **Every security company — Test a new service or market:** Entering a new city or launching a new service? Ads show how buyers respond before you invest in longer-term channels such as SEO.
 - **What's included:**
-  - **Google Search Ads** — Campaigns targeting the searches buyers use when they need security services now.
-  - **Local Services Ads** — Setup and management of Google Local Services Ads where your category and location qualify.
-  - **Campaign structure** — Campaigns split by service, city and buyer type, so budget goes where the work is.
-  - **Negative keywords** — Filters that keep out job seekers, DIY searches and other clicks that will not become customers.
-  - **Landing pages** — A dedicated page for each campaign, built to turn a click into a call or quote request.
-  - **Conversion tracking** — Calls and form submissions tracked back to the campaign and keyword that produced them.
+  - **Google Search Ads** — Campaigns targeting the searches buyers use when they need security services now. Ads are written for each service and area, with clear calls to action for quotes and site surveys. Ad schedules can follow the hours your team answers the phone.
+  - **Local Services Ads** — Setup and management of Google Local Services Ads where your category and location qualify. We work through the profile, service areas and verification steps with you. Leads are reviewed, and ones that do not qualify can be disputed where Google allows it.
+  - **Campaign structure** — Campaigns split by service, city and buyer type, so budget goes where the work is. Commercial guard services and residential alarm installs never compete for the same budget. You can raise or lower spend on each line of business separately.
+  - **Negative keywords** — Filters that keep out job seekers, DIY searches and other clicks that will not become customers. Terms such as “jobs”, “hiring” and “training” are excluded from the start. The list grows as we review what people actually searched for.
+  - **Landing pages** — A dedicated page for each campaign, built to turn a click into a call or quote request. The page matches the ad the buyer clicked, so they land on exactly what they searched for. Calls and forms on it are tracked separately from your main website.
+  - **Conversion tracking** — Calls and form submissions tracked back to the campaign and keyword that produced them. That shows which searches bring in inquiries and which only spend money. Budget decisions are made on inquiries, not clicks.
 - **How it works:** 1. Audit — We review any existing ad accounts, your services and the areas you want to grow in. 2. Build — We set up campaigns, negative keywords, landing pages and conversion tracking. 3. Launch — Campaigns go live on a budget you approve. 4. Optimize — We review search terms, bids and landing pages regularly and shift spend toward what produces inquiries.
+- **What to expect:**
+  - **First month — Audit, build and launch:** Review of any existing ad accounts and past campaigns; Campaigns, negative keywords and landing pages built; Conversion tracking tested, then launch on a budget you approve.
+  - **Months 2–3 — Learn and refine:** Search terms reviewed and negative keywords added; Bids and budget shifted toward searches that produce inquiries; Ad copy and landing page tests.
+  - **Ongoing — Manage and report:** Regular search term and budget reviews; New campaigns for services or areas you add; A monthly report on spend, cost per lead and inquiries.
 - **What you get:**
   - Managed Google Search campaigns, plus Local Services Ads where eligible
   - A landing page for each campaign
@@ -189,15 +242,28 @@ On the `/services` overview, each block shows the name, short description, "Lear
 
 - **H1:** "Social Media Marketing for Security Companies"
 - **Subheadline:** "Keep your LinkedIn, Facebook and Instagram active and credible, so buyers who look you up see a company worth calling back."
-- **Problem — Buyers check you out before they call back:** "Commercial buyers check you out before they call back. A dormant LinkedIn page or a Facebook feed last updated two years ago makes a company look smaller and less reliable than it is. For guard companies, social media does a second job: it is often where officer candidates first hear about you."
+- **Hero graphic:** see "Service page graphics" above
+- **Problem — Buyers check you out before they call back:**
+  - "Commercial buyers check you out before they call back. A dormant LinkedIn page or a Facebook feed last updated two years ago makes a company look smaller and less reliable than it is."
+  - "It matters most at the end of a sale. A property manager holding your proposal and a competitor’s may look both companies up before deciding. An active, professional presence will not win the contract on its own, but a neglected one can quietly cost it."
+  - "For guard companies, social media does a second job: it is often where officer candidates first hear about you. Staffing decides which contracts you can take on, so recruiting reach matters too."
+- **Why it matters for security companies:**
+  - **Guard services — Credibility and recruiting in one place:** The same feed can show commercial buyers a professional operation and show candidates a company worth working for.
+  - **Alarm & CCTV installers — Show the work, not just the product:** Photos of clean installs, tidy cable runs and well-placed cameras show homeowners and businesses the quality of your work before they request a quote.
+  - **Access control & integrators — LinkedIn reaches the people who sign off:** Facilities directors, property managers and IT leads use LinkedIn. Regular project and expertise posts keep your company familiar to them between projects.
+  - **Every security company — An active page answers an unasked question:** Buyers rarely ask whether you are still active or growing. A current, consistent presence answers it for them.
 - **What's included:**
-  - **Profile setup and cleanup** — Complete, consistent profiles on LinkedIn, Facebook and Instagram.
-  - **Content calendar** — A monthly plan built around your services, projects and team.
-  - **Credibility posts** — Posts that show your licensing, training, installs and people.
-  - **Recruiting posts** — Posts that help fill open officer and technician roles.
-  - **Comment and message monitoring** — Comments and messages watched, with inquiries passed to your team.
-  - **Engagement reporting** — A monthly view of reach and engagement across your channels.
+  - **Profile setup and cleanup** — Complete, consistent profiles on LinkedIn, Facebook and Instagram. Descriptions, service areas, contact details and branding match across every channel. Old or duplicate pages are identified so they can be merged or removed.
+  - **Content calendar** — A monthly plan built around your services, projects and team. The mix is set for your buyers, from commercial credibility on LinkedIn to community content on Facebook. You see and approve the whole month before it runs.
+  - **Credibility posts** — Posts that show your licensing, training, installs and people. Buyers see how you work rather than generic security tips. Photos and details from your team make these the strongest posts in the calendar.
+  - **Recruiting posts** — Posts that help fill open officer and technician roles. They show what it is like to work for you, alongside the job details. Each one can link to your careers page or job board listing.
+  - **Comment and message monitoring** — Comments and messages watched, with inquiries passed to your team. Questions from potential buyers do not sit in an inbox nobody checks. Anything sensitive is flagged to you rather than answered on your behalf.
+  - **Engagement reporting** — A monthly view of reach and engagement across your channels. The report shows which topics and formats work best for your audience. The next month’s calendar is adjusted to match.
 - **How it works:** 1. Audit — We review your current profiles, what competitors post and who you want to reach. 2. Plan — We set the tone, content themes and a monthly calendar for your approval. 3. Publish — We create and schedule posts, using photos and details you share from the field. 4. Report — We report on reach and engagement each month and adjust the plan.
+- **What to expect:**
+  - **First month — Audit and setup:** Review of your current profiles and competitor activity; Profiles cleaned up and made consistent; Tone, content themes and the first monthly calendar agreed.
+  - **Months 2–3 — Publish and learn:** Scheduled posts across your chosen channels; Recruiting posts for open roles; Comment and message monitoring in place.
+  - **Ongoing — Refine:** Monthly calendars shaped by what works; Photos and updates from the field turned into posts; A monthly engagement report.
 - **What you get:**
   - Updated LinkedIn, Facebook and Instagram profiles
   - A monthly content calendar for your approval
@@ -223,15 +289,28 @@ On the `/services` overview, each block shows the name, short description, "Lear
 
 - **H1:** "Email Marketing & Lead Generation for Security Companies"
 - **Subheadline:** "Stay in front of property managers, facilities directors and past inquiries through long buying cycles, so you are the first call when a contract comes up."
-- **Problem — Security contracts have long buying cycles:** "A property manager may not switch providers until the current contract ends, and an inquiry that goes quiet today can still become a job next year — if you stay in touch. Most security companies have a list of past inquiries and quotes that nobody follows up on."
+- **Hero graphic:** see "Service page graphics" above
+- **Problem — Security contracts have long buying cycles:**
+  - "A property manager may not switch guard providers until the current contract ends. A business owner who asked about cameras may wait for next quarter’s budget. An inquiry that goes quiet today can still become a job next year — if you stay in touch."
+  - "Most security companies have a list of past inquiries and quotes that nobody follows up on. Sales time goes to the leads that are ready now, which makes sense, but the rest go cold and eventually call whoever reaches them when they are ready."
+  - "Referrals and repeat work depend on staying in front of people too. Clients who hear from you regularly have a reason to remember your name when a colleague asks for a recommendation."
+- **Why it matters for security companies:**
+  - **Guard services — Be known before the contract comes up:** Guard contracts often renew on a fixed cycle. Regular, useful contact means you are already familiar when a property manager starts looking for a new provider.
+  - **Alarm & CCTV installers — Turn open quotes into installs:** Many quotes that did not close were postponed rather than lost. A short follow-up sequence reopens the conversation without adding to your team’s workload.
+  - **Access control & integrators — Support long commercial sales cycles:** Integration projects involve several decision makers and budget approvals. Well-timed, relevant emails keep your company in the conversation throughout.
+  - **Every security company — Put an unused list to work:** Past inquiries, clients and contacts from events already know your name. Email is a simple, low-cost way to stay in touch with all of them.
 - **What's included:**
-  - **Lead magnets** — Offers such as security checklists and assessment requests that turn website visitors into contacts.
-  - **Nurture sequences** — Automated emails for commercial and residential prospects that move them toward a quote.
-  - **Newsletters** — Regular updates to past inquiries and current clients.
-  - **Outbound campaigns** — Targeted campaigns to commercial prospects such as property managers and general contractors.
-  - **List setup and compliance** — List building, segmentation and CAN-SPAM compliant templates.
-  - **Reporting** — Open, click and reply reporting for every campaign.
+  - **Lead magnets** — Offers such as security checklists and assessment requests that turn website visitors into contacts. They give a buyer who is not ready to call a reason to leave their details. Each one is written for a specific audience, such as property managers or retail owners.
+  - **Nurture sequences** — Automated emails for commercial and residential prospects that move them toward a quote. Each sequence answers the questions buyers have at each stage, from what affects pricing to what a site survey involves. A sequence stops as soon as someone replies or books.
+  - **Newsletters** — Regular updates to past inquiries and current clients. Content covers practical security topics, company news and seasonal reminders. It keeps your name in front of people between contracts.
+  - **Outbound campaigns** — Targeted campaigns to commercial prospects such as property managers and general contractors. Messages are short, specific to the recipient’s industry and aimed at starting a conversation. Every campaign follows CAN-SPAM requirements.
+  - **List setup and compliance** — List building, segmentation and CAN-SPAM compliant templates. Contacts are grouped by buyer type, service interest and stage. Unsubscribes are honored automatically, and sending health is monitored so your emails keep reaching inboxes.
+  - **Reporting** — Open, click and reply reporting for every campaign. Replies and booked calls are tracked alongside the standard email metrics. What works feeds into the next round of subject lines, timing and targeting.
 - **How it works:** 1. Audit — We review your existing contacts, your email tools and the buyers you want to reach. 2. Build — We set up lists, segments, templates and lead magnets. 3. Launch — Nurture sequences, newsletters and outbound campaigns go live after your approval. 4. Refine — We track opens, clicks and replies, and adjust subject lines, timing and targeting.
+- **What to expect:**
+  - **First month — Audit and setup:** Review of your existing contacts and email tools; Lists cleaned, segmented and made compliant; Lead magnets and first sequences drafted for your approval.
+  - **Months 2–3 — Launch:** Nurture sequences switched on for new inquiries; First newsletters sent; Outbound campaigns started to an agreed target list.
+  - **Ongoing — Refine:** Regular newsletters and new campaigns; Subject lines, timing and targeting adjusted; A monthly report on opens, clicks and replies.
 - **What you get:**
   - Lead magnets and signup forms on your website
   - Automated nurture sequences
@@ -257,15 +336,28 @@ On the `/services` overview, each block shows the name, short description, "Lear
 
 - **H1:** "Google Business Profile Management for Security Companies"
 - **Subheadline:** "Get into the map results for “near me” searches with a complete, active profile and a steady flow of reviews."
-- **Problem — The map results appear above the websites:** "For “near me” searches, the map results appear above the websites. An incomplete profile, the wrong service area or a run of unanswered reviews is enough to keep you out of them. For alarm and CCTV installers and mobile patrol companies especially, the map results are often the first place a buyer looks."
+- **Hero graphic:** see "Service page graphics" above
+- **Problem — The map results appear above the websites:**
+  - "For “near me” searches, the map results appear above the websites. When a homeowner looks for an alarm installer or a business owner looks for mobile patrol, those few listings are often the only companies they consider."
+  - "An incomplete profile, the wrong categories or service area, or a run of unanswered reviews is enough to keep you out of them. Meanwhile, competitors with active profiles — and sometimes spam listings with no real office — take the calls."
+  - "Most profiles were set up once and never touched again. Recent photos, posts and review responses show buyers a company that is open for business and paying attention."
+- **Why it matters for security companies:**
+  - **Alarm & CCTV installers — Residential buyers start in the map results:** Homeowners looking for an alarm or camera system often search “near me” and call straight from the map listing, without visiting a website.
+  - **Guard services — Patrol and site work is won locally:** Mobile patrol routes and local guard posts are won in a defined area. A complete profile with the right service area puts you in front of buyers there.
+  - **Access control & integrators — Reviews reassure commercial buyers too:** Commercial buyers check reviews as well. Professional responses show how you treat clients, including when something goes wrong.
+  - **Every security company — Often the first impression:** Many buyers see your profile before your website. Current photos, accurate hours and recent posts show a company that is active and reliable.
 - **What's included:**
-  - **Profile audit and setup** — A full review of your profile, with verification support and every field completed.
-  - **Categories and service areas** — Primary and secondary categories, services and service areas configured correctly.
-  - **Posts and photos** — Weekly posts and regular photo updates that keep the profile active.
-  - **Reviews** — A simple review request process for your team, plus responses to new reviews.
-  - **Profile monitoring** — Monitoring for unwanted edits and spam competitor listings.
-  - **Reporting** — Monthly reporting on calls, direction requests and profile views.
+  - **Profile audit and setup** — A full review of your profile, with verification support and every field completed. Business details, hours, services and descriptions are checked for accuracy. Duplicate or outdated listings are found and resolved.
+  - **Categories and service areas** — Primary and secondary categories, services and service areas configured correctly. Categories decide which searches you are eligible to appear for. Service areas are set to match where you actually work.
+  - **Posts and photos** — Weekly posts and regular photo updates that keep the profile active. Posts cover services, projects, seasonal reminders and company news. Photos come from your team and your work, not stock libraries.
+  - **Reviews** — A simple review request process for your team, plus responses to new reviews. Requests go out at a natural moment, such as after an install or a contract milestone. Every review, positive or negative, gets a professional reply.
+  - **Profile monitoring** — Monitoring for unwanted edits and spam competitor listings. Anyone can suggest changes to your profile, and Google sometimes applies them without asking. We catch those changes and report listings that break Google’s guidelines.
+  - **Reporting** — Monthly reporting on calls, direction requests and profile views. You can see how people find and use your profile. Each report notes what was done that month and what is planned next.
 - **How it works:** 1. Audit — We review your profile, categories and reviews, and how you appear in map results against competitors. 2. Fix — We correct categories, services, service areas and business details, and complete every missing field. 3. Maintain — We publish posts and photos, respond to reviews and watch for unwanted edits. 4. Report — We report on calls, direction requests and profile views each month.
+- **What to expect:**
+  - **First month — Audit and fix:** Profile, categories and reviews compared with local competitors; Business details, categories and service areas corrected; Review request process set up with your team.
+  - **Months 2–3 — Build activity:** Weekly posts and photo updates; A reply to every new review; Monitoring for edits and spam listings in place.
+  - **Ongoing — Maintain and report:** Posts, photos and review replies continued; Spam listings reported when found; A monthly report on calls, direction requests and profile views.
 - **What you get:**
   - A fully completed and verified Google Business Profile
   - Weekly posts and photo updates
@@ -291,15 +383,28 @@ On the `/services` overview, each block shows the name, short description, "Lear
 
 - **H1:** "CRM Automation for Security Companies"
 - **Subheadline:** "Capture every inquiry, reply instantly and follow up automatically, so leads you already paid for do not go to a competitor."
-- **Problem — A lead that waits a day has usually called someone else:** "Inquiries arrive by phone, form and email, often after hours. Without a system, follow-up depends on whoever picks it up — and a lead that waits a day for a reply has usually called someone else. Open quotes and site surveys slip the same way."
+- **Hero graphic:** see "Service page graphics" above
+- **Problem — A lead that waits a day has usually called someone else:**
+  - "Inquiries arrive by phone, web form, email and ad platforms, often after hours or while your team is out on site. Without one system, follow-up depends on whoever happens to pick them up."
+  - "Buyers with an urgent need contact several companies at once. The first to reply with a clear next step often books the site survey, and the rest end up chasing a job that is already gone."
+  - "Open quotes and site surveys slip the same way. Without reminders, a proposal sent last month goes unchased — and nobody can say which marketing channel produced the work you actually won."
+- **Why it matters for security companies:**
+  - **Guard services — Bids have deadlines:** Proposals, site walk-throughs and bid deadlines are easy to lose in an inbox. A pipeline with reminders keeps every open opportunity moving.
+  - **Alarm & CCTV installers — Speed wins residential jobs:** Homeowners and small businesses often contact several installers at once. An instant reply and a prompt follow-up keep you in the running.
+  - **Access control & integrators — Many open quotes, many stakeholders:** Integration projects involve several contacts and long approval cycles. A CRM keeps every conversation and next step in one place.
+  - **Every security company — Know what your marketing produces:** When every lead carries its source, you can see which channels lead to signed contracts and spend accordingly.
 - **What's included:**
-  - **CRM setup or cleanup** — Selection and setup of a CRM, or cleanup of the one you already use.
-  - **One pipeline** — Every web form, call and ad lead routed into a single pipeline.
-  - **Instant replies** — Automatic text and email replies the moment a new inquiry arrives, day or night.
-  - **Follow-up reminders** — Automated reminders for open quotes and site surveys, so nothing slips.
-  - **Pipeline stages** — Clear stages from first inquiry to signed contract.
-  - **Reporting** — Reporting on lead source, response time and close rate.
+  - **CRM setup or cleanup** — Selection and setup of a CRM, or cleanup of the one you already use. Contacts are de-duplicated and organized, with fields for the details your team needs, such as property type and services requested. Nothing is changed without your sign-off.
+  - **One pipeline** — Every web form, call and ad lead routed into a single pipeline. Your team works from one list instead of several inboxes and a notebook. Each lead carries its source, so you always know where it came from.
+  - **Instant replies** — Automatic text and email replies the moment a new inquiry arrives, day or night. The message confirms the inquiry arrived and explains what happens next. Missed calls can trigger a text reply where your phone setup allows it.
+  - **Follow-up reminders** — Automated reminders for open quotes and site surveys, so nothing slips. Tasks go to the right person with a due date. Leads that go quiet can move into an email nurture sequence.
+  - **Pipeline stages** — Clear stages from first inquiry to signed contract. The stages match how your team sells, whether that involves site surveys, proposals or bid deadlines. Managers can see every open opportunity at a glance.
+  - **Reporting** — Reporting on lead source, response time and close rate. You can see which channels produce signed contracts, not just inquiries. It also shows where leads stall, so the process can be fixed.
 - **How it works:** 1. Audit — We map how inquiries reach you today and where they get lost. 2. Design — We design the pipeline stages, replies and follow-up rules around how your team sells. 3. Build — We set up the CRM, connect your forms, call tracking and ads, and build the automations. 4. Train and refine — We walk your team through it, then review response times and close rates and adjust.
+- **What to expect:**
+  - **First month — Audit and design:** A map of how inquiries reach you today; Pipeline stages and follow-up rules designed with your team; CRM selected, or your existing one cleaned up.
+  - **Months 2–3 — Build and train:** Forms, call tracking and ad leads connected; Instant replies and reminders built and tested; Team walkthrough and go-live.
+  - **Ongoing — Review and refine:** Response times and close rates reviewed; Automations adjusted as your process changes; A monthly report on lead source, response time and close rate.
 - **What you get:**
   - A configured CRM with your pipeline stages
   - Forms, calls and ad leads connected to the pipeline
@@ -320,8 +425,6 @@ On the `/services` overview, each block shows the name, short description, "Lear
   - *What will we be able to see?* "Where each lead came from, how quickly it was answered, where it sits in the pipeline and which sources turn into signed contracts."
 - **Related:** `/services/email-marketing`, `/services/website`, `/services/paid-ads`
 - **Proof:** none (section hidden)
-
-> **⚠ Check the per-service copy.** The inclusions, process steps, deliverables and FAQs are new copy written from what the site already said about each service. Nothing claims results, clients or guarantees, but several items describe how you work. Confirm them before launch, especially: weekly Google Business Profile posts; instant text replies (CRM Automation); Local Services Ads management; a walkthrough at website launch; "you approve every budget" (Paid Ads); and "we do not buy, write or incentivize reviews" (Google Business Profile).
 
 ### Pricing
 
@@ -446,6 +549,8 @@ None. The softer commitments are:
 | `/services/crm-automation` | CRM Automation detail page |
 | any other path, including `/services/<unknown>` | 404 page (returns a 404 status and `noindex, follow`) |
 
+**Header "Services" dropdown:** lists every service page (icon and name, current page highlighted) with "View all services" (`/services`) at the bottom. In the mobile menu it's an accordion, open by default on a service page.
+
 **Navigation** (header and footer "Company" column): Services (`/services`), Approach (`/#approach`), Why Us (`/#why-us`), How It Works (`/#process`), Contact (`/#contact`). The home-section links work from any page and scroll to the section once the home page loads.
 
 **Footer "Services" column:** the heading links to `/services`; each service links to its detail page.
@@ -477,6 +582,8 @@ None. The softer commitments are:
 | `/services/crm-automation` | "CRM Automation for Security Companies | Security Marketing Company" | "CRM automation for US security companies: one pipeline for every inquiry, instant replies, quote follow-up reminders and response-time reporting." |
 
 The meta for `/services` and every service page is written into static HTML at build time (`dist/services.html`, `dist/services/<slug>.html`), so it's present on a direct load, including for crawlers and link previews that don't run JavaScript. Several service titles run past 60 characters because the required format includes the full service name; search results may truncate them.
+
+**Analytics:** Google Analytics 4, measurement ID `G-CBBT708R7T`. The tag is in the `<head>` of every page, including the prerendered HTML, but it only loads on securitymarketingcompany.com (with or without `www`). One `page_view` is sent per page, including in-app navigation. See the README for setup, and the GA admin setting that has to be switched off to avoid double counting.
 
 **Crawling:** `/robots.txt` allows everything except `/api/` and points to `/sitemap.xml`. The sitemap is generated at build time and lists 9 URLs: `/`, `/services` and every service page.
 
