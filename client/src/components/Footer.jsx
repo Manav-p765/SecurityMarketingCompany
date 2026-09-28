@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { COMPANY, NAV_LINKS, SOCIALS, services } from '../data/content.js';
+import { COMPANY, LEGAL_LINKS, NAV_LINKS, SOCIALS, services } from '../data/content.js';
 import { SOCIAL_ICONS } from './Icons.jsx';
 import { sectionPath, telHref } from './Links.jsx';
 
@@ -93,6 +93,14 @@ export default function Footer() {
         <p>
           © {year} {COMPANY.name}. All rights reserved.
         </p>
+        <nav className="footer__legal" aria-label="Legal">
+          {LEGAL_LINKS.map((link, index) => (
+            <span key={link.to}>
+              {index > 0 && <span aria-hidden="true"> · </span>}
+              <Link to={link.to}>{link.label}</Link>
+            </span>
+          ))}
+        </nav>
         <p>{COMPANY.promise}</p>
       </div>
     </footer>

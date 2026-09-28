@@ -9,6 +9,7 @@ import './styles/sections.css';
 import './styles/mockups.css';
 import './styles/contact.css';
 import './styles/services-page.css';
+import './styles/pages.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

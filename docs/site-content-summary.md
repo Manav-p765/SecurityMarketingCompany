@@ -1,10 +1,10 @@
 # Security Marketing Company: Site Content Summary
 
-Updated on 2026-09-26 for the expanded service page copy (problem, why it matters, what's included, what to expect), the service page graphics, the header Services dropdown and Google Analytics. Earlier update: 2026-09-24, for the US retargeting, the Services page and the individual service pages. The first version was compiled on 2026-09-23 from commit `da29ff0`.
+Updated on 2026-09-26 for the expanded service page copy (problem, why it matters, what's included, what to expect), the service page graphics, the header Services dropdown and Google Analytics. Then again for the About and Contact pages and the home page client reviews (samples, hidden on the live site), and for the Privacy Policy, Terms, thank-you page and blog. Earlier update: 2026-09-24, for the US retargeting, the Services page and the individual service pages. The first version was compiled on 2026-09-23 from commit `da29ff0`.
 
 **Sources:** `client/src/data/content.js` (almost all copy: every service and its detail page under `services`, the overview under `servicesPage`), the components in `client/src/components/` and `client/src/pages/`, `client/index.html` (home page meta and site-wide JSON-LD), `client/scripts/prerender.js` (meta for `/services` and each service page), and the server's lead routes and email templates.
 
-**About this site:** the home page (`/`), the Services overview (`/services`) and one detail page per service (`/services/:slug`, 7 in total). Any other path, including an unknown service slug, shows a 404 page. There's no CMS and no blog.
+**About this site:** the home page (`/`), the Services overview (`/services`), one detail page per service (`/services/:slug`, 7 in total), About (`/about`), Contact (`/contact`), a thank-you page (`/thank-you`), the blog (`/blog` and one page per post) and the Privacy Policy and Terms (`/privacy`, `/terms`). Any other path, including an unknown service slug, shows a 404 page. There's no CMS and no blog.
 
 Quotes are copied exactly from the source. Items marked **⚠** still need your input.
 
@@ -461,6 +461,100 @@ None. The softer commitments are:
 
 ---
 
+## 2b. About & Contact Pages
+
+### About page (`/about`)
+
+Sections in order: hero, who we are, why we focus on security companies, how we work, what we do (all 7 services, each linking to its page), the home page stats row (same component and values), closing CTA card. No founding story, dates, team, clients or awards.
+
+- **Hero:** eyebrow "About us"; H1 "The Marketing Agency Built Only for US Security Companies" (second part in red); subhead "We help guard services, alarm and CCTV installers, access control firms and security integrators win more contracts and better leads online."; buttons "Book Strategy Call" (to `/contact`) and "View Services" (to `/services`)
+- **Who we are — One industry. One focus.:**
+  - "Security Marketing Company is a B2B digital marketing agency that works only with US security companies: guard and patrol services, alarm and CCTV installers, access control firms and security systems integrators."
+  - "We build the websites, search visibility, advertising and follow-up that help them win more contracts and qualified leads online. We market security companies — we never provide security services or compete with our clients for work."
+- **Why we focus on security companies** — "Security is not a typical local service. The way buyers choose a provider shapes every part of the marketing."
+  - **We understand your buyers:** Facilities managers, property managers, business owners, homeowners and IT directors each buy security differently. We write and target for each of them, not for a generic customer.
+  - **Commercial sales cycles are long:** A guard contract may not come up for renewal for a year, and an integration project can need several approvals. Marketing has to keep you in front of buyers for the whole cycle, not just the first click.
+  - **Local search is competitive:** Most security work is won city by city, in the map results and the top few search results. Service-area pages, a well-managed Google Business Profile and targeted ads are built for that contest.
+  - **Trust decides the call:** Buyers are trusting you with their people and property. Licenses, insurance, certifications and genuine reviews need to be easy to find, because they are often what earns the inquiry.
+- **How we work — Four commitments on every engagement** (each restates a commitment already made on the service pages or the /services FAQ):
+  - **Reporting built around inquiries:** Monthly reports show the calls, form submissions and booked surveys our work produces and where each came from. Traffic and rankings are there for context.
+  - **You approve before anything goes live:** You approve every ad budget before it is spent, and review copy, content calendars and campaigns before they are published.
+  - **No shortcuts that put you at risk:** We do not buy, write or incentivize reviews, we do not guarantee rankings no one controls, and every email campaign follows CAN-SPAM requirements.
+  - **Terms in writing from the start:** The scope, term and notice period are set out in writing before any work starts, whether it is a one-off website build or an ongoing program.
+- **What we do — Services for security companies:** one tile per service (icon, name, short description), plus "View all services"
+- **Stats:** the home page row, unchanged ("10+", "500+", "5+", "50+")
+- **Closing CTA — Next step / Let’s talk about your market:** "Tell us the contracts you are chasing and the areas you cover. We will come back with a straight assessment of what it takes to win them — no obligation." Button "Book Strategy Call", note "No obligation."
+
+### Contact page (`/contact`)
+
+Hero, then the lead form (the same component, validation, API and service dropdown as the home page) beside a column with the email address, a calendar button (only when `COMPANY.calendarUrl` is set) and "What happens next", then an FAQ. No response times are stated on this page.
+
+- **Hero:** eyebrow "Contact"; H1 "Book a Strategy Call Tell Us What You Want to Win"; subhead "Share the contracts you are chasing and the areas you cover. We will review your details and come back with a plan for your market — no obligation."
+- **Form heading:** "Your details" / "Request a strategy call"; button "Book Strategy Call"; note "Your details are never sold or shared."
+- **Direct contact:** "Prefer email?" — Email: andy@securitymarketingcompany.com. Calendar: "Prefer to pick a time?" / "Book on our calendar" (hidden until a calendar link is set)
+- **What happens next:** 1. We review your details — We look at your website, your service area and the services you want to grow. 2. We reach out to schedule a strategy call — We contact you by email to find a time that suits you. 3. You get a tailored plan — After the call, you receive a plan built around your market, your services and your goals.
+- **FAQ — The first call and getting started:**
+  - *What happens on the strategy call?* "We talk through your services, the areas you cover and the work you want more of, and look at your current website, search visibility and advertising. You come away with a clear view of where the biggest opportunities are."
+  - *Do we need to prepare anything?* "No preparation is required. If you have them to hand, your website address, the services and areas you want to grow, and access to any current ad or analytics accounts help us make the call more useful."
+  - *Is there any obligation?* "No. The strategy call is a conversation about your goals, with no obligation to work with us."
+  - *What does onboarding look like if we go ahead?* "The scope, term and notice period are agreed in writing first. Onboarding then starts with a kickoff call and access to the accounts the work needs, such as your website, Google Business Profile, ad accounts and analytics."
+
+The home page contact section keeps its "We reply the same business day" note. After a successful submission, both forms now go to `/thank-you` instead of showing an inline success message.
+
+---
+
+## 2c. Legal, Thank-You & Blog
+
+### Privacy Policy (`/privacy`) and Terms & Conditions (`/terms`)
+
+**⚠ Templates — have both reviewed before relying on them legally.** Text lives in `client/src/data/legal/privacy.js` and `terms.js`. "Last updated: September 26, 2026" on both. No business address anywhere; the contact email is the `COMPANY` email (andy@securitymarketingcompany.com). Governing law: "applicable U.S. federal and state law" (a code comment marks where a state can be added).
+
+- **Privacy Policy sections:** `#information-we-collect` Information we collect · `#how-we-use-information` How we use your information · `#where-your-information-goes` Where your information goes · `#no-sale-of-data` We do not sell your information · `#analytics-and-cookies` Analytics and cookies · `#data-retention` How long we keep information · `#your-choices` Access, correction and deletion · `#us-state-privacy-rights` U.S. state privacy rights · `#security` Security · `#children` Children’s privacy · `#other-websites` Links to other websites · `#changes` Changes to this policy · `#contact` Contact us
+  - Lists the form fields actually collected (name, company, work email, service, optional message), plus the user agent and timestamp saved with each submission and the IP address used for rate limiting.
+  - Names the providers the code uses: Vercel (site hosting), Render (API server), MongoDB Atlas (lead storage), Resend (team notification and visitor confirmation emails), Google (Analytics 4 and Google Fonts).
+  - GA4 cookies explained, with links to Google’s privacy policy, "How Google uses information from sites or apps" and the Google Analytics Opt-out Browser Add-on.
+  - No sale of personal information and no sharing for targeted advertising; retention described in general terms (**⚠ confirm it matches your practice**); requests by email, answered "within a reasonable time and within any period required by applicable law"; a U.S. state privacy rights section (California, Virginia, Colorado, Connecticut, Utah); not directed at children under 13.
+- **Terms sections:** `#acceptance` Acceptance of terms · `#use-of-the-website` Use of the website · `#services-information` Information about our services · `#intellectual-property` Intellectual property · `#user-submissions` Information you submit · `#third-party-links` Third-party links · `#disclaimers` Disclaimers · `#limitation-of-liability` Limitation of liability · `#indemnification` Indemnification · `#governing-law` Governing law · `#changes` Changes to these terms · `#general` General · `#contact` Contact us
+  - Liability for claims about the website is capped at US$100 (**⚠ review**); separate written service agreements take precedence.
+- **Footer:** "Privacy Policy · Terms" in the bottom row. **Under every form:** "By submitting, you agree to our Privacy Policy." (linked to /privacy).
+
+### Thank-you page (`/thank-you`)
+
+Both forms (home and /contact) go here after a successful submission; errors stay on the form. `noindex, nofollow`, not in the sitemap. **Placeholder copy — final content to come.**
+
+- **Heading:** "Thanks — we’ve received your details" — or "Thanks, Jordan — we’ve received your details" when the first name from the form is available in this browser tab
+- **Eyebrow / intro:** "Request received" / "Here is what happens next."
+- **What happens next:** 1. We review your details — We look at your website, your service area and the services you want to grow. 2. We reach out to schedule a strategy call — We contact you by email to find a time that suits you. 3. You get a tailored plan — After the call, you receive a plan built around your market, your services and your goals.
+- **Calendar box** (only when `COMPANY.calendarUrl` is set): "Want to pick a time now?" / "Book on our calendar"
+- **While you wait:** Explore our services (`/services`), Read the blog (`/blog`), Back to home (`/`)
+- **GA4:** `generate_lead` fires once in the form, before the redirect; nothing extra on this page, so refreshes and direct visits never count as leads.
+
+### Blog (`/blog`, `/blog/:slug`)
+
+- **Hero:** eyebrow "Blog"; H1 "Marketing Advice for Security Companies"; intro "Practical guides for owners and managers of guard, alarm, CCTV and access control companies — on getting found, turning visitors into inquiries and winning more contracts."
+- **Listing:** "Latest post" (the newest post, featured), then a card grid; category chips ("All" + each category); pagination only past 9 posts. Cards: cover (or a generated graphic), category, title, excerpt, date, read time.
+- **Post pages:** breadcrumb (Home / Blog / title), title, excerpt, date · read time · "By Security Marketing Company Team", cover, article, an in-article box ("Want help with this?" / "See how our {Service} service works" / "We do this work every day for US security companies. See what is included and how we deliver it." / "Learn more") linking to the related service, "Related articles" (2–3, same category first), closing CTA "Put this to work for your company".
+- **Meta:** /blog title "Blog: Marketing Advice for Security Companies | Security Marketing Company", description "Practical marketing advice for US guard, alarm, CCTV and access control companies: Google Business Profile, websites, lead follow-up and more.", `Blog` schema. Each post: title "{Post title} | Security Marketing Company", description = excerpt, `og:type` article, `Article` + `BreadcrumbList` schema.
+
+| Date | Post | Category | Words | CTA service |
+| --- | --- | --- | --- | --- |
+| 2026-09-24 | [Why Speed-to-Lead Wins Security Contracts](/blog/speed-to-lead-security-contracts) | Lead Follow-Up | ~1120 | `/services/crm-automation` |
+| 2026-09-17 | [Website Must-Haves for Guard and Alarm Companies](/blog/website-must-haves-guard-alarm-companies) | Websites | ~1110 | `/services/website` |
+| 2026-09-10 | [How Security Companies Can Get More Leads From Google Business Profile](/blog/google-business-profile-leads) | Local SEO | ~1210 | `/services/google-business-profile` |
+
+**Why Speed-to-Lead Wins Security Contracts** — "Why the first security company to respond often wins the job, and how to build a follow-up process that answers every inquiry quickly — even after hours."
+Sections: Why response time matters more in security · Where inquiries usually get stuck · Step 1: Bring every inquiry into one place · Step 2: Reply automatically, right away · Step 3: Make a real response fast · Step 4: Follow up more than once · Step 5: Chase open quotes · Step 6: Measure it · Speed is a system, not a personality trait
+
+**Website Must-Haves for Guard and Alarm Companies** — "The pages, trust signals and conversion features every guard and alarm company website needs to turn visitors into quote and site survey requests."
+Sections: Make the first screen count · Give every service its own page · Show where you work · Put trust signals where people look for them · Make asking for a quote easy · Answer the questions buyers ask before they call · Build it to be fast and mobile-friendly · Track what the site produces · Recruiting pages for guard companies · A quick checklist
+
+**How Security Companies Can Get More Leads From Google Business Profile** — "A practical guide for guard, alarm, CCTV and access control companies to setting up, maintaining and getting inquiries from a Google Business Profile."
+Sections: Start with the basics: verification and accurate details · Choose categories carefully · Set your service area properly · Fill in services, description and attributes · Keep the profile active with posts and photos · Build a steady flow of genuine reviews · Watch for unwanted edits and spam listings · Connect the profile to your website and follow-up · A simple monthly routine
+
+All three are by "Security Marketing Company Team" and contain no statistics, client stories or quotes.
+
+---
+
 ## 3. Messaging & Copy Assets
 
 ### Headlines by section
@@ -490,20 +584,33 @@ None. The softer commitments are:
 
 | CTA text | Where it appears | Where it goes |
 | --- | --- | --- |
-| "Book Strategy Call" | Header (desktop and mobile menu, every page), home hero, home services CTA card, home Feature 1, each overview block, overview hero, every detail page hero and pricing card, closing CTA on /services and every detail page, 404 page | `/#contact` (a calendar link instead, once `COMPANY.calendarUrl` is set) |
+| "Book Strategy Call" | Home hero, home services CTA card, home Feature 1 | `/#contact` (a calendar link instead, once `COMPANY.calendarUrl` is set) |
+| "Book Strategy Call" | Header (desktop and mobile menu, every page, including home), overview hero and blocks, every detail page hero and pricing card, closing CTA on /services, every detail page and /about, /about hero, 404 page | `/contact` (or the calendar link, once set) |
 | "View Services" | Home hero, second button | `/services` |
 | "Learn more" | Each home service card, each /services overview block, each related-service card | `/services/<slug>` |
 | "View All Services" | Every detail page hero | `/services` |
 | Breadcrumb "Home" / "Services" | Every detail page | `/` / `/services` |
 | "Start a Project" | Home Feature 2 | `/#contact` (or the calendar) |
-| "Book Strategy Call" (submit) | Contact form | Submits the form |
+| "View Services" | /about hero, second button | `/services` |
+| "View all services" | Header Services dropdown, /about services grid | `/services` |
+| "Book on our calendar" | /contact (only when `COMPANY.calendarUrl` is set) | The calendar link |
+| "Book Strategy Call" (submit) | Contact form (home and /contact) | Submits the form, then `/thank-you` |
+| "Learn more" (in-article box) | Every blog post | The related service page |
+| "Explore our services" / "Read the blog" / "Back to home" | /thank-you | `/services` / `/blog` / `/` |
 | "Back to Home" | 404 page | `/` |
 
 ---
 
 ## 4. Social Proof
 
-- **Testimonials, case studies, client logos:** none yet.
+- **Client reviews (home page, after "How it works" and before the contact form):** "Client reviews" / "What Security Company Owners Say" — "Guard companies, alarm and CCTV installers and access control firms on working with us."
+  - **⚠ All four are samples** written for layout (`isSample: true`). They show on local and preview builds only, under the notice "Preview only: these are sample reviews for layout. They are hidden on the live site until replaced with real client reviews." On the live site the section is hidden, and no Review schema is output, until real reviews replace them. See the README, "Client reviews — how to make them live".
+  - (sample) "Almost all of our new contracts used to come from referrals. Now property managers find us on Google and call about specific sites, and the inquiries are for the kind of work we actually want. The monthly report makes it easy to see where each lead came from." — Marcus T., Owner, Ironside Patrol Services, Houston, TX · 5 stars
+  - (sample) "We were paying for clicks from people shopping for DIY cameras and looking for security jobs. The campaigns are much tighter now, and the calls we get are homeowners and businesses ready to talk about an install." — Danielle R., Operations Manager, Brightline Alarm & Camera, Phoenix, AZ · 5 stars
+  - (sample) "Our sales cycle is long, and good leads used to go quiet after the first proposal. With automatic follow-ups and one clear pipeline, our team knows exactly which quotes need attention each week." — Kevin S., General Manager, Crestview Access Systems, Charlotte, NC · no rating
+  - (sample) "Our Google Business Profile had not been touched in years. It is complete and active now, clients leave reviews without us chasing them, and more of our calls come from people who found us in the map results." — Angela M., Owner, Harborline Security Group, Tampa, FL · 5 stars
+
+- **Real testimonials, case studies, client logos:** none yet.
 - **Stats row (under the home hero):** "10+" Security Companies Served · "500+" Leads Generated · "5+" Years Marketing Experience · "50+" Experienced Team. These are public claims; keep them accurate.
 - **Example mockups:** these show a fictional firm, "Summit Guard Co." (`summitguardco.example`). Its example site reads "Licensed Security Officers Serving the Greater Dallas Area", with "Get a Quote", "Book a Site Survey" and "Licenses & Certifications". The search mockup shows the "security guard company near me" query against "Example Security LLC". Every window shows a visible **"Example illustration"** tag. The "Position 1" and "Top 3" claims are gone, and the floating card now reads "Sample report — Monthly inquiries" with no figure.
 
@@ -547,11 +654,18 @@ None. The softer commitments are:
 | `/services/email-marketing` | Email Marketing & Lead Generation detail page |
 | `/services/google-business-profile` | Google Business Profile Management detail page |
 | `/services/crm-automation` | CRM Automation detail page |
+| `/about` | About: who we are, why security companies, how we work, services, stats, closing CTA |
+| `/contact` | Contact: lead form, email, "What happens next", FAQ |
+| `/thank-you` | After a successful form submission (noindex, not in the sitemap) |
+| `/blog` | Blog listing: featured post, category filter, card grid |
+| `/blog/<slug>` | One page per markdown post (3 so far) |
+| `/privacy` | Privacy Policy |
+| `/terms` | Terms & Conditions |
 | any other path, including `/services/<unknown>` | 404 page (returns a 404 status and `noindex, follow`) |
 
 **Header "Services" dropdown:** lists every service page (icon and name, current page highlighted) with "View all services" (`/services`) at the bottom. In the mobile menu it's an accordion, open by default on a service page.
 
-**Navigation** (header and footer "Company" column): Services (`/services`), Approach (`/#approach`), Why Us (`/#why-us`), How It Works (`/#process`), Contact (`/#contact`). The home-section links work from any page and scroll to the section once the home page loads.
+**Navigation** (header and footer "Company" column): Services (`/services`, a dropdown in the header), About (`/about`), Approach (`/#approach`), Why Us (`/#why-us`), How It Works (`/#process`), Blog (`/blog`), Contact (`/contact`). Footer bottom row: Privacy Policy (`/privacy`) · Terms (`/terms`). The home-section links work from any page and scroll to the section once the home page loads.
 
 **Footer "Services" column:** the heading links to `/services`; each service links to its detail page.
 
@@ -569,6 +683,8 @@ None. The softer commitments are:
 | OG / Twitter description | "More visibility. Bigger contracts. We grow security companies online." | Same as the meta description |
 | Structured data | `ProfessionalService`, areaServed United States, `sameAs` social profiles | Plus 7 `Service` entries, each with areaServed United States |
 
+**About and Contact:** `/about` — title "About Us | Security Marketing Company", description "A B2B marketing agency that works only with US security companies: guard services, alarm and CCTV installers, access control firms and security integrators.", `AboutPage` schema. `/contact` — title "Contact Us | Security Marketing Company", description "Book a strategy call with Security Marketing Company. Tell us the contracts you are chasing and the areas you cover, and we will come back with a plan.", `ContactPage` schema with the email as a sales `ContactPoint`. Both have their own canonical and Open Graph/Twitter tags in the prerendered HTML (`dist/about.html`, `dist/contact.html`). The home page gets `Review` schema only from real (non-sample) reviews.
+
 **Service detail pages:** title format "{Service} for Security Companies | Security Marketing Company". Structured data: one `Service` (provider Security Marketing Company, areaServed United States) plus a `BreadcrumbList`.
 
 | Page | Title | Meta description |
@@ -583,9 +699,9 @@ None. The softer commitments are:
 
 The meta for `/services` and every service page is written into static HTML at build time (`dist/services.html`, `dist/services/<slug>.html`), so it's present on a direct load, including for crawlers and link previews that don't run JavaScript. Several service titles run past 60 characters because the required format includes the full service name; search results may truncate them.
 
-**Analytics:** Google Analytics 4, measurement ID `G-CBBT708R7T`. The tag is in the `<head>` of every page, including the prerendered HTML, but it only loads on securitymarketingcompany.com (with or without `www`). One `page_view` is sent per page, including in-app navigation. See the README for setup, and the GA admin setting that has to be switched off to avoid double counting.
+**Analytics:** Google Analytics 4, measurement ID `G-CBBT708R7T`. The tag is in the `<head>` of every page, including the prerendered HTML, but it only loads on securitymarketingcompany.com (with or without `www`). One `page_view` is sent per page, including in-app navigation and the new /about and /contact routes. A successful form submission sends `generate_lead` with `form_location` "homepage" or "contact_page". See the README for setup, and the GA admin setting that has to be switched off to avoid double counting.
 
-**Crawling:** `/robots.txt` allows everything except `/api/` and points to `/sitemap.xml`. The sitemap is generated at build time and lists 9 URLs: `/`, `/services` and every service page.
+**Crawling:** `/robots.txt` allows everything except `/api/` and points to `/sitemap.xml`. The sitemap is generated at build time and lists 17 URLs: `/`, `/services`, every service page, `/about`, `/contact`, `/blog`, every blog post (with `<lastmod>`), `/privacy` and `/terms`. `/thank-you` is excluded (noindex).
 
 ---
 

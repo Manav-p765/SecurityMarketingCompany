@@ -1,6 +1,22 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { gaHeadSnippet } from './src/analytics.js';
+import { compileMarkdown } from './scripts/markdown.js';
+
+/**
+ * Blog posts: `import doc from './post.md'` gives { frontmatter, html, words }.
+ * Markdown is rendered here at build time, so no parser ships to the browser.
+ */
+function blogMarkdown() {
+  return {
+    name: 'blog-markdown',
+    enforce: 'pre',
+    transform(code, id) {
+      if (!id.split('?')[0].endsWith('.md')) return null;
+      return { code: `export default ${JSON.stringify(compileMarkdown(code))};`, map: null };
+    },
+  };
+}
 
 /**
  * Writes the Google tag into the <head> of index.html, right after the
@@ -20,7 +36,7 @@ function googleTag() {
 }
 
 export default defineConfig({
-  plugins: [react(), googleTag()],
+  plugins: [blogMarkdown(), react(), googleTag()],
   server: {
     port: 5173,
     proxy: {

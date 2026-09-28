@@ -4,8 +4,10 @@ Marketing site for **Security Marketing Company** — a B2B digital marketing ag
 companies: guard and patrol services, alarm installers, CCTV/video surveillance providers, access
 control integrators and security systems integrators.
 
-Pages: the home page (`/`), a Services overview (`/services`) and a detail page for each service
-(`/services/:slug`, e.g. `/services/seo`). Anything else, including an unknown slug, shows a 404.
+Pages: the home page (`/`), a Services overview (`/services`), a detail page for each service
+(`/services/:slug`, e.g. `/services/seo`), About (`/about`), Contact (`/contact`), a thank-you page
+after form submissions (`/thank-you`), the blog (`/blog`, `/blog/:slug`), and the Privacy Policy
+(`/privacy`) and Terms (`/terms`). Anything else, including an unknown slug, shows a 404.
 
 > **Positioning note for anyone editing copy:** we are the *marketing partner* for security
 > companies. We do not provide guarding, installation, monitoring or cybersecurity services. Every
@@ -20,7 +22,8 @@ Pages: the home page (`/`), a Services overview (`/services`) and a detail page 
 
 | Layer | Technology |
 | --- | --- |
-| Frontend | React 18 + Vite + React Router (`/`, `/services`, `/services/:slug`) |
+| Frontend | React 18 + Vite + React Router |
+| Blog | Markdown files, rendered at build time with `marked` (dev dependency — nothing ships to the browser) |
 | Analytics | Google Analytics 4 (gtag.js), production domain only — see "Google Analytics (GA4)" |
 | Backend | Node + Express (contact-form endpoint) |
 | Database | MongoDB via Mongoose (stores leads) |
@@ -36,9 +39,10 @@ securitymarketingcompany/
 ├── .env.example              # Copy to server/.env
 ├── client/                   # Vite + React app
 │   ├── index.html            # Home page meta tags, fonts, site-wide JSON-LD
-│   ├── vite.config.js        # Dev proxy: /api -> localhost:5000
+│   ├── vite.config.js        # Dev proxy, Google tag, blog markdown plugin
 │   ├── vercel.json           # cleanUrls: serves dist/services.html at /services
-│   ├── scripts/prerender.js  # Post-build: writes dist/services.html and dist/404.html
+│   ├── scripts/prerender.js  # Post-build: a static HTML file per page, 404.html, sitemap.xml
+│   ├── scripts/markdown.js   # Build-time markdown → HTML for blog posts (marked)
 │   ├── public/
 │   │   ├── logo/             # ← LOGO FILES (see logo/README.md)
 │   │   └── hero/             # ← OPTIONAL HERO PHOTO (see hero/README.md)
@@ -47,16 +51,22 @@ securitymarketingcompany/
 │       ├── App.jsx           # Routes and hash-link scrolling
 │       ├── seo.js            # Page meta + Service/BreadcrumbList JSON-LD (app and prerender.js)
 │       ├── data/content.js   # ← ALL SITE COPY. Edit text here, not in JSX.
+│       ├── data/legal/       # ← PRIVACY POLICY and TERMS text (privacy.js, terms.js)
+│       ├── content/blog/     # ← BLOG POSTS, one markdown file each
+│       ├── blog/             # posts.js (loadPosts — the one place posts are loaded), schema.js
 │       ├── pages/
 │       │   ├── HomePage.jsx      # Home section order
 │       │   ├── ServicesPage.jsx  # /services: hero, service blocks, process, industries, FAQ, CTA
-│       │   └── ServiceDetailPage.jsx # /services/:slug template (unknown slug → 404)
+│       │   ├── ServiceDetailPage.jsx # /services/:slug template (unknown slug → 404)
+│       │   ├── AboutPage.jsx ContactPage.jsx ThankYouPage.jsx
+│       │   ├── LegalPage.jsx     # /privacy and /terms
+│       │   └── BlogPage.jsx BlogPostPage.jsx # /blog and /blog/:slug (unknown slug → 404)
 │       ├── components/
 │       │   ├── Header.jsx Hero.jsx Stats.jsx Industries.jsx Services.jsx Band.jsx
 │       │   ├── Feature.jsx   # Reusable split section: copy + tilted screen
 │       │   ├── Mockups.jsx   # The tilted browser / search-results screens
 │       │   ├── WhyUs.jsx Process.jsx Contact.jsx Footer.jsx NotFound.jsx
-│       │   ├── Links.jsx     # StrategyCallLink (calendar or contact form) + helpers
+│       │   ├── Links.jsx     # StrategyCallLink (calendar, home form or /contact) + helpers
 │       │   ├── ServiceCard.jsx # Service card (home grid, related services)
 │       │   ├── Faq.jsx       # Accessible FAQ accordion section
 │       │   ├── CtaPanel.jsx  # Closing red CTA card (/services and detail pages)
@@ -134,26 +144,37 @@ one service.
 **Routes on a direct load or refresh.** The build runs `client/scripts/prerender.js` after Vite. It
 writes, from `content.js`:
 
+- `dist/about.html` and `dist/contact.html`, with `AboutPage` / `ContactPage` schema — and, once
+  there are real client reviews, their `Review` schema in the home page `index.html`;
 - `dist/services.html` and `dist/services/<slug>.html` for every service — index.html with that
   page's title, description, canonical, Open Graph tags and JSON-LD (`Service`, plus
   `BreadcrumbList` on detail pages) swapped in;
+- `dist/privacy.html`, `dist/terms.html` and `dist/thank-you.html` (the last with
+  `noindex, nofollow`);
+- `dist/blog.html` (`Blog` schema) and `dist/blog/<slug>.html` for every post (`Article` +
+  `BreadcrumbList` schema, `og:type` article). The blog modules are loaded through Vite
+  (`ssrLoadModule`), so prerender uses the same `loadPosts()` as the browser;
 - `dist/404.html`;
-- `dist/sitemap.xml` — the home page, `/services` and every service page.
+- `dist/sitemap.xml` — every indexable page: home, `/services` and each service, `/about`,
+  `/contact`, `/blog` and each post (with `<lastmod>`), `/privacy` and `/terms`. `/thank-you` is
+  deliberately left out.
 
 It also **fails the build** if the contact form options in `server/src/models/Lead.js` no longer match
 the service names in `content.js`. `client/public/robots.txt` allows everything except `/api/` and
 points to the sitemap. Then:
 
-- **Express** serves `services.html` for `/services`, `services/<slug>.html` for each known slug
-  (200) and `404.html` for anything else, including unknown slugs (404).
-- **Vercel** serves the same files at `/services` and `/services/<slug>` through `cleanUrls` in
-  `client/vercel.json`; an unknown slug has no file, so Vercel's `404.html` handling covers it.
+- **Express** (`server/src/index.js`) serves `<page>.html` for each page in its `PAGES` list and
+  `services/<slug>.html` / `blog/<slug>.html` for each slug the build wrote (200), and `404.html`
+  for anything else, including unknown slugs (404).
+- **Vercel** serves the same files at the clean paths through `cleanUrls` in `client/vercel.json`;
+  an unknown slug has no file, so Vercel's `404.html` handling covers it.
 - **Vite dev / preview** fall back to index.html; React Router then renders the right page, and
-  `ServiceDetailPage` renders the 404 page for an unknown slug.
+  `ServiceDetailPage` / `BlogPostPage` render the 404 page for an unknown slug.
 
-A new service needs no routing work — adding it to `services` creates its page, prerendered HTML and
-sitemap entry. For a new *kind* of page, add a route in `App.jsx`, meta in `content.js`, and extend
-`prerender.js` and the Express routes the same way.
+A new service or blog post needs no routing work — adding it creates its page, prerendered HTML and
+sitemap entry. For a new *kind* of page, add a route in `App.jsx`, meta in `content.js`, a
+`writePage()` call (and sitemap entry) in `prerender.js`, and its name in `PAGES` in
+`server/src/index.js`.
 
 #### Split hosting: frontend on Vercel, API on Render
 
@@ -202,9 +223,9 @@ Render's free plan sleeps after 15 minutes idle and takes up to a minute to wake
 
 ## Google Analytics (GA4)
 
-Measurement ID **`G-CBBT708R7T`**. It lives in one place, `client/src/analytics.js`, together with
-the list of production hostnames (`securitymarketingcompany.com` and
-`www.securitymarketingcompany.com`).
+Measurement ID **`G-CBBT708R7T`**. It lives in one place, `client/src/analytics.js`. The production
+hostnames (`securitymarketingcompany.com` and `www.securitymarketingcompany.com`) are
+`PRODUCTION_HOSTNAMES` in `client/src/site.js`, shared with the client reviews display rule.
 
 **How the tag gets onto every page.** A small Vite plugin in `client/vite.config.js` writes the
 Google tag snippet into the `<head>` of `index.html`, right after the charset and viewport tags.
@@ -214,7 +235,13 @@ Google tag snippet into the `<head>` of `index.html`, right after the charset an
 **Production only.** The snippet checks `window.location.hostname` first. On any other host
 (localhost, `vite preview`, Vercel preview deployments on `*.vercel.app`, the Render URL) it returns
 straight away: no `gtag.js` request, no `window.gtag`, and nothing sent. To add a domain, add it to
-`GA_HOSTNAMES`.
+`PRODUCTION_HOSTNAMES`.
+
+**Leads.** After a successful form submission the site sends `generate_lead` with `form_location`
+set to `homepage` or `contact_page`. In GA4 you can mark `generate_lead` as a key event (Admin →
+Events) to count it as a conversion.
+
+New routes need no analytics code: every route gets its `page_view` from `PageViews` in `App.jsx`.
 
 **Page views in a single-page app.** The config call sets `send_page_view: false`, so the tag does
 not count the first load by itself. `PageViews` in `client/src/App.jsx` sends one `page_view`
@@ -465,8 +492,90 @@ label and note in `servicesPage.pricing`. All seven currently say "Custom quote"
 ### Phone and calendar
 
 Set `COMPANY.phone` to show it in the contact section and footer. Set `COMPANY.calendarUrl` (e.g. a
-Calendly link) and every "Book Strategy Call" button opens it in a new tab instead of scrolling to the
-contact form; the contact section also gets a calendar link. Both are empty now.
+Calendly link) and every "Book Strategy Call" button opens it in a new tab; the home contact section
+and the /contact page also get a calendar link. Both are empty now.
+
+Without a calendar link, "Book Strategy Call" buttons go to the form: on the home page they scroll to
+the home contact section; everywhere else (About, Services, service pages) they go to `/contact`. The
+header button always goes to `/contact`. All of this is in `StrategyCallLink` (`Links.jsx`).
+
+---
+
+## Blog
+
+Posts are markdown files in `client/src/content/blog/`. They are rendered to HTML at build time
+(`client/scripts/markdown.js`, via the `blog-markdown` plugin in `vite.config.js`), so there is no
+markdown parser in the browser bundle.
+
+### Adding a post
+
+1. Create `client/src/content/blog/<slug>.md`:
+
+   ```markdown
+   ---
+   title: Your Post Title
+   slug: your-post-title            # optional — defaults to the file name
+   date: 2026-10-01                 # YYYY-MM-DD; newest posts come first
+   excerpt: One or two sentences. Used on cards and as the meta description.
+   category: Local SEO              # becomes a filter chip on /blog
+   author: Security Marketing Company Team
+   coverImage: /blog/your-image.jpg # optional — put the file in client/public/blog/
+   readingTime: 6                   # optional — calculated from word count if missing
+   service: google-business-profile # optional — service slug for the in-article CTA box
+   ---
+
+   Write the post in markdown. Use ## and ### for headings (the title is the page's H1).
+   ```
+
+2. Build. That's it: the post gets its page at `/blog/<slug>`, prerendered HTML with its own meta
+   and Article schema, a sitemap entry, and a card on `/blog`.
+
+- **Required fields:** `title`, `date`, `excerpt`, `category`, `author`. The build fails with a
+  clear message if one is missing, a date is malformed or two posts share a slug.
+- **No cover image?** The card and post show a generated graphic in the site style, based on the
+  category and slug.
+- **The CTA box** in the middle of each post links to `service` if set, otherwise to the service
+  mapped from the category in `blogPage.categoryServices` (content.js).
+- **Links:** `[text](/services/seo)` stays inside the app; `https://…` links open in a new tab.
+- **Listing:** the newest post is featured, the rest form a grid, category chips filter on the
+  client, and pagination appears once there are more than 9 posts.
+- **Moving to a CMS or WordPress later:** change `loadPosts()` in `client/src/blog/posts.js` to
+  fetch posts and return the same shape (`slug, title, date, excerpt, category, author,
+  coverImage, readingTime, service, html`). Nothing else reads the markdown files.
+
+Blog page copy (hero, labels, CTA text) is `blogPage` in content.js.
+
+---
+
+## Legal pages and the thank-you page
+
+**Privacy Policy and Terms** (`/privacy`, `/terms`) are in `client/src/data/legal/privacy.js` and
+`terms.js`. Each starts with `// Template — have this reviewed before relying on it legally`.
+
+- Edit the text there. Each section is `{ id, heading, blocks }`; `id` is the anchor
+  (`/privacy#analytics-and-cookies`), and a block is a paragraph string or `{ list: [...] }`.
+- Inline markup: `{email}` (the business email from `COMPANY`, linked — never hard-code an
+  address), `{company}`, `[label](url)` and `**bold**`.
+- Change `lastUpdated` whenever you change the text.
+- The privacy policy describes what the site does today: the form fields, the user agent and
+  timestamp saved with each lead, MongoDB Atlas, Render, Vercel, Resend, Google Analytics and
+  Google Fonts. **If you add a form field, a provider or a cookie, update it.**
+- Governing law is "applicable U.S. federal and state law". A comment in `terms.js` shows where
+  to name a state.
+- The footer's "Privacy Policy · Terms" links come from `LEGAL_LINKS`, and the line under every
+  form ("By submitting, you agree to our Privacy Policy.") from `CONTACT_FORM.privacyNotice`.
+
+**Thank-you page** (`/thank-you`). Both forms go here after a successful submission; on an error
+the visitor stays on the form. Its copy — heading, the version with a first name, "What happens
+next", the calendar box and the links — is `thankYouPage` in content.js, placeholder text ready to
+be replaced.
+
+- GA4 `generate_lead` fires once, in the form, just before the redirect. The thank-you page sends
+  nothing but its normal `page_view`, so a refresh or a direct visit never counts as a lead.
+- The form saves the visitor's first name in `sessionStorage` (key `smc:lead`) only so the page
+  can say "Thanks, Jordan — …". It never blocks the page; direct visits see the generic heading.
+- The page is `noindex, nofollow` (prerendered and at runtime) and is not in the sitemap.
+- The calendar box appears only when `COMPANY.calendarUrl` is set.
 
 ---
 
@@ -478,6 +587,24 @@ The figures under the hero (`STATS` in `content.js`) are public claims: "10+" se
 served, "500+" leads generated, "5+" years of experience and a "50+" team. Keep them accurate and
 update them as they grow. Blanking a value hides that stat and the row resizes to fit; blanking all
 four hides the row. A trailing "+" is styled in red automatically.
+
+### Client reviews — how to make them live
+
+The home page "What Security Company Owners Say" section reads `reviews` in content.js. All four
+entries are **samples** written for layout (`isSample: true`, each marked
+`// SAMPLE — replace with real client review before launch`).
+
+- **Where they show:** `displayedReviews()` in `client/src/site.js` is the only rule. On the
+  production domain it returns real reviews only; anywhere else (localhost, `vite preview`, Vercel
+  previews) it returns everything, with a "Preview only" notice above the cards. With no real
+  reviews the section is hidden on the live site, so it is safe to deploy as it is.
+- **Going live:** replace each sample with a real, approved review (first name and last initial,
+  role, company, city and state; `rating` 1–5 and `photo` are optional) and set `isSample: false`.
+  Nothing else: it then shows on the live site and is added to the home page `Review` schema, both
+  in the prerendered HTML and in the app. Samples never reach the schema.
+- Get each client's written permission to publish their name, company and quote. Google does not
+  show review stars in search results for reviews a business publishes about itself, so treat the
+  schema as a nice-to-have rather than a way to get stars.
 
 ### Adding real proof
 
@@ -506,13 +633,19 @@ When you have a genuine Google or Clutch rating, awards, or client numbers, that
 
 | Status | Meaning |
 | --- | --- |
-| `201` | Lead saved. Form shows the green success state. |
+| `201` | Lead saved. The visitor is sent to `/thank-you`. |
 | `400` | Validation failed. Returns `{ errors: { field: message } }`, shown inline in amber. |
 | `429` | Rate limited — 10 submissions per IP per 15 minutes. |
 | `503` | Database unreachable. Visitor is told to email us directly. |
 
+The form lives in one component, `client/src/components/ContactForm.jsx`, used by the home page
+contact section (`Contact.jsx`) and the `/contact` page. Its `location` prop (`homepage` or
+`contact_page`) picks the note under the button in `CONTACT_FORM` (content.js) and is sent to GA4:
+after a successful submission it fires `generate_lead` with `form_location` (production domain
+only), then navigates to `/thank-you`.
+
 Validation rules are duplicated in `server/src/routes/leads.js` and
-`client/src/components/Contact.jsx` so the messages match on both sides. **If you change one, change
+`client/src/components/ContactForm.jsx` so the messages match on both sides. **If you change one, change
 the other.**
 
 Built in: a honeypot field that silently accepts and discards bot submissions, request rate
@@ -537,8 +670,8 @@ db.leads.find().sort({ createdAt: -1 }).limit(20)
 - Visible focus rings in brand red.
 - `prefers-reduced-motion` disables the scroll reveal, the smooth scrolling and the tilt transition.
 - Scroll reveal uses one `IntersectionObserver` and unobserves each element after it fires.
-- No UI framework and no icon library — every icon is inline SVG. Production bundle is ~300kb JS and
-  ~68kb CSS before gzip (~93kb / ~13kb gzipped).
+- No UI framework and no icon library — every icon is inline SVG. Production bundle is ~374kb JS and
+  ~82kb CSS before gzip (~117kb / ~15kb gzipped), including the blog post and legal text.
 - Header "Services" dropdown: a disclosure button with `aria-expanded`, `aria-haspopup` and
   `aria-controls`. It opens on hover (mouse only) and on click, Enter or Space, and ArrowDown
   moves into the list. Escape closes it and returns focus to the button, and so do a click outside,
@@ -554,8 +687,14 @@ db.leads.find().sort({ createdAt: -1 }).limit(20)
 - Review the FAQ answers on /services (contract terms in particular) and the per-service copy in
   `services` (inclusions, process, deliverables, FAQs) against how you actually deliver.
 - Add real testimonials or results as `proof` on a service when you have cleared ones.
-- New services land in `sitemap.xml` automatically. A new kind of page needs its meta added to
-  `PAGES` in `client/scripts/prerender.js`.
+- Replace the four sample client reviews in `reviews` with real ones (see "Client reviews — how to
+  make them live").
+- New services and blog posts land in `sitemap.xml` automatically. A new kind of page needs a
+  `writePage()` call and a `PAGES` entry in `client/scripts/prerender.js`.
+- Have the Privacy Policy and Terms reviewed by a lawyer before relying on them, and confirm the
+  data retention wording matches what you actually do.
+- Replace the placeholder thank-you page copy (`thankYouPage` in content.js) when the final text
+  is ready.
 - Supply light-on-dark logo originals (SVG if possible) to replace the derived `-light` PNGs.
 - Add client logos, case studies or results figures once cleared — see "Two things to fill in".
 

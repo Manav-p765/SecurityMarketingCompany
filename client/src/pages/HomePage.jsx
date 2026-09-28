@@ -7,16 +7,21 @@ import Band from '../components/Band.jsx';
 import Feature from '../components/Feature.jsx';
 import WhyUs from '../components/WhyUs.jsx';
 import Process from '../components/Process.jsx';
+import Reviews from '../components/Reviews.jsx';
 import Contact from '../components/Contact.jsx';
 import Footer from '../components/Footer.jsx';
 import { SerpMockup, SiteMockup } from '../components/Mockups.jsx';
 import { FEATURES, HOME_META } from '../data/content.js';
 import { usePageMeta } from '../hooks/usePageMeta.js';
 import { useReveal } from '../hooks/useReveal.js';
+import { reviewsSchema } from '../seo.js';
+
+// Review JSON-LD from real reviews only; null (no schema) while there are none.
+const SCHEMA = reviewsSchema();
 
 export default function HomePage() {
   useReveal();
-  usePageMeta(HOME_META);
+  usePageMeta(HOME_META, SCHEMA);
 
   return (
     /* `.page` carries the one continuous texture field for the whole
@@ -56,6 +61,7 @@ export default function HomePage() {
 
         <WhyUs />
         <Process />
+        <Reviews />
         <Contact />
       </main>
 

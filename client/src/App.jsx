@@ -3,6 +3,13 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage.jsx';
 import ServicesPage from './pages/ServicesPage.jsx';
 import ServiceDetailPage from './pages/ServiceDetailPage.jsx';
+import AboutPage from './pages/AboutPage.jsx';
+import ContactPage from './pages/ContactPage.jsx';
+import ThankYouPage from './pages/ThankYouPage.jsx';
+import BlogPage from './pages/BlogPage.jsx';
+import BlogPostPage from './pages/BlogPostPage.jsx';
+import LegalPage from './pages/LegalPage.jsx';
+import { privacyPolicy, termsPage } from './data/content.js';
 import NotFound from './components/NotFound.jsx';
 import { trackPageView } from './analytics.js';
 
@@ -92,6 +99,14 @@ export default function App() {
         <Route path="/services" element={<ServicesPage />} />
         {/* Unknown slugs render the 404 page from inside ServiceDetailPage. */}
         <Route path="/services/:slug" element={<ServiceDetailPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/thank-you" element={<ThankYouPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        {/* Unknown slugs render the 404 page from inside BlogPostPage. */}
+        <Route path="/blog/:slug" element={<BlogPostPage />} />
+        <Route path="/privacy" element={<LegalPage key="privacy" doc={privacyPolicy} />} />
+        <Route path="/terms" element={<LegalPage key="terms" doc={termsPage} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <PageViews />

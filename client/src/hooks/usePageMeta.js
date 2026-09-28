@@ -17,7 +17,22 @@ function setAttr(selector, attr, value) {
  * removed when the page unmounts. The site-wide ProfessionalService block in
  * index.html is left alone.
  */
-export function usePageMeta({ path, title, description, socialDescription }, schema) {
+export function usePageMeta(
+  { path, title, description, socialDescription, robots, ogType },
+  schema
+) {
+  // Optional per-page robots ("noindex, nofollow" on /thank-you) and og:type
+  // ("article" on blog posts); both go back to the defaults on leaving.
+  useEffect(() => {
+    if (!robots && !ogType) return undefined;
+    if (robots) setAttr('meta[name="robots"]', 'content', robots);
+    if (ogType) setAttr('meta[property="og:type"]', 'content', ogType);
+    return () => {
+      if (robots) setAttr('meta[name="robots"]', 'content', 'index, follow');
+      if (ogType) setAttr('meta[property="og:type"]', 'content', 'website');
+    };
+  }, [robots, ogType]);
+
   useEffect(() => {
     const url = absoluteUrl(path);
     const social = socialDescription || description;

@@ -22,11 +22,22 @@ export const COMPANY = {
  */
 export const NAV_LINKS = [
   { id: 'services', label: 'Services', to: '/services', menu: true, menuAllLabel: 'View all services' },
+  { id: 'about', label: 'About', to: '/about' },
   { id: 'approach', label: 'Approach', section: 'approach' },
   { id: 'why-us', label: 'Why Us', section: 'why-us' },
   { id: 'process', label: 'How It Works', section: 'process' },
-  { id: 'contact', label: 'Contact', section: 'contact' },
+  { id: 'blog', label: 'Blog', to: '/blog' },
+  { id: 'contact', label: 'Contact', to: '/contact' },
 ];
+
+/** Legal links in the footer's bottom row. The pages' text is in data/legal/. */
+export const LEGAL_LINKS = [
+  { label: 'Privacy Policy', to: '/privacy' },
+  { label: 'Terms', to: '/terms' },
+];
+
+/** Path of the contact page. "Book Strategy Call" buttons off the home page go here. */
+export const CONTACT_PATH = '/contact';
 
 /**
  * Per-page SEO. The home values mirror the static tags in client/index.html
@@ -1423,5 +1434,375 @@ export const servicesPage = {
     body: 'Tell us the contracts you are chasing and the areas you cover. We will come back with a straight assessment of what it takes to win them — no obligation.',
     button: 'Book Strategy Call',
     note: 'We reply the same business day.',
+  },
+};
+
+/* ==========================================================================
+   Client reviews (home page)
+   ========================================================================== */
+
+/**
+ * Shape: { quote, name, role, company, location, rating?, photo?, isSample }
+ * - `name` is first name and last initial ("Marcus T.").
+ * - `rating` (1–5) is optional; without it no stars are shown.
+ * - `photo` is optional, a path under /public (e.g. '/reviews/marcus.jpg');
+ *   without it the card shows initials.
+ * - `isSample: true` reviews are shown on local and preview builds only and
+ *   never on the live site or in structured data. The rule lives in
+ *   displayedReviews() in src/site.js. To go live, replace each sample with
+ *   a real, approved review and set `isSample: false`.
+ */
+export const reviews = [
+  // SAMPLE — replace with real client review before launch
+  {
+    quote:
+      'Almost all of our new contracts used to come from referrals. Now property managers find us on Google and call about specific sites, and the inquiries are for the kind of work we actually want. The monthly report makes it easy to see where each lead came from.',
+    name: 'Marcus T.',
+    role: 'Owner',
+    company: 'Ironside Patrol Services',
+    location: 'Houston, TX',
+    rating: 5,
+    isSample: true,
+  },
+  // SAMPLE — replace with real client review before launch
+  {
+    quote:
+      'We were paying for clicks from people shopping for DIY cameras and looking for security jobs. The campaigns are much tighter now, and the calls we get are homeowners and businesses ready to talk about an install.',
+    name: 'Danielle R.',
+    role: 'Operations Manager',
+    company: 'Brightline Alarm & Camera',
+    location: 'Phoenix, AZ',
+    rating: 5,
+    isSample: true,
+  },
+  // SAMPLE — replace with real client review before launch
+  {
+    quote:
+      'Our sales cycle is long, and good leads used to go quiet after the first proposal. With automatic follow-ups and one clear pipeline, our team knows exactly which quotes need attention each week.',
+    name: 'Kevin S.',
+    role: 'General Manager',
+    company: 'Crestview Access Systems',
+    location: 'Charlotte, NC',
+    isSample: true,
+  },
+  // SAMPLE — replace with real client review before launch
+  {
+    quote:
+      'Our Google Business Profile had not been touched in years. It is complete and active now, clients leave reviews without us chasing them, and more of our calls come from people who found us in the map results.',
+    name: 'Angela M.',
+    role: 'Owner',
+    company: 'Harborline Security Group',
+    location: 'Tampa, FL',
+    rating: 5,
+    isSample: true,
+  },
+];
+
+export const REVIEWS_SECTION = {
+  label: 'Client reviews',
+  title: 'What Security Company Owners Say',
+  lead: 'Guard companies, alarm and CCTV installers and access control firms on working with us.',
+  /** Shown above the cards only while sample reviews are on screen (never on the live site). */
+  sampleNotice:
+    'Preview only: these are sample reviews for layout. They are hidden on the live site until replaced with real client reviews.',
+};
+
+/* ==========================================================================
+   Contact form (shared by the home page section and /contact)
+   ========================================================================== */
+
+/**
+ * Copy around the one form component (components/ContactForm.jsx). The home
+ * page keeps its original note; the contact page avoids stating a response
+ * time. After a successful submission both forms go to /thank-you
+ * (thankYouPage below).
+ */
+export const CONTACT_FORM = {
+  submit: 'Book Strategy Call',
+  sending: 'Sending…',
+  homepage: {
+    note: 'We reply the same business day. Your details are never sold or shared.',
+  },
+  contact_page: {
+    note: 'Your details are never sold or shared.',
+  },
+  /** Under every form. `{privacy}` becomes a link to the Privacy Policy. */
+  privacyNotice: 'By submitting, you agree to our {privacy}.',
+  privacyLinkLabel: 'Privacy Policy',
+};
+
+/* ==========================================================================
+   /thank-you — shown after a successful form submission (noindex, not in
+   the sitemap). Placeholder copy: edit freely.
+   ========================================================================== */
+
+export const thankYouPage = {
+  meta: {
+    path: '/thank-you',
+    title: 'Thank You | Security Marketing Company',
+    description: 'Thanks for getting in touch with Security Marketing Company.',
+    robots: 'noindex, nofollow',
+  },
+  eyebrow: 'Request received',
+  heading: 'Thanks — we’ve received your details',
+  /** Used instead of `heading` when the visitor's first name is known. */
+  headingWithName: 'Thanks, {name} — we’ve received your details',
+  body: 'Here is what happens next.',
+  nextSteps: {
+    title: 'What happens next',
+    steps: [
+      {
+        title: 'We review your details',
+        body: 'We look at your website, your service area and the services you want to grow.',
+      },
+      {
+        title: 'We reach out to schedule a strategy call',
+        body: 'We contact you by email to find a time that suits you.',
+      },
+      {
+        title: 'You get a tailored plan',
+        body: 'After the call, you receive a plan built around your market, your services and your goals.',
+      },
+    ],
+  },
+  calendar: {
+    title: 'Want to pick a time now?',
+    button: 'Book on our calendar',
+  },
+  links: {
+    title: 'While you wait',
+    items: [
+      { label: 'Explore our services', to: '/services' },
+      { label: 'Read the blog', to: '/blog' },
+      { label: 'Back to home', to: '/' },
+    ],
+  },
+};
+
+/* ==========================================================================
+   /blog — posts are markdown files in src/content/blog/ (see blog/posts.js)
+   ========================================================================== */
+
+export const blogPage = {
+  meta: {
+    path: '/blog',
+    title: 'Blog: Marketing Advice for Security Companies | Security Marketing Company',
+    description:
+      'Practical marketing advice for US guard, alarm, CCTV and access control companies: Google Business Profile, websites, lead follow-up and more.',
+  },
+  breadcrumb: 'Blog',
+  hero: {
+    eyebrow: 'Blog',
+    title: 'Marketing Advice for Security Companies',
+    intro:
+      'Practical guides for owners and managers of guard, alarm, CCTV and access control companies — on getting found, turning visitors into inquiries and winning more contracts.',
+  },
+  featuredLabel: 'Latest post',
+  filterLabel: 'Filter by category',
+  allLabel: 'All',
+  readMore: 'Read article',
+  pageLabel: 'Page',
+  previous: 'Previous',
+  next: 'Next',
+  empty: 'No posts in this category yet.',
+  post: {
+    by: 'By',
+    readSuffix: 'min read',
+    relatedLabel: 'Keep reading',
+    relatedTitle: 'Related articles',
+    ctaKicker: 'Want help with this?',
+    /** `{service}` becomes the related service's name. */
+    ctaTitle: 'See how our {service} service works',
+    ctaBody: 'We do this work every day for US security companies. See what is included and how we deliver it.',
+    ctaButton: 'Learn more',
+  },
+  /** In-content CTA target when a post has no `service` in its frontmatter. */
+  categoryServices: {
+    'Local SEO': 'google-business-profile',
+    Websites: 'website',
+    'Lead Follow-Up': 'crm-automation',
+  },
+  defaultService: 'seo',
+  cta: {
+    label: 'Next step',
+    title: 'Put this to work for your company',
+    body: 'Tell us the contracts you are chasing and the areas you cover. We will come back with a straight assessment of what it takes to win them — no obligation.',
+    button: 'Book Strategy Call',
+    note: 'No obligation.',
+  },
+};
+
+/* ==========================================================================
+   /privacy and /terms — text lives in data/legal/, one file per page
+   ========================================================================== */
+
+export { privacyPolicy } from './legal/privacy.js';
+export { termsPage } from './legal/terms.js';
+
+/* ==========================================================================
+   /about
+   ========================================================================== */
+
+export const aboutPage = {
+  meta: {
+    path: '/about',
+    title: 'About Us | Security Marketing Company',
+    description:
+      'A B2B marketing agency that works only with US security companies: guard services, alarm and CCTV installers, access control firms and security integrators.',
+  },
+
+  hero: {
+    eyebrow: 'About us',
+    headlineTop: 'The Marketing Agency Built Only',
+    headlineBottom: 'for US Security Companies',
+    subhead:
+      'We help guard services, alarm and CCTV installers, access control firms and security integrators win more contracts and better leads online.',
+    cta: 'Book Strategy Call',
+    ctaSecondary: 'View Services',
+  },
+
+  whoWeAre: {
+    label: 'Who we are',
+    title: 'One industry. One focus.',
+    paragraphs: [
+      'Security Marketing Company is a B2B digital marketing agency that works only with US security companies: guard and patrol services, alarm and CCTV installers, access control firms and security systems integrators.',
+      'We build the websites, search visibility, advertising and follow-up that help them win more contracts and qualified leads online. We market security companies — we never provide security services or compete with our clients for work.',
+    ],
+  },
+
+  whyFocus: {
+    label: 'Why security companies',
+    title: 'Why we focus on security companies',
+    lead: 'Security is not a typical local service. The way buyers choose a provider shapes every part of the marketing.',
+    points: [
+      {
+        title: 'We understand your buyers',
+        body: 'Facilities managers, property managers, business owners, homeowners and IT directors each buy security differently. We write and target for each of them, not for a generic customer.',
+      },
+      {
+        title: 'Commercial sales cycles are long',
+        body: 'A guard contract may not come up for renewal for a year, and an integration project can need several approvals. Marketing has to keep you in front of buyers for the whole cycle, not just the first click.',
+      },
+      {
+        title: 'Local search is competitive',
+        body: 'Most security work is won city by city, in the map results and the top few search results. Service-area pages, a well-managed Google Business Profile and targeted ads are built for that contest.',
+      },
+      {
+        title: 'Trust decides the call',
+        body: 'Buyers are trusting you with their people and property. Licenses, insurance, certifications and genuine reviews need to be easy to find, because they are often what earns the inquiry.',
+      },
+    ],
+  },
+
+  /** Each principle restates a commitment already made on the service pages. */
+  principles: {
+    label: 'How we work',
+    title: 'Four commitments on every engagement',
+    items: [
+      {
+        title: 'Reporting built around inquiries',
+        body: 'Monthly reports show the calls, form submissions and booked surveys our work produces and where each came from. Traffic and rankings are there for context.',
+      },
+      {
+        title: 'You approve before anything goes live',
+        body: 'You approve every ad budget before it is spent, and review copy, content calendars and campaigns before they are published.',
+      },
+      {
+        title: 'No shortcuts that put you at risk',
+        body: 'We do not buy, write or incentivize reviews, we do not guarantee rankings no one controls, and every email campaign follows CAN-SPAM requirements.',
+      },
+      {
+        title: 'Terms in writing from the start',
+        body: 'The scope, term and notice period are set out in writing before any work starts, whether it is a one-off website build or an ongoing program.',
+      },
+    ],
+  },
+
+  services: {
+    label: 'What we do',
+    title: 'Services for security companies',
+    all: 'View all services',
+  },
+
+  cta: {
+    label: 'Next step',
+    title: 'Let’s talk about your market',
+    body: 'Tell us the contracts you are chasing and the areas you cover. We will come back with a straight assessment of what it takes to win them — no obligation.',
+    button: 'Book Strategy Call',
+    note: 'No obligation.',
+  },
+};
+
+/* ==========================================================================
+   /contact
+   ========================================================================== */
+
+export const contactPage = {
+  meta: {
+    path: '/contact',
+    title: 'Contact Us | Security Marketing Company',
+    description:
+      'Book a strategy call with Security Marketing Company. Tell us the contracts you are chasing and the areas you cover, and we will come back with a plan.',
+  },
+
+  hero: {
+    eyebrow: 'Contact',
+    headlineTop: 'Book a Strategy Call',
+    headlineBottom: 'Tell Us What You Want to Win',
+    subhead:
+      'Share the contracts you are chasing and the areas you cover. We will review your details and come back with a plan for your market — no obligation.',
+  },
+
+  form: {
+    label: 'Your details',
+    title: 'Request a strategy call',
+  },
+
+  direct: {
+    title: 'Prefer email?',
+    emailLabel: 'Email',
+    calendarTitle: 'Prefer to pick a time?',
+    calendarButton: 'Book on our calendar',
+  },
+
+  nextSteps: {
+    title: 'What happens next',
+    steps: [
+      {
+        title: 'We review your details',
+        body: 'We look at your website, your service area and the services you want to grow.',
+      },
+      {
+        title: 'We reach out to schedule a strategy call',
+        body: 'We contact you by email to find a time that suits you.',
+      },
+      {
+        title: 'You get a tailored plan',
+        body: 'After the call, you receive a plan built around your market, your services and your goals.',
+      },
+    ],
+  },
+
+  faq: {
+    label: 'FAQ',
+    title: 'The first call and getting started',
+    items: [
+      {
+        q: 'What happens on the strategy call?',
+        a: 'We talk through your services, the areas you cover and the work you want more of, and look at your current website, search visibility and advertising. You come away with a clear view of where the biggest opportunities are.',
+      },
+      {
+        q: 'Do we need to prepare anything?',
+        a: 'No preparation is required. If you have them to hand, your website address, the services and areas you want to grow, and access to any current ad or analytics accounts help us make the call more useful.',
+      },
+      {
+        q: 'Is there any obligation?',
+        a: 'No. The strategy call is a conversation about your goals, with no obligation to work with us.',
+      },
+      {
+        q: 'What does onboarding look like if we go ahead?',
+        a: 'The scope, term and notice period are agreed in writing first. Onboarding then starts with a kickoff call and access to the accounts the work needs, such as your website, Google Business Profile, ad accounts and analytics.',
+      },
+    ],
   },
 };

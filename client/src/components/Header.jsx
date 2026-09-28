@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { NAV_LINKS, services } from '../data/content.js';
+import { CONTACT_PATH, NAV_LINKS, services } from '../data/content.js';
 import { useActiveSection } from '../hooks/useActiveSection.js';
 import { servicePath } from '../seo.js';
 import { IconArrowRight, IconChevronDown, SERVICE_ICONS } from './Icons.jsx';
@@ -265,7 +265,9 @@ export default function Header() {
           )}
         </nav>
 
-        <StrategyCallLink className="btn btn--primary header__cta">Book Strategy Call</StrategyCallLink>
+        <StrategyCallLink className="btn btn--primary header__cta" to={CONTACT_PATH}>
+          Book Strategy Call
+        </StrategyCallLink>
 
         <button
           type="button"
@@ -337,7 +339,7 @@ export default function Header() {
               </Link>
             );
           })}
-          <StrategyCallLink className="btn btn--primary" onClick={close}>
+          <StrategyCallLink className="btn btn--primary" to={CONTACT_PATH} onClick={close}>
             Book Strategy Call
           </StrategyCallLink>
         </nav>

@@ -1,6 +1,8 @@
+import { PRODUCTION_HOSTNAMES } from './site.js';
+
 /**
- * Google Analytics 4. The measurement ID and the production hostnames live
- * here and nowhere else:
+ * Google Analytics 4. The measurement ID lives here and nowhere else; the
+ * production hostnames come from site.js:
  *  - vite.config.js imports them to write the loader snippet into the <head>
  *    of index.html, so every prerendered page (dist/services.html,
  *    dist/services/<slug>.html, 404.html) carries it too;
@@ -14,7 +16,7 @@
 
 export const GA_MEASUREMENT_ID = 'G-CBBT708R7T';
 
-export const GA_HOSTNAMES = ['securitymarketingcompany.com', 'www.securitymarketingcompany.com'];
+export const GA_HOSTNAMES = PRODUCTION_HOSTNAMES;
 
 /**
  * The inline <head> script. `send_page_view: false` stops the config call
@@ -38,6 +40,15 @@ export function gaHeadSnippet() {
         document.head.appendChild(tag);
       })();
     </script>`;
+}
+
+/**
+ * GA4 `generate_lead` after a successful form submission. `formLocation` is
+ * "contact_page" or "homepage". Does nothing off the production hosts.
+ */
+export function trackLead(formLocation) {
+  if (typeof window.gtag !== 'function') return;
+  window.gtag('event', 'generate_lead', { form_location: formLocation });
 }
 
 /** Sends one GA4 page_view for the current URL and document.title. */

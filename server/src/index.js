@@ -34,19 +34,26 @@ app.use('/api', (_req, res) => res.status(404).json({ message: 'Not found.' }));
 // exists. Hosted API-only (e.g. Render, with the client on Vercel) it won't.
 const dist = path.resolve(__dirname, '../../client/dist');
 if (process.env.NODE_ENV === 'production' && fs.existsSync(dist)) {
-  // /services and each /services/:slug have their own prerendered HTML (see
-  // client/scripts/prerender.js), so they get their own meta tags on a direct
-  // load or refresh. Registered before the static handler: dist/services/ is
-  // a folder, and express.static would otherwise redirect /services to
-  // /services/.
-  app.get('/services', (_req, res) => res.sendFile(path.join(dist, 'services.html')));
-  app.get('/services/:slug', (req, res, next) => {
-    const { slug } = req.params;
-    const file = path.join(dist, 'services', `${slug}.html`);
-    // Only slugs the build wrote a page for; anything else falls through to the 404.
-    if (/^[a-z0-9-]+$/.test(slug) && fs.existsSync(file)) return res.sendFile(file);
-    return next();
-  });
+  // Every page other than "/" has its own prerendered HTML (see
+  // client/scripts/prerender.js), so a direct load or refresh gets that
+  // page's meta tags. Registered before the static handler: dist/services/
+  // and dist/blog/ are folders, and express.static would otherwise redirect
+  // /services to /services/.
+  const PAGES = ['services', 'about', 'contact', 'privacy', 'terms', 'thank-you', 'blog'];
+  for (const page of PAGES) {
+    app.get(`/${page}`, (_req, res) => res.sendFile(path.join(dist, `${page}.html`)));
+  }
+
+  // /services/:slug and /blog/:slug: only slugs the build wrote a page for.
+  // Anything else falls through to the 404 below.
+  for (const folder of ['services', 'blog']) {
+    app.get(`/${folder}/:slug`, (req, res, next) => {
+      const { slug } = req.params;
+      const file = path.join(dist, folder, `${slug}.html`);
+      if (/^[a-z0-9-]+$/.test(slug) && fs.existsSync(file)) return res.sendFile(file);
+      return next();
+    });
+  }
   app.use(express.static(dist, { redirect: false }));
   // Any other path renders the client's 404 screen with a real 404 status so
   // search engines drop it.

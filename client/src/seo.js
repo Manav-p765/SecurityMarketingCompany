@@ -1,4 +1,12 @@
-import { COMPANY, serviceDetail, services, servicesPage } from './data/content.js';
+import {
+  aboutPage,
+  COMPANY,
+  contactPage,
+  serviceDetail,
+  services,
+  servicesPage,
+} from './data/content.js';
+import { publishedReviews } from './site.js';
 
 /**
  * Plain data helpers, no React — also imported by scripts/prerender.js at
@@ -33,6 +41,61 @@ function serviceNode(service) {
     provider,
     areaServed: US,
     audience: { '@type': 'BusinessAudience', audienceType: 'Security companies' },
+  };
+}
+
+/** WebPage-type JSON-LD (AboutPage, ContactPage) about the agency itself. */
+function pageSchema(type, meta, extra = {}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': type,
+    '@id': `${absoluteUrl(meta.path)}#webpage`,
+    url: absoluteUrl(meta.path),
+    name: meta.title,
+    description: meta.description,
+    inLanguage: 'en-US',
+    about: { ...provider, areaServed: US },
+    ...extra,
+  };
+}
+
+export const aboutSchema = () => pageSchema('AboutPage', aboutPage.meta);
+
+export const contactSchema = () =>
+  pageSchema('ContactPage', contactPage.meta, {
+    mainEntity: {
+      ...provider,
+      email: COMPANY.email,
+      ...(COMPANY.phone && { telephone: COMPANY.phone }),
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'sales',
+        email: COMPANY.email,
+        areaServed: US,
+        availableLanguage: 'English',
+      },
+    },
+  });
+
+/**
+ * Review JSON-LD for the home page, built from real reviews only (see
+ * publishedReviews in site.js). Returns null while there are none, so sample
+ * reviews never reach structured data.
+ */
+export function reviewsSchema() {
+  const real = publishedReviews();
+  if (real.length === 0) return null;
+  return {
+    '@context': 'https://schema.org',
+    ...provider,
+    review: real.map((review) => ({
+      '@type': 'Review',
+      reviewBody: review.quote,
+      author: { '@type': 'Person', name: review.name },
+      ...(review.rating && {
+        reviewRating: { '@type': 'Rating', ratingValue: review.rating, bestRating: 5 },
+      }),
+    })),
   };
 }
 

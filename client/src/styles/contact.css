@@ -209,49 +209,6 @@
   color: var(--dark-gray);
 }
 
-/* --- Success state ------------------------------------------------------- */
-
-.form__success {
-  display: grid;
-  gap: var(--space-sm);
-  justify-items: start;
-  padding: clamp(1.75rem, 1.2rem + 2.5vw, 3rem) 0;
-}
-
-.form__success-icon {
-  display: grid;
-  place-items: center;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: rgba(22, 163, 74, 0.1);
-  color: var(--success-green);
-}
-
-.form__success h3 {
-  font-size: var(--fs-h3);
-  text-transform: uppercase;
-  color: var(--success-green);
-}
-
-.form__success p {
-  font-size: var(--fs-small);
-  max-width: 46ch;
-}
-
-.form__success button {
-  margin-top: 0.4rem;
-  padding: 0;
-  background: none;
-  border: none;
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: var(--link-blue);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
-}
-
 @media (min-width: 640px) {
   .form__grid {
     grid-template-columns: repeat(2, 1fr);
