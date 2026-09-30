@@ -2,6 +2,7 @@ import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { Lead, SERVICES } from '../models/Lead.js';
 import { isDatabaseReady } from '../db.js';
+import { BUSINESS_EMAIL } from '../config.js';
 import {
   isConfirmationConfigured,
   isEmailConfigured,
@@ -60,7 +61,7 @@ router.post('/leads', submitLimiter, async (req, res) => {
     return res.status(503).json({
       ok: false,
       message:
-        'We could not save your request right now. Please email andy@securitymarketingcompany.com and we will reply the same day.',
+        `We could not save your request right now. Please email ${BUSINESS_EMAIL} and we will reply the same day.`,
     });
   }
 
@@ -86,7 +87,7 @@ router.post('/leads', submitLimiter, async (req, res) => {
   if (!lead && !emailed) {
     return res.status(500).json({
       ok: false,
-      message: 'Something went wrong on our end. Please email andy@securitymarketingcompany.com.',
+      message: `Something went wrong on our end. Please email ${BUSINESS_EMAIL}.`,
     });
   }
 

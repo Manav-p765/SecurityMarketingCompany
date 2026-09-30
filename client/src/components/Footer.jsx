@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { COMPANY, LEGAL_LINKS, NAV_LINKS, SOCIALS, services } from '../data/content.js';
+import { COMPANY, LEGAL_LINKS, NAV_LINKS, QUICK_LINKS, SOCIALS, services } from '../data/content.js';
 import { SOCIAL_ICONS } from './Icons.jsx';
 import { sectionPath, telHref } from './Links.jsx';
 
@@ -33,7 +33,20 @@ export default function Footer() {
           <ul>
             {NAV_LINKS.map((link) => (
               <li key={link.id}>
-                <Link to={link.to ?? sectionPath(link.section)}>{link.label}</Link>
+                <Link to={link.to}>{link.label}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Home page sections — linked from here now that the header only
+            carries the main pages. */}
+        <div className="footer__col">
+          <h4>Quick links</h4>
+          <ul>
+            {QUICK_LINKS.map((link) => (
+              <li key={link.section}>
+                <Link to={sectionPath(link.section)}>{link.label}</Link>
               </li>
             ))}
           </ul>

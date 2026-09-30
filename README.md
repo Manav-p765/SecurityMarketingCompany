@@ -83,6 +83,7 @@ securitymarketingcompany/
 │           └── services-page.css # /services and /services/:slug
 └── server/
     ├── src/index.js          # Express app
+    ├── src/config.js         # BUSINESS_EMAIL (must match COMPANY.email; the build checks)
     ├── src/db.js             # Mongo connection
     ├── src/models/Lead.js    # Lead schema
     └── src/routes/leads.js   # POST /api/leads
@@ -200,18 +201,27 @@ API — Render's free plan blocks SMTP, so Gmail/Nodemailer won't work there). A
 received if either succeeds, so a database outage doesn't lose leads.
 
 1. Sign up at resend.com and create an API key.
-2. On Render set `RESEND_API_KEY`, and `LEAD_NOTIFY_TO` to the inbox(es) that should get leads.
+2. On Render set `RESEND_API_KEY`, and `LEAD_NOTIFY_TO` to the inbox(es) that should get leads —
+   normally the business inbox, `info@securitymarketingcompany.com` (comma-separate several).
 3. Until you verify a domain in Resend, the sender must stay `onboarding@resend.dev` and
    `LEAD_NOTIFY_TO` can only be the address you signed up to Resend with. Verify
    `securitymarketingcompany.com` (a few DNS records) to send from e.g.
    `leads@securitymarketingcompany.com` to any address, then update `LEAD_NOTIFY_FROM`.
 
-Emails set Reply-To to the visitor, so replying goes straight to them.
+Team emails set Reply-To to the visitor, so replying goes straight to them.
 
 Once `LEAD_NOTIFY_FROM` is on a verified domain, each visitor also gets a confirmation email ("your
-request is in, Andy will reply the same business day") with a copy of what they sent. Their replies go
-to `LEAD_REPLY_TO` (default `andy@securitymarketingcompany.com`). It sends after the form responds,
-so a failure there never shows the visitor an error.
+request is in, Andy will reply the same business day") with a copy of what they sent. Its Reply-To is
+the business email, `BUSINESS_EMAIL` in `server/src/config.js` (`info@securitymarketingcompany.com`).
+It sends after the form responds, so a failure there never shows the visitor an error.
+
+**The business email** is `COMPANY.email` in `client/src/data/content.js`. Every visitor-facing
+address on the site comes from it: header/footer, contact page, legal pages, thank-you page, 404
+page and the schema added by the app. Two copies can't import it, so the build checks them:
+`BUSINESS_EMAIL` in `server/src/config.js` (API error messages and the confirmation Reply-To) and
+the `"email"` in the site-wide JSON-LD in `client/index.html`. **The build fails** if either one
+differs from `COMPANY.email`, or if any other address appears in the built HTML. To change the
+email, update all three.
 
 `VITE_API_URL` is baked in at build time, so redeploy Vercel after changing it. Vercel preview
 deployments get their own URLs; add one to `CORS_ORIGIN` if you want to test the form there.
@@ -414,7 +424,8 @@ the site without touching JSX.
 | Export in content.js | What it controls |
 | --- | --- |
 | `COMPANY` | Name, tagline, promise, email, site URL, optional `phone` and `calendarUrl` |
-| `NAV_LINKS` | Header nav and the footer "Company" column |
+| `NAV_LINKS` | Header nav (Home · Services · About Us · Contact Us · Blog) and the footer "Company" column |
+| `QUICK_LINKS` | Footer "Quick links" to home page sections (Approach, Why Us, How It Works, contact form) |
 | `HOME_META` | Home page title/description re-applied on in-app navigation (mirror of `index.html`) |
 | `HERO` | Home hero, including both buttons |
 | `STATS` | Proof row under the hero (blank values are hidden) |
@@ -468,6 +479,14 @@ section whose data is missing or empty is left out. The shared section headings 
 
 The header's "Services" item is a dropdown (desktop) and an accordion (mobile menu), generated
 from `services`. It comes from `menu: true` on the Services entry in `NAV_LINKS`.
+
+**Header navigation.** Five page links, the same order on desktop and mobile: Home, Services, About
+Us, Contact Us, Blog, plus the "Book Strategy Call" button. A link is active on its own page and
+every page under it (Services on `/services/:slug`, Blog on `/blog/:slug`); Home only on `/`.
+Clicking Home (or the logo) while on the home page scrolls back to the top. The full nav shows from
+1024px wide (`sections.css`, kept in step with the `matchMedia` in `Header.jsx`); below that it's
+the menu button. The home page sections (Approach, Why Us, How It Works) are linked from the
+footer's "Quick links" column.
 
 | Service | Detail page | Overview anchor |
 | --- | --- | --- |

@@ -2,7 +2,12 @@ export const COMPANY = {
   name: 'Security Marketing Company',
   tagline: 'Growing security companies online.',
   promise: 'More visibility. Bigger contracts.',
-  email: 'andy@securitymarketingcompany.com',
+  /**
+   * The one business email, used everywhere on the site. The server keeps a
+   * copy (BUSINESS_EMAIL in server/src/config.js) and client/index.html has it
+   * in its JSON-LD; the build fails if either one differs from this.
+   */
+  email: 'info@securitymarketingcompany.com',
   site: 'www.securitymarketingcompany.com',
   siteUrl: 'https://www.securitymarketingcompany.com',
   /**
@@ -15,19 +20,32 @@ export const COMPANY = {
 };
 
 /**
- * Main navigation. `to` is a page route; `section` is an anchor on the home
- * page (rendered as "/#section", so it works from any page). `menu: true`
+ * Main navigation (header, desktop and mobile, in this order; also the
+ * footer's "Company" column). Each `to` is a page route, and the link is
+ * marked active on that page and on any page below it (Services on
+ * /services/:slug, Blog on /blog/:slug). Home ("/") is active on the home
+ * page only, and on the home page it scrolls back to the top. `menu: true`
  * turns the link into a dropdown (desktop) / accordion (mobile) listing every
  * entry in `services`, with `menuAllLabel` linking to `to` at the bottom.
  */
 export const NAV_LINKS = [
+  { id: 'home', label: 'Home', to: '/' },
   { id: 'services', label: 'Services', to: '/services', menu: true, menuAllLabel: 'View all services' },
-  { id: 'about', label: 'About', to: '/about' },
-  { id: 'approach', label: 'Approach', section: 'approach' },
-  { id: 'why-us', label: 'Why Us', section: 'why-us' },
-  { id: 'process', label: 'How It Works', section: 'process' },
+  { id: 'about', label: 'About Us', to: '/about' },
+  { id: 'contact', label: 'Contact Us', to: '/contact' },
   { id: 'blog', label: 'Blog', to: '/blog' },
-  { id: 'contact', label: 'Contact', to: '/contact' },
+];
+
+/**
+ * Home page sections, linked from the footer's "Quick links" column only
+ * (they are no longer in the header). Rendered as "/#section", so they work
+ * from any page.
+ */
+export const QUICK_LINKS = [
+  { label: 'Our Approach', section: 'approach' },
+  { label: 'Why Us', section: 'why-us' },
+  { label: 'How It Works', section: 'process' },
+  { label: 'Get in Touch', section: 'contact' },
 ];
 
 /** Legal links in the footer's bottom row. The pages' text is in data/legal/. */

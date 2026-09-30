@@ -439,9 +439,10 @@
   color: var(--security-red);
 }
 
-/* Desktop nav from 1120px: below that, five links plus the longer
-   "Book Strategy Call" button do not fit on one line. */
-@media (min-width: 1120px) {
+/* Desktop nav from 1024px (keep in step with the matchMedia in Header.jsx):
+   below that, the logo, five links and the "Book Strategy Call" button do
+   not fit on one line with comfortable spacing. */
+@media (min-width: 1024px) {
   .header__nav,
   .header__cta {
     display: inline-flex;

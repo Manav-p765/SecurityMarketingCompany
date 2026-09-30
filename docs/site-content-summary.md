@@ -1,6 +1,6 @@
 # Security Marketing Company: Site Content Summary
 
-Updated on 2026-09-26 for the expanded service page copy (problem, why it matters, what's included, what to expect), the service page graphics, the header Services dropdown and Google Analytics. Then again for the About and Contact pages and the home page client reviews (samples, hidden on the live site), and for the Privacy Policy, Terms, thank-you page and blog. Earlier update: 2026-09-24, for the US retargeting, the Services page and the individual service pages. The first version was compiled on 2026-09-23 from commit `da29ff0`.
+Updated on 2026-09-30 for the single business email (info@securitymarketingcompany.com) and the five-item header with footer quick links. Earlier updates: the Privacy Policy, Terms, thank-you page and blog; the About and Contact pages and home page client reviews (samples, hidden on the live site); 2026-09-26, the expanded service page copy, service page graphics, Services dropdown and Google Analytics; 2026-09-24, the US retargeting, the Services page and the individual service pages. The first version was compiled on 2026-09-23 from commit `da29ff0`.
 
 **Sources:** `client/src/data/content.js` (almost all copy: every service and its detail page under `services`, the overview under `servicesPage`), the components in `client/src/components/` and `client/src/pages/`, `client/index.html` (home page meta and site-wide JSON-LD), `client/scripts/prerender.js` (meta for `/services` and each service page), and the server's lead routes and email templates.
 
@@ -491,7 +491,7 @@ Hero, then the lead form (the same component, validation, API and service dropdo
 
 - **Hero:** eyebrow "Contact"; H1 "Book a Strategy Call Tell Us What You Want to Win"; subhead "Share the contracts you are chasing and the areas you cover. We will review your details and come back with a plan for your market — no obligation."
 - **Form heading:** "Your details" / "Request a strategy call"; button "Book Strategy Call"; note "Your details are never sold or shared."
-- **Direct contact:** "Prefer email?" — Email: andy@securitymarketingcompany.com. Calendar: "Prefer to pick a time?" / "Book on our calendar" (hidden until a calendar link is set)
+- **Direct contact:** "Prefer email?" — Email: info@securitymarketingcompany.com. Calendar: "Prefer to pick a time?" / "Book on our calendar" (hidden until a calendar link is set)
 - **What happens next:** 1. We review your details — We look at your website, your service area and the services you want to grow. 2. We reach out to schedule a strategy call — We contact you by email to find a time that suits you. 3. You get a tailored plan — After the call, you receive a plan built around your market, your services and your goals.
 - **FAQ — The first call and getting started:**
   - *What happens on the strategy call?* "We talk through your services, the areas you cover and the work you want more of, and look at your current website, search visibility and advertising. You come away with a clear view of where the biggest opportunities are."
@@ -507,7 +507,7 @@ The home page contact section keeps its "We reply the same business day" note. A
 
 ### Privacy Policy (`/privacy`) and Terms & Conditions (`/terms`)
 
-**⚠ Templates — have both reviewed before relying on them legally.** Text lives in `client/src/data/legal/privacy.js` and `terms.js`. "Last updated: September 26, 2026" on both. No business address anywhere; the contact email is the `COMPANY` email (andy@securitymarketingcompany.com). Governing law: "applicable U.S. federal and state law" (a code comment marks where a state can be added).
+**⚠ Templates — have both reviewed before relying on them legally.** Text lives in `client/src/data/legal/privacy.js` and `terms.js`. "Last updated: September 26, 2026" on both. No business address anywhere; the contact email is the `COMPANY` email (info@securitymarketingcompany.com). Governing law: "applicable U.S. federal and state law" (a code comment marks where a state can be added).
 
 - **Privacy Policy sections:** `#information-we-collect` Information we collect · `#how-we-use-information` How we use your information · `#where-your-information-goes` Where your information goes · `#no-sale-of-data` We do not sell your information · `#analytics-and-cookies` Analytics and cookies · `#data-retention` How long we keep information · `#your-choices` Access, correction and deletion · `#us-state-privacy-rights` U.S. state privacy rights · `#security` Security · `#children` Children’s privacy · `#other-websites` Links to other websites · `#changes` Changes to this policy · `#contact` Contact us
   - Lists the form fields actually collected (name, company, work email, service, optional message), plus the user agent and timestamp saved with each submission and the IP address used for rate limiting.
@@ -574,7 +574,7 @@ All three are by "Security Marketing Company Team" and contain no statistics, cl
 | Services process | "How we work" | "Audit. Strategy. Launch. Optimize. Report." | See §2 |
 | Services FAQ | "FAQ" | "Questions security company owners ask us" | none |
 | Services CTA | "Next step" | "Tell us what you want to win" | Same text as the home contact lead, plus "We reply the same business day." |
-| 404 | "Error 404" | "Nothing on this page. **Plenty on the home page.**" | "The link may be old, or the address mistyped. Head back to the home page, see our services, or tell us what you were looking for at andy@securitymarketingcompany.com." |
+| 404 | "Error 404" | "Nothing on this page. **Plenty on the home page.**" | "The link may be old, or the address mistyped. Head back to the home page, see our services, or tell us what you were looking for at info@securitymarketingcompany.com." |
 
 **Feature bullet points:**
 - Feature 1: "Map pack and local rankings, city by city" / "A service-area page for every city you cover" / "Reporting tied to inquiries, not keyword screenshots"
@@ -621,13 +621,34 @@ All three are by "Security Marketing Company Team" and contain no statistics, cl
 | Item | As shown on the site |
 | --- | --- |
 | Business name | Security Marketing Company |
-| Email | andy@securitymarketingcompany.com |
+| Email | info@securitymarketingcompany.com — the one business email (`COMPANY.email`), used everywhere on the site |
 | Website | www.securitymarketingcompany.com |
-| Named contact | "Andy" |
+| Named contact | None on the website. The visitor confirmation email (sent by the server) still says "Andy will reply" and is signed "Andy" — ⚠ confirm that is still right now that replies go to info@. |
 | Response time | "Same business day" |
 | Phone | ⚠ Not set. Add it in `COMPANY.phone` and it will appear in the contact section and footer. |
 | Calendar link | ⚠ Not set. Add it in `COMPANY.calendarUrl` and every "Book Strategy Call" button will open it. |
 | Street address | Not shown (none provided) |
+
+### Where the business email appears
+
+`info@securitymarketingcompany.com` everywhere. It is `COMPANY.email` in `client/src/data/content.js`; the two copies that cannot import it are checked by the build.
+
+| Where | Source |
+| --- | --- |
+| Footer "Contact" column (every page) | `COMPANY.email` |
+| Home page contact section ("Email") | `COMPANY.email` |
+| /contact — "Prefer email?" card | `COMPANY.email` |
+| /privacy and /terms — intro, requests, contact sections | `{email}` in `data/legal/*.js` → `COMPANY.email` |
+| Form error messages ("please email …") | `COMPANY.email` |
+| 404 page | `COMPANY.email` |
+| ContactPage JSON-LD (/contact) | `COMPANY.email` (seo.js) |
+| Site-wide ProfessionalService JSON-LD (every page) | `client/index.html` — build fails if it differs |
+| API error messages (503/500) | `BUSINESS_EMAIL`, `server/src/config.js` — build fails if it differs |
+| Visitor confirmation email Reply-To | `BUSINESS_EMAIL`, `server/src/config.js` |
+| Team lead notification recipient | `LEAD_NOTIFY_TO` environment variable on Render (⚠ set it to info@; `.env.example` shows info@) |
+| `npm run test:email` default recipient | `LEAD_NOTIFY_TO`, else `BUSINESS_EMAIL` |
+
+The thank-you page shows the email only through the footer. Sending address: unchanged (`LEAD_NOTIFY_FROM`, default `onboarding@resend.dev`).
 
 **Contact form fields:** "Your name" (required), "Company" (required), "Work email" (required), "Service interested in" (required), "What do you need?" (optional), plus a hidden honeypot field that catches spam bots.
 
@@ -665,7 +686,9 @@ All three are by "Security Marketing Company Team" and contain no statistics, cl
 
 **Header "Services" dropdown:** lists every service page (icon and name, current page highlighted) with "View all services" (`/services`) at the bottom. In the mobile menu it's an accordion, open by default on a service page.
 
-**Navigation** (header and footer "Company" column): Services (`/services`, a dropdown in the header), About (`/about`), Approach (`/#approach`), Why Us (`/#why-us`), How It Works (`/#process`), Blog (`/blog`), Contact (`/contact`). Footer bottom row: Privacy Policy (`/privacy`) · Terms (`/terms`). The home-section links work from any page and scroll to the section once the home page loads.
+**Navigation** (header, desktop and mobile, and the footer "Company" column): Home (`/`), Services (`/services`, a dropdown in the header), About Us (`/about`), Contact Us (`/contact`), Blog (`/blog`), plus the "Book Strategy Call" button. The current page is highlighted (Services also on every service page, Blog on every post). Home scrolls to the top when you are already on the home page. The full nav shows from 1024px wide; below that, the menu button.
+
+**Footer "Quick links":** Our Approach (`/#approach`), Why Us (`/#why-us`), How It Works (`/#process`), Get in Touch (`/#contact`) — the home page sections that used to be in the header. They work from any page. Footer bottom row: Privacy Policy (`/privacy`) · Terms (`/terms`).
 
 **Footer "Services" column:** the heading links to `/services`; each service links to its detail page.
 

@@ -1,16 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { CONTACT_PATH, NAV_LINKS, services } from '../data/content.js';
-import { useActiveSection } from '../hooks/useActiveSection.js';
 import { servicePath } from '../seo.js';
 import { IconArrowRight, IconChevronDown, SERVICE_ICONS } from './Icons.jsx';
-import { StrategyCallLink, sectionPath } from './Links.jsx';
+import { StrategyCallLink } from './Links.jsx';
 
-const SECTION_IDS = NAV_LINKS.filter((link) => link.section).map((link) => link.section);
-const NO_SECTIONS = [];
+const isHomePath = (pathname) => pathname === '/' || pathname === '/index.html';
 
-/** Page links go to their route; section links go to "/#section" from any page. */
-const linkTarget = (link) => link.to ?? sectionPath(link.section);
+/**
+ * Home is active on the home page only; every other link on its own page and
+ * any page below it (Services on /services/:slug, Blog on /blog/:slug).
+ */
+function isLinkActive(link, pathname) {
+  if (link.to === '/') return isHomePath(pathname);
+  return pathname === link.to || pathname.startsWith(`${link.to}/`);
+}
 
 /** Pointer that can actually hover (not a touch screen faking it on tap). */
 const canHover = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -178,13 +182,8 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
-  const { pathname } = useLocation();
-  const onHome = pathname === '/' || pathname === '/index.html';
-  // Section tracking only means something on the page that has the sections.
-  const activeSection = useActiveSection(onHome ? SECTION_IDS : NO_SECTIONS);
-
-  const isActive = (link) =>
-    link.to ? pathname.startsWith(link.to) : onHome && activeSection === link.section;
+  const { pathname, hash } = useLocation();
+  const isActive = (link) => isLinkActive(link, pathname);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -208,7 +207,7 @@ export default function Header() {
     const onKey = (event) => {
       if (event.key === 'Escape') setMenuOpen(false);
     };
-    const desktop = window.matchMedia('(min-width: 1120px)');
+    const desktop = window.matchMedia('(min-width: 1024px)');
     const onChange = (event) => {
       if (event.matches) setMenuOpen(false);
     };
@@ -221,6 +220,21 @@ export default function Header() {
   }, [menuOpen]);
 
   const close = () => setMenuOpen(false);
+
+  /**
+   * Home (and the logo) on the home page itself: scroll back to the top
+   * instead of navigating. With a hash in the URL ("/#contact") the normal
+   * navigation to "/" clears it, and App.jsx scrolls to the top.
+   */
+  const onHomeClick = (event) => {
+    close();
+    if (!isHomePath(pathname) || hash) return;
+    event.preventDefault();
+    const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'instant' });
+  };
+
+  const onLinkClick = (link) => (link.to === '/' ? onHomeClick : close);
 
   const toggleMenu = () => {
     // The Services accordion starts open on a service page, so the current
@@ -235,7 +249,7 @@ export default function Header() {
         <Link
           className="header__logo"
           to="/"
-          onClick={close}
+          onClick={onHomeClick}
           aria-label="Security Marketing Company — home"
         >
           {/* DROP-IN: /public/logo/logo-lockup-light.png — the light lockup that
@@ -256,8 +270,9 @@ export default function Header() {
               <Link
                 key={link.id}
                 className={`header__link${isActive(link) ? ' is-active' : ''}`}
-                to={linkTarget(link)}
-                aria-current={link.to && isActive(link) ? 'page' : undefined}
+                to={link.to}
+                aria-current={isActive(link) ? 'page' : undefined}
+                onClick={onLinkClick(link)}
               >
                 {link.label}
               </Link>
@@ -330,9 +345,9 @@ export default function Header() {
               <Link
                 key={link.id}
                 className={isActive(link) ? 'is-active' : undefined}
-                to={linkTarget(link)}
-                aria-current={isActive(link) ? (link.to ? 'page' : 'true') : undefined}
-                onClick={close}
+                to={link.to}
+                aria-current={isActive(link) ? 'page' : undefined}
+                onClick={onLinkClick(link)}
               >
                 {link.label}
                 {number}

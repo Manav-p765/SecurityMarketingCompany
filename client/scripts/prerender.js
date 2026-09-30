@@ -35,6 +35,7 @@ import { createServer } from 'vite';
 import {
   aboutPage,
   blogPage,
+  COMPANY,
   contactPage,
   HOME_META,
   privacyPolicy,
@@ -166,6 +167,37 @@ const sitemap = [
   '',
 ].join('\n');
 fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap);
+
+// The business email lives in COMPANY.email. Two copies cannot import it:
+// client/index.html (site-wide JSON-LD) and the API's BUSINESS_EMAIL in
+// server/src/config.js. Fail the build if either differs, or if any other
+// address appears in the built HTML. Example domains in mockups are ignored.
+const EMAIL_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
+const IGNORED_EMAIL = /@example\.(com|org|net)$|\.example$/;
+for (const file of ['index.html', 'contact.html', 'privacy.html', 'terms.html', 'thank-you.html']) {
+  const html = fs.readFileSync(path.join(dist, file), 'utf8');
+  const others = [...new Set(html.match(EMAIL_RE) ?? [])].filter(
+    (email) => email !== COMPANY.email && !IGNORED_EMAIL.test(email)
+  );
+  if (others.length) {
+    throw new Error(
+      `prerender: dist/${file} contains ${others.join(', ')} — the business email is ${COMPANY.email}` +
+        ' (COMPANY.email in content.js; the JSON-LD in client/index.html must match it).'
+    );
+  }
+}
+const serverConfig = path.resolve(here, '../../server/src/config.js');
+if (fs.existsSync(serverConfig)) {
+  const serverEmail = fs
+    .readFileSync(serverConfig, 'utf8')
+    .match(/export const BUSINESS_EMAIL = '([^']+)'/)?.[1];
+  if (serverEmail !== COMPANY.email) {
+    throw new Error(
+      `prerender: server/src/config.js BUSINESS_EMAIL (${serverEmail}) does not match ` +
+        `COMPANY.email in content.js (${COMPANY.email}).`
+    );
+  }
+}
 
 // The API deploys on its own (Render, rootDir: server), so it cannot import
 // content.js and keeps its own copy of the form options. Fail the build if

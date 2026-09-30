@@ -1,7 +1,7 @@
 /**
  * Sends one "Hello World" email to check the Resend API key works.
  *
- *   npm run test:email                      -> sends to LEAD_NOTIFY_TO
+ *   npm run test:email                      -> sends to LEAD_NOTIFY_TO (else BUSINESS_EMAIL)
  *   npm run test:email -- you@example.com   -> sends to that address
  *
  * Reads RESEND_API_KEY (and optionally LEAD_NOTIFY_FROM / LEAD_NOTIFY_TO)
@@ -9,6 +9,7 @@
  */
 import 'dotenv/config';
 import { Resend } from 'resend';
+import { BUSINESS_EMAIL } from '../src/config.js';
 
 const key = process.env.RESEND_API_KEY;
 if (!key || key === 're_xxxxxxxxx') {
@@ -19,7 +20,7 @@ if (!key || key === 're_xxxxxxxxx') {
 const to =
   process.argv[2] ||
   process.env.LEAD_NOTIFY_TO?.split(',')[0].trim() ||
-  'andy@securitymarketingcompany.com';
+  BUSINESS_EMAIL;
 const from = process.env.LEAD_NOTIFY_FROM || 'onboarding@resend.dev';
 
 const resend = new Resend(key);

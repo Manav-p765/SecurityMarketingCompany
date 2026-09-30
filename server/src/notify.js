@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { BUSINESS_EMAIL } from './config.js';
 
 /**
  * Lead emails through Resend (the `resend` SDK, which calls its HTTP API —
@@ -6,7 +7,9 @@ import { Resend } from 'resend';
  *
  * Two emails per submission:
  *  - sendLeadEmail: the lead's details to the team (LEAD_NOTIFY_TO).
- *  - sendLeadConfirmation: a "we got it" note to the visitor.
+ *  - sendLeadConfirmation: a "we got it" note to the visitor, with Reply-To
+ *    set to the business email (BUSINESS_EMAIL in config.js), so a visitor's
+ *    reply reaches the same inbox shown on the website.
  *
  * Needs RESEND_API_KEY and LEAD_NOTIFY_TO. LEAD_NOTIFY_FROM defaults to
  * Resend's shared test sender, which can only deliver to the address the
@@ -16,7 +19,6 @@ import { Resend } from 'resend';
  */
 
 const DEFAULT_FROM = 'Security Marketing Company <onboarding@resend.dev>';
-const DEFAULT_REPLY_TO = 'andy@securitymarketingcompany.com';
 
 const sender = () => process.env.LEAD_NOTIFY_FROM || DEFAULT_FROM;
 
@@ -92,14 +94,14 @@ export async function sendLeadEmail(lead) {
   });
 }
 
-/** "We got it" note to the visitor. Replies go to Andy. */
+/** "We got it" note to the visitor. Replies go to the business email. */
 export async function sendLeadConfirmation(lead) {
   const firstName = lead.name.split(/\s+/)[0];
   const rows = detailRows(lead).filter(([label]) => label !== 'Email');
 
   await send({
     to: [lead.email],
-    replyTo: process.env.LEAD_REPLY_TO || DEFAULT_REPLY_TO,
+    replyTo: BUSINESS_EMAIL,
     subject: 'We received your strategy call request — Security Marketing Company',
     html: `
     <p style="${FONT};font-size:15px">Hi ${escapeHtml(firstName)},</p>
