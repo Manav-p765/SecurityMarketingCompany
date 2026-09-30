@@ -613,14 +613,14 @@ The home page "What Security Company Owners Say" section reads `reviews` in cont
 entries are **samples** written for layout (`isSample: true`, each marked
 `// SAMPLE — replace with real client review before launch`).
 
-- **Where they show:** `displayedReviews()` in `client/src/site.js` is the only rule. On the
-  production domain it returns real reviews only; anywhere else (localhost, `vite preview`, Vercel
-  previews) it returns everything, with a "Preview only" notice above the cards. With no real
-  reviews the section is hidden on the live site, so it is safe to deploy as it is.
+- **Where they show:** everywhere, including the live site (`displayedReviews()` in
+  `client/src/site.js`). While any review has `isSample: true`, a small low-contrast line under the
+  heading reads "Sample reviews shown. Client testimonials coming soon." (`REVIEWS_SECTION.sampleNote`).
 - **Going live:** replace each sample with a real, approved review (first name and last initial,
   role, company, city and state; `rating` 1–5 and `photo` are optional) and set `isSample: false`.
-  Nothing else: it then shows on the live site and is added to the home page `Review` schema, both
-  in the prerendered HTML and in the app. Samples never reach the schema.
+  Nothing else: the sample line disappears once no samples are left, and each real review is added
+  to the home page `Review` schema, both in the prerendered HTML and in the app. Samples never reach
+  the schema.
 - Get each client's written permission to publish their name, company and quote. Google does not
   show review stars in search results for reviews a business publishes about itself, so treat the
   schema as a nice-to-have rather than a way to get stars.

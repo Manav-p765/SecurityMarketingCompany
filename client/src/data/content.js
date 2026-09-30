@@ -8,7 +8,8 @@ export const COMPANY = {
    * in its JSON-LD; the build fails if either one differs from this.
    */
   email: 'info@securitymarketingcompany.com',
-  site: 'www.securitymarketingcompany.com',
+  /** Display form of the website address (footer). Links use siteUrl. */
+  site: 'securitymarketingcompany.com',
   siteUrl: 'https://www.securitymarketingcompany.com',
   /**
    * Optional. Leave empty to hide. `phone` shows in the contact section and
@@ -1465,10 +1466,11 @@ export const servicesPage = {
  * - `rating` (1–5) is optional; without it no stars are shown.
  * - `photo` is optional, a path under /public (e.g. '/reviews/marcus.jpg');
  *   without it the card shows initials.
- * - `isSample: true` reviews are shown on local and preview builds only and
- *   never on the live site or in structured data. The rule lives in
- *   displayedReviews() in src/site.js. To go live, replace each sample with
- *   a real, approved review and set `isSample: false`.
+ * - All reviews are shown on every environment, including the live site.
+ *   While any has `isSample: true`, a small "Sample reviews shown" line
+ *   appears under the heading, and samples are never added to the Review
+ *   schema. To go live, replace each sample with a real, approved review and
+ *   set `isSample: false` — the line then disappears on its own.
  */
 export const reviews = [
   // SAMPLE — replace with real client review before launch
@@ -1520,9 +1522,8 @@ export const REVIEWS_SECTION = {
   label: 'Client reviews',
   title: 'What Security Company Owners Say',
   lead: 'Guard companies, alarm and CCTV installers and access control firms on working with us.',
-  /** Shown above the cards only while sample reviews are on screen (never on the live site). */
-  sampleNotice:
-    'Preview only: these are sample reviews for layout. They are hidden on the live site until replaced with real client reviews.',
+  /** Shown under the heading while any displayed review has isSample: true. */
+  sampleNote: 'Sample reviews shown. Client testimonials coming soon.',
 };
 
 /* ==========================================================================

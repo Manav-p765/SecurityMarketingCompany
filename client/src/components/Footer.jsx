@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { COMPANY, LEGAL_LINKS, NAV_LINKS, QUICK_LINKS, SOCIALS, services } from '../data/content.js';
 import { SOCIAL_ICONS } from './Icons.jsx';
-import { sectionPath, telHref } from './Links.jsx';
+import { EmailText, sectionPath, telHref } from './Links.jsx';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -69,7 +69,9 @@ export default function Footer() {
           <h4>Contact</h4>
           <ul>
             <li>
-              <a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a>
+              <a href={`mailto:${COMPANY.email}`}>
+                <EmailText />
+              </a>
             </li>
             {COMPANY.phone && (
               <li>

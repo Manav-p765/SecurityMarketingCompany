@@ -1,6 +1,5 @@
-import { useMemo } from 'react';
 import { REVIEWS_SECTION } from '../data/content.js';
-import { displayedReviews } from '../site.js';
+import { displayedReviews, hasSampleReviews } from '../site.js';
 
 const initials = (name) =>
   name
@@ -52,15 +51,14 @@ function ReviewCard({ review, index }) {
 }
 
 /**
- * Home page client reviews. Which reviews appear (and whether the section
- * appears at all) is decided by displayedReviews() in site.js: samples show
- * on local and preview builds only, so the live site shows real reviews or
- * nothing.
+ * Home page client reviews, shown on every environment (displayedReviews in
+ * site.js). While any review is a sample, a small line under the heading
+ * says so; it goes away once every review has `isSample: false`.
  */
 export default function Reviews() {
-  const items = useMemo(() => displayedReviews(), []);
+  const items = displayedReviews();
   if (items.length === 0) return null;
-  const showingSamples = items.some((review) => review.isSample);
+  const showingSamples = hasSampleReviews(items);
 
   return (
     <section className="section section--tight dark-field reviews" id="reviews">
@@ -69,11 +67,10 @@ export default function Reviews() {
           <div>
             <p className="label">{REVIEWS_SECTION.label}</p>
             <h2>{REVIEWS_SECTION.title}</h2>
+            {showingSamples && <p className="reviews__sample-note">{REVIEWS_SECTION.sampleNote}</p>}
           </div>
           <p className="section-head__lead">{REVIEWS_SECTION.lead}</p>
         </div>
-
-        {showingSamples && <p className="reviews__notice">{REVIEWS_SECTION.sampleNotice}</p>}
 
         <ul className="reviews__grid">
           {items.map((review, index) => (

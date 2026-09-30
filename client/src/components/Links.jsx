@@ -30,5 +30,21 @@ export function StrategyCallLink({ children, to, ...props }) {
   );
 }
 
+/**
+ * An email address that may wrap only after the "@", never mid-word:
+ * "info@" / "securitymarketingcompany.com" on a narrow column.
+ */
+export function EmailText({ email = COMPANY.email }) {
+  const at = email.indexOf('@');
+  if (at < 0) return email;
+  return (
+    <>
+      {email.slice(0, at + 1)}
+      <wbr />
+      {email.slice(at + 1)}
+    </>
+  );
+}
+
 /** "tel:" href from a display number such as "(214) 555-0100". */
 export const telHref = (phone) => `tel:${phone.replace(/[^\d+]/g, '')}`;

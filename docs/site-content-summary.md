@@ -604,7 +604,7 @@ All three are by "Security Marketing Company Team" and contain no statistics, cl
 ## 4. Social Proof
 
 - **Client reviews (home page, after "How it works" and before the contact form):** "Client reviews" / "What Security Company Owners Say" — "Guard companies, alarm and CCTV installers and access control firms on working with us."
-  - **⚠ All four are samples** written for layout (`isSample: true`). They show on local and preview builds only, under the notice "Preview only: these are sample reviews for layout. They are hidden on the live site until replaced with real client reviews." On the live site the section is hidden, and no Review schema is output, until real reviews replace them. See the README, "Client reviews — how to make them live".
+  - **⚠ All four are samples** written for layout (`isSample: true`). They show on every environment, including the live site, with a small low-contrast line under the heading: "Sample reviews shown. Client testimonials coming soon." The line disappears once every review has isSample: false. Samples are never added to the Review schema. See the README, "Client reviews — how to make them live".
   - (sample) "Almost all of our new contracts used to come from referrals. Now property managers find us on Google and call about specific sites, and the inquiries are for the kind of work we actually want. The monthly report makes it easy to see where each lead came from." — Marcus T., Owner, Ironside Patrol Services, Houston, TX · 5 stars
   - (sample) "We were paying for clicks from people shopping for DIY cameras and looking for security jobs. The campaigns are much tighter now, and the calls we get are homeowners and businesses ready to talk about an install." — Danielle R., Operations Manager, Brightline Alarm & Camera, Phoenix, AZ · 5 stars
   - (sample) "Our sales cycle is long, and good leads used to go quiet after the first proposal. With automatic follow-ups and one clear pipeline, our team knows exactly which quotes need attention each week." — Kevin S., General Manager, Crestview Access Systems, Charlotte, NC · no rating
@@ -622,7 +622,7 @@ All three are by "Security Marketing Company Team" and contain no statistics, cl
 | --- | --- |
 | Business name | Security Marketing Company |
 | Email | info@securitymarketingcompany.com — the one business email (`COMPANY.email`), used everywhere on the site |
-| Website | www.securitymarketingcompany.com |
+| Website | securitymarketingcompany.com (footer; links to https://www.securitymarketingcompany.com) |
 | Named contact | None on the website. The visitor confirmation email (sent by the server) still says "Andy will reply" and is signed "Andy" — ⚠ confirm that is still right now that replies go to info@. |
 | Response time | "Same business day" |
 | Phone | ⚠ Not set. Add it in `COMPANY.phone` and it will appear in the contact section and footer. |

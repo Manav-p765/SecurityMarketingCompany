@@ -217,14 +217,11 @@
    Home page reviews: a grid on desktop, a swipeable row on phones
    -------------------------------------------------------------------------- */
 
-.reviews__notice {
-  margin: calc(-1 * var(--head-gap) + var(--space-md)) 0 var(--space-lg);
-  padding: 0.75rem 1rem;
-  border: 1px dashed rgba(245, 158, 11, 0.6);
-  border-radius: var(--radius-card);
+/* Small, low-contrast line under the heading while sample reviews are shown. */
+.reviews__sample-note {
+  margin-top: var(--space-sm);
   font-size: var(--fs-xs);
-  font-weight: 600;
-  color: var(--warning-amber);
+  color: var(--on-dark-3);
 }
 
 .reviews__grid {

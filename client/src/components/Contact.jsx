@@ -1,6 +1,6 @@
 import { COMPANY } from '../data/content.js';
 import ContactForm from './ContactForm.jsx';
-import { telHref } from './Links.jsx';
+import { EmailText, telHref } from './Links.jsx';
 
 /** Home page contact section: intro and direct details beside the shared lead form. */
 export default function Contact() {
@@ -22,7 +22,7 @@ export default function Contact() {
               <dt>Email</dt>
               <dd>
                 <a className="text-link" href={`mailto:${COMPANY.email}`}>
-                  {COMPANY.email}
+                  <EmailText />
                 </a>
               </dd>
             </div>

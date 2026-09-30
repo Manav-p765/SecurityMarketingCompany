@@ -3,7 +3,7 @@ import ContactForm from '../components/ContactForm.jsx';
 import Faq from '../components/Faq.jsx';
 import Footer from '../components/Footer.jsx';
 import { IconArrowRight } from '../components/Icons.jsx';
-import { telHref } from '../components/Links.jsx';
+import { EmailText, telHref } from '../components/Links.jsx';
 import { COMPANY, contactPage } from '../data/content.js';
 import { usePageMeta } from '../hooks/usePageMeta.js';
 import { useReveal } from '../hooks/useReveal.js';
@@ -52,7 +52,7 @@ export default function ContactPage() {
                     <dt>{direct.emailLabel}</dt>
                     <dd>
                       <a className="text-link" href={`mailto:${COMPANY.email}`}>
-                        {COMPANY.email}
+                        <EmailText />
                       </a>
                     </dd>
                   </div>
