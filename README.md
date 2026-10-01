@@ -44,6 +44,7 @@ securitymarketingcompany/
 │   ├── scripts/prerender.js  # Post-build: a static HTML file per page, 404.html, sitemap.xml
 │   ├── scripts/markdown.js   # Build-time markdown → HTML for blog posts (marked)
 │   ├── public/
+│   │   ├── admin/            # ← BLOG ADMIN (/admin): Sveltia CMS page + config.yml
 │   │   ├── logo/             # ← LOGO FILES (see logo/README.md)
 │   │   └── hero/             # ← OPTIONAL HERO PHOTO (see hero/README.md)
 │   └── src/
@@ -53,6 +54,7 @@ securitymarketingcompany/
 │       ├── data/content.js   # ← ALL SITE COPY. Edit text here, not in JSX.
 │       ├── data/legal/       # ← PRIVACY POLICY and TERMS text (privacy.js, terms.js)
 │       ├── content/blog/     # ← BLOG POSTS, one markdown file each
+│       ├── content/blog-settings.yml # Categories offered in the blog admin
 │       ├── blog/             # posts.js (loadPosts — the one place posts are loaded), schema.js
 │       ├── pages/
 │       │   ├── HomePage.jsx      # Home section order
@@ -86,7 +88,8 @@ securitymarketingcompany/
     ├── src/config.js         # BUSINESS_EMAIL (must match COMPANY.email; the build checks)
     ├── src/db.js             # Mongo connection
     ├── src/models/Lead.js    # Lead schema
-    └── src/routes/leads.js   # POST /api/leads
+    ├── src/routes/leads.js   # POST /api/leads
+    └── src/routes/auth.js    # GitHub sign-in for the blog admin (/api/auth)
 ```
 
 ---
@@ -524,9 +527,14 @@ header button always goes to `/contact`. All of this is in `StrategyCallLink` (`
 
 Posts are markdown files in `client/src/content/blog/`. They are rendered to HTML at build time
 (`client/scripts/markdown.js`, via the `blog-markdown` plugin in `vite.config.js`), so there is no
-markdown parser in the browser bundle.
+markdown parser in the browser bundle. Frontmatter is parsed with the `yaml` package (build time
+only), so hand-written posts and posts saved by the blog admin read the same way.
 
-### Adding a post
+Non-developers write posts in the **blog admin at `/admin`** (next section, and the editor guide in
+`docs/blog-admin-guide.md`). It saves the same markdown files, so everything below applies to
+admin-written posts too.
+
+### Adding a post by hand
 
 1. Create `client/src/content/blog/<slug>.md`:
 
@@ -538,9 +546,10 @@ markdown parser in the browser bundle.
    excerpt: One or two sentences. Used on cards and as the meta description.
    category: Local SEO              # becomes a filter chip on /blog
    author: Security Marketing Company Team
-   coverImage: /blog/your-image.jpg # optional — put the file in client/public/blog/
+   coverImage: /images/blog/your-image.jpg # optional — file in client/public/images/blog/
    readingTime: 6                   # optional — calculated from word count if missing
    service: google-business-profile # optional — service slug for the in-article CTA box
+   draft: false                     # optional — true keeps it off the site
    ---
 
    Write the post in markdown. Use ## and ### for headings (the title is the page's H1).
@@ -551,6 +560,8 @@ markdown parser in the browser bundle.
 
 - **Required fields:** `title`, `date`, `excerpt`, `category`, `author`. The build fails with a
   clear message if one is missing, a date is malformed or two posts share a slug.
+- **Drafts:** `draft: true` posts are skipped by `loadPosts()` before anything else: no page, no
+  card, no sitemap entry, no prerendered HTML, and their missing fields never fail the build.
 - **No cover image?** The card and post show a generated graphic in the site style, based on the
   category and slug.
 - **The CTA box** in the middle of each post links to `service` if set, otherwise to the service
@@ -563,6 +574,63 @@ markdown parser in the browser bundle.
   coverImage, readingTime, service, html`). Nothing else reads the markdown files.
 
 Blog page copy (hero, labels, CTA text) is `blogPage` in content.js.
+
+---
+
+## Blog admin (`/admin`)
+
+A Git-based admin for writing and publishing posts without touching code:
+[Sveltia CMS](https://sveltiacms.app), loaded from a CDN by a static page outside the React app.
+
+- **Files:** `client/public/admin/index.html` (loads the CMS) and `client/public/admin/config.yml`
+  (the "Blog Posts" collection, fields, media folder). Categories offered in the editor are in
+  `client/src/content/blog-settings.yml`, editable in the admin under **Blog Settings**. Adding a
+  category there only adds it to the dropdown; it shows on /blog once a published post uses it.
+- **How publishing works:** the admin signs in to GitHub and commits straight to `main` in
+  `Manav-p765/SecurityMarketingCompany`. Each save is a commit, which triggers the normal Vercel
+  build, so a published post is live a couple of minutes later. Posts are saved as markdown files in
+  `client/src/content/blog/` with the same frontmatter as hand-written ones; images go to
+  `client/public/images/blog/` and are referenced as `/images/blog/<file>`.
+- **Drafts:** the **Draft** switch writes `draft: true`. Draft posts are committed but never built
+  into the site.
+- **Sign-in:** GitHub OAuth through the API on Render: `GET /api/auth` and `GET /api/auth/callback`
+  (`server/src/routes/auth.js`). After GitHub sign-in the server checks the account has **write
+  access** to the repo before handing the token to the admin; anyone else is refused. The token
+  only reaches the live site's origins (or `CMS_ORIGINS`).
+- **Kept private:** `/admin` sends `noindex, nofollow` (meta tag, plus an `X-Robots-Tag` header from
+  `client/vercel.json` and from Express). It is not in the sitemap or prerender, and nothing on the
+  public site links to it. Vercel serves it as a static folder; Express has an explicit `/admin`
+  route ahead of the page handling.
+
+### One-time setup
+
+The API on Render must be running: the sign-in goes through it.
+
+1. **Create a GitHub OAuth App.** GitHub → your avatar → **Settings** → **Developer settings** →
+   **OAuth Apps** → **New OAuth App**:
+   - Application name: `Security Marketing Company Blog Admin`
+   - Homepage URL: `https://www.securitymarketingcompany.com`
+   - Authorization callback URL — exactly:
+     **`https://securitymarketingcompany.onrender.com/api/auth/callback`**
+   - Leave "Enable Device Flow" off. Click **Register application**.
+   - On the next page, copy the **Client ID**, then click **Generate a new client secret** and copy
+     the secret (it is shown once).
+2. **Add the credentials on Render.** Render dashboard → the API service → **Environment** → add
+   `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` with the values from step 1 → **Save changes**
+   (Render redeploys). Never put them in the repo.
+3. **Give each editor access.** GitHub → the repo → **Settings** → **Collaborators** → **Add
+   people** → their GitHub username, with **Write** access (the default for collaborators on a
+   personal repo). They accept the email invitation, then sign in at
+   `https://www.securitymarketingcompany.com/admin`. You, as the owner, already have access.
+
+If the Render URL ever changes, update both the OAuth App's callback URL and `base_url` in
+`client/public/admin/config.yml`.
+
+### Testing the admin locally
+
+On `localhost` the admin also offers **Work with Local Repository**: pick this repo's folder (in
+Chrome or Edge) and edits are written straight to your working copy, with no GitHub sign-in.
+Run `npm run build && npm --prefix client run preview` and open `http://localhost:4173/admin`.
 
 ---
 

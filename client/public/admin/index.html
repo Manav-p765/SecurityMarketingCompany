@@ -1,0 +1,24 @@
+<!doctype html>
+<!--
+  Blog admin — Sveltia CMS (https://sveltiacms.app), a Git-based CMS.
+  Static page served at /admin, outside the React app. Posts are saved as
+  markdown files in client/src/content/blog/ by committing to the GitHub
+  repo, which triggers the normal Vercel deploy. Configuration: config.yml
+  next to this file. Setup and login: README, "Blog admin (/admin)".
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Blog Admin | Security Marketing Company</title>
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <!-- Absolute path, so the config loads whether the page is opened at
+         /admin or /admin/. -->
+    <link href="/admin/config.yml" type="application/yaml" rel="cms-config-url" />
+  </head>
+  <body>
+    <!-- Pinned major version from the CDN; 0.x releases stay config-compatible. -->
+    <script src="https://unpkg.com/@sveltia/cms@0/dist/sveltia-cms.js"></script>
+  </body>
+</html>

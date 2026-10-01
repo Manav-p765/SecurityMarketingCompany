@@ -6,6 +6,7 @@ import express from 'express';
 import cors from 'cors';
 import { connectDatabase, isDatabaseReady } from './db.js';
 import leadRoutes from './routes/leads.js';
+import authRoutes from './routes/auth.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -26,6 +27,8 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.use('/api', leadRoutes);
+// GitHub sign-in for the blog admin (Sveltia CMS at /admin on the website).
+app.use('/api', authRoutes({ corsOrigins: ORIGINS }));
 
 // Unknown API routes get a JSON 404, not the HTML page.
 app.use('/api', (_req, res) => res.status(404).json({ message: 'Not found.' }));
@@ -54,6 +57,16 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(dist)) {
       return next();
     });
   }
+  // Blog admin: the static Sveltia CMS page (client/public/admin/), outside
+  // the React app and the page handling above. Never indexed.
+  app.get(['/admin', '/admin/'], (_req, res) =>
+    res.set('X-Robots-Tag', 'noindex, nofollow').sendFile(path.join(dist, 'admin', 'index.html'))
+  );
+  app.use('/admin', (_req, res, next) => {
+    res.set('X-Robots-Tag', 'noindex, nofollow');
+    next();
+  });
+
   app.use(express.static(dist, { redirect: false }));
   // Any other path renders the client's 404 screen with a real 404 status so
   // search engines drop it.

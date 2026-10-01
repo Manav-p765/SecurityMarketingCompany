@@ -35,8 +35,31 @@ function googleTag() {
   };
 }
 
+/**
+ * /admin is the static blog admin (public/admin/index.html), not a React
+ * route. Vercel and Express serve it directly; this does the same for the
+ * Vite dev and preview servers, whose SPA fallback would otherwise send
+ * "/admin" to the React app.
+ */
+function adminPage() {
+  const rewrite = (req, _res, next) => {
+    if (req.url === '/admin' || req.url.startsWith('/admin?')) req.url = req.url.replace('/admin', '/admin/index.html');
+    else if (req.url === '/admin/' || req.url.startsWith('/admin/?')) req.url = req.url.replace('/admin/', '/admin/index.html');
+    next();
+  };
+  return {
+    name: 'admin-page',
+    configureServer(server) {
+      server.middlewares.use(rewrite);
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(rewrite);
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [blogMarkdown(), react(), googleTag()],
+  plugins: [blogMarkdown(), react(), googleTag(), adminPage()],
   server: {
     port: 5173,
     proxy: {

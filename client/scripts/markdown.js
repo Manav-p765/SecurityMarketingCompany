@@ -5,6 +5,7 @@
  * count.
  */
 import { Marked } from 'marked';
+import { parse as parseYaml } from 'yaml';
 
 /** "Speed to lead: why it matters" -> "speed-to-lead-why-it-matters" */
 export const slugify = (text) =>
@@ -44,20 +45,17 @@ const marked = new Marked({
 });
 
 /**
- * Minimal frontmatter: `key: value` lines between two `---` lines. Values
- * may be quoted. That covers title, slug, date, excerpt, category,
- * coverImage, author, readingTime and service.
+ * YAML frontmatter between two `---` lines, parsed with a real YAML parser:
+ * posts are written by hand and by the blog admin (Sveltia CMS, /admin),
+ * which may quote values or wrap long ones. Dates like 2026-10-01 stay
+ * strings (YAML 1.2 core schema); `draft: true` is a boolean.
  */
 export function parseFrontmatter(raw) {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
   if (!match) return { data: {}, body: raw };
-  const data = {};
-  for (const line of match[1].split(/\r?\n/)) {
-    const pair = line.match(/^([A-Za-z][\w-]*)\s*:\s*(.*)$/);
-    if (!pair) continue;
-    let value = pair[2].trim();
-    if (/^(['"]).*\1$/.test(value)) value = value.slice(1, -1);
-    data[pair[1]] = value;
+  const data = parseYaml(match[1]) ?? {};
+  if (typeof data !== 'object' || Array.isArray(data)) {
+    throw new Error('Blog post frontmatter must be a set of "key: value" pairs.');
   }
   return { data, body: raw.slice(match[0].length) };
 }

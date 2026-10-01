@@ -27,3 +27,9 @@ services:
         sync: false
       - key: LEAD_NOTIFY_FROM
         value: Security Marketing Company <onboarding@resend.dev>
+      # Blog admin (/admin) GitHub sign-in: the GitHub OAuth App's credentials.
+      # Callback URL on the OAuth App: https://<this service>/api/auth/callback
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
