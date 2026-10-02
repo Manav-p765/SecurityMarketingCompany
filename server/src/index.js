@@ -1,12 +1,15 @@
 import 'dotenv/config';
+import './asyncErrors.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import express from 'express';
 import cors from 'cors';
 import { connectDatabase, isDatabaseReady } from './db.js';
+import { ipSource } from './clientIp.js';
 import leadRoutes from './routes/leads.js';
-import authRoutes from './routes/auth.js';
+import publicRoutes from './routes/public.js';
+import adminRoutes from './routes/admin/index.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -16,19 +19,24 @@ const ORIGINS = (process.env.CORS_ORIGIN || 'http://localhost:5173')
   .split(',')
   .map((o) => o.trim())
   .filter(Boolean);
+// Origins allowed to make signed-in admin requests (checked on writes).
+const SITE_ORIGINS = ['https://www.securitymarketingcompany.com', 'https://securitymarketingcompany.com'];
+const ADMIN_ORIGINS = [...new Set([...SITE_ORIGINS, ...ORIGINS, 'http://localhost:5173', 'http://localhost:4173'])];
 
 const app = express();
 app.set('trust proxy', 1);
 app.use(cors({ origin: ORIGINS }));
-app.use(express.json({ limit: '32kb' }));
 
-app.get('/api/health', (_req, res) => {
-  res.json({ ok: true, db: isDatabaseReady() ? 'connected' : 'disconnected' });
+app.get('/api/health', (req, res) => {
+  res.json({ ok: true, db: isDatabaseReady() ? 'connected' : 'disconnected', via: ipSource(req) });
 });
 
+// The admin API parses its own (larger) JSON bodies, so it comes before the
+// site-wide 32kb parser.
+app.use('/api/admin', adminRoutes({ allowedOrigins: ADMIN_ORIGINS }));
+app.use(express.json({ limit: '32kb' }));
+app.use('/api/public', publicRoutes);
 app.use('/api', leadRoutes);
-// GitHub sign-in for the blog admin (Sveltia CMS at /admin on the website).
-app.use('/api', authRoutes({ corsOrigins: ORIGINS }));
 
 // Unknown API routes get a JSON 404, not the HTML page.
 app.use('/api', (_req, res) => res.status(404).json({ message: 'Not found.' }));
@@ -57,21 +65,25 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(dist)) {
       return next();
     });
   }
-  // Blog admin: the static Sveltia CMS page (client/public/admin/), outside
-  // the React app and the page handling above. Never indexed.
-  app.get(['/admin', '/admin/'], (_req, res) =>
-    res.set('X-Robots-Tag', 'noindex, nofollow').sendFile(path.join(dist, 'admin', 'index.html'))
+
+  // Admin panel: a React route (lazy-loaded), so every /admin URL gets the
+  // app shell. Never indexed.
+  app.get(['/admin', '/admin/*'], (_req, res) =>
+    res.set('X-Robots-Tag', 'noindex, nofollow').sendFile(path.join(dist, 'index.html'))
   );
-  app.use('/admin', (_req, res, next) => {
-    res.set('X-Robots-Tag', 'noindex, nofollow');
-    next();
-  });
 
   app.use(express.static(dist, { redirect: false }));
   // Any other path renders the client's 404 screen with a real 404 status so
   // search engines drop it.
   app.get('*', (_req, res) => res.status(404).sendFile(path.join(dist, '404.html')));
 }
+
+// Last resort for errors thrown anywhere above (see asyncErrors.js).
+app.use((err, _req, res, _next) => {
+  console.error('[api]', err);
+  if (res.headersSent) return;
+  res.status(500).json({ message: 'Something went wrong. Please try again.' });
+});
 
 connectDatabase(MONGODB_URI).catch((err) =>
   console.error('[db] initial connection failed:', err.message)

@@ -2,117 +2,113 @@
 
 This guide shows you how to write, save and publish articles on the Security Marketing Company blog. You don't need to know any code.
 
-**The admin is at:** https://www.securitymarketingcompany.com/admin
-
----
-
-## Before you start (one time only)
-
-You need a free **GitHub account**, and the site owner needs to give that account access to the website. GitHub is where the website's files are kept; the admin uses it to save your work.
-
-1. If you don't have one, create an account at https://github.com/signup.
-2. Send your GitHub username to the site owner and ask to be added as a **collaborator**.
-3. You'll get an email invitation from GitHub. Click **Accept invitation**.
-
-That's it — you can now sign in.
+**The admin panel is at:** https://www.securitymarketingcompany.com/admin
 
 ---
 
 ## 1. Sign in
 
 1. Go to **https://www.securitymarketingcompany.com/admin**.
-2. Click **Sign In with GitHub**.
-3. A small window opens. Sign in to GitHub if asked, then click **Authorize** the first time.
-4. The window closes and you'll see the list of blog posts.
+2. Enter the **email** and **password** the site admin gave you, and click **Sign in**.
 
-If you see a message saying your account doesn't have access, ask the site owner to add you as a collaborator (see above).
+You stay signed in on that browser for 7 days.
+
+- **Forgot your password?** Ask an admin to reset it (Users → Reset password). There is no "forgot password" email.
+- **Changing your password:** click **My account** in the left menu. Use at least 10 characters.
+- **On a shared computer?** Click **Sign out** (bottom of the left menu) when you're done.
 
 ---
 
-## 2. Create a new post
+## 2. Write a new post
 
-1. Under **Collections** on the left, click **Blog Posts**.
-2. Click the blue **New** button (top right).
-3. Fill in the form:
+1. Click **Blog posts** in the left menu, then the red **New post** button (top right).
+2. Fill in the form:
 
 | Field | What to enter |
 | --- | --- |
 | **Title** | The headline, e.g. *How to Win More Commercial Guard Contracts*. |
-| **Web address** (optional) | Leave this **blank**. A web address is made from the title automatically. Only fill it in if you want a shorter address — and never change it after the post is live. |
-| **Publish date** | The date shown on the post. Click **Today**, or pick a date. Newer dates appear first on the blog. |
-| **Excerpt** | One or two sentences summing up the article. It appears on the blog page and in Google results. |
-| **Category** | Pick one. To add a new category, see "Adding a category" below. |
-| **Cover image** (optional) | See step 3. |
+| **Web address** | Filled in for you from the title. You can shorten it before you publish. Once a post is published, the address is fixed so links to it keep working. |
+| **Excerpt** | One or two sentences summing up the article. It appears on the blog page and in Google results. The counter shows how many characters you've used — about 160 fit in Google. |
+| **Category** | Pick one from the list. (Admins can add new categories under **Categories**.) |
 | **Author** | Already filled in as *Security Marketing Company Team*. Leave it, or change it. |
-| **Related service** (optional) | The service promoted in the box in the middle of the article. Leave blank to have it chosen from the category. |
-| **Draft** | See step 4. |
-| **Article** | The article itself. |
+| **Article** | The article itself — see below. |
 
-**Writing the article:** type as you would in a word processor. Use the toolbar for **bold**, *italic* and links. For section headings, use the paragraph-style menu on the left of the toolbar and choose **Heading 2** (and **Heading 3** for sub-sections). Don't use Heading 1 — the title is already the page heading.
+### Writing the article
 
-The right-hand side shows a preview as you type.
+Type in the **Article** box like a word processor. The toolbar above it has:
 
----
+- **H2** — a section heading. **H3** — a smaller sub-heading. (The title is already the page's main heading, so start sections with H2.)
+- **B** (bold) and ***I*** (italic).
+- **• List** and **1. List** — bulleted and numbered lists.
+- **“ Quote** — a highlighted quote block.
+- **Link** — select some text first, click **Link**, and type the web address (e.g. `/services/seo` for a page on our site, or a full `https://…` address). To remove a link, click inside it, click **Link** and clear the address.
+- **Image** — adds a picture inside the article (see step 3).
+- **↶ / ↷** — undo and redo.
 
-## 3. Add a cover image (optional)
-
-1. In **Cover image**, click **Browse** (or drag an image onto the box).
-2. Choose an image from your computer. A wide image works best — landscape, roughly twice as wide as it is tall (16:9), such as 1600 × 900 pixels. JPG or WebP keeps the page fast.
-3. The image uploads and appears in the field.
-
-No cover image? That's fine — the blog shows a branded graphic for the post's category instead.
-
-Only use photos you have the right to use — your own, or ones you've licensed.
+Keyboard shortcuts work too: Ctrl+B (bold), Ctrl+I (italic), Ctrl+Z (undo).
 
 ---
 
-## 4. Save as a draft, or publish
+## 3. Add images
 
-The **Draft** switch decides whether the post appears on the website:
+**Cover image** (the picture at the top of the post and on the blog page):
 
-- **Draft ON** → the post is saved, but **not shown** on the website. Use this for work in progress or posts waiting for review. You can come back and edit it any time.
-- **Draft OFF** → the post is **published** on the website.
+1. In the **Cover image** box on the right, click **Upload image**.
+2. Choose a JPG, PNG or WebP file, up to 5 MB. A wide picture works best (landscape, roughly 16:9 — e.g. 1600 × 900 pixels).
+3. A preview appears. Use **Replace image** to change it or **Remove** to take it off.
 
-Then click **Save** (top right).
+No cover image? That's fine — the blog shows a branded graphic instead.
 
-To publish a draft later: open it from the Blog Posts list, turn **Draft** off, and click **Save**.
+**Pictures inside the article:**
 
-To take a live post down without deleting it: turn **Draft** on and click **Save**.
+1. Click in the article where the picture should go.
+2. Click **Image** in the toolbar and choose a file.
+3. You'll be asked to **describe the image** in a few words (for example "Security officer checking a visitor's badge"). This helps people using screen readers and helps Google.
 
-Posts that are drafts show "— DRAFT" after their title in the Blog Posts list.
+Large photos are resized automatically. Only use photos you have the right to use — your own, or ones you've licensed.
+
+---
+
+## 4. Draft or publish
+
+- **Save draft** keeps your work without putting it on the website. Drafts also **save automatically every 30 seconds** while you type, and the top bar shows "Saved" with the time.
+- **Preview** shows the post exactly as it will look on the website, so you can check it before publishing. Click **Close preview** (or press Esc) to go back to editing.
+- **Publish** puts the post on the website. If anything required is missing (title, excerpt, category, article text), you'll see what to fix.
+
+After publishing you'll see: **"Published. The post will be live in about 2–3 minutes."**
+
+- **Editing a published post:** make your changes and click **Save changes**. The website updates within about 2–3 minutes.
+- **Taking a post down:** open it and click **Unpublish**. It goes back to being a draft and disappears from the website within a few minutes. You can publish it again later.
+- If you try to leave a page with unsaved changes, you'll be asked before anything is lost.
 
 ---
 
 ## 5. How long until it's live?
 
-Every time you click **Save**, the website rebuilds itself automatically. A published post (or a change to one) is usually live **within 2–5 minutes**.
+The website rebuilds itself automatically after you publish, unpublish, or save a published post. Expect the change to be live in **about 2–3 minutes**. If you make several changes in a row, they go out together about a minute after your last save.
 
-To check: open https://www.securitymarketingcompany.com/blog and refresh the page. If you don't see it yet, wait a minute and refresh again.
-
----
-
-## Editing or deleting a post
-
-- **Edit:** click the post in the **Blog Posts** list, make your changes, and click **Save**. The live site updates within a few minutes.
-- **Delete:** open the post, click the **⋮** menu (top right) and choose **Delete**. This removes it from the website. Deleting can't be undone from the admin, so if you might want it back, switch it to **Draft** instead.
+To check: open https://www.securitymarketingcompany.com/blog and refresh the page.
 
 ---
 
-## Adding a category
+## Optional: search engine settings
 
-1. Under **Collections** on the left, click **Blog Settings**, then **Blog categories**.
-2. Click **Add Category** and type the new category name.
-3. Click **Save**.
-4. Go back to your post — the new category is now in the **Category** list.
+Open **Search engine settings** under the article to set a different title or description just for Google. Leave them empty to use the post title and excerpt. The **Google preview** shows roughly how the post will appear in search results; the counters show the recommended lengths (about 60 characters for the title, 160 for the description).
 
-A category only appears as a filter on the blog page once a published post uses it.
+---
+
+## Finding, editing and deleting posts
+
+- **Blog posts** lists every post with its status (**Published** or **Draft**), category and date. Use the search box or the status filter to find one.
+- **Edit** opens a post. **View live** opens the published post on the website.
+- **Delete** removes a post completely (you'll be asked to confirm). Deleting can't be undone — if you might want it back, **Unpublish** it instead.
 
 ---
 
 ## Tips for good posts
 
-- Aim for 800–1,500 words, broken into sections with clear **Heading 2** titles.
-- Write the excerpt as if it were the only thing a reader sees — it often is, in Google.
+- Aim for 800–1,500 words, broken into sections with clear **H2** headings.
+- Write the excerpt as if it were the only thing a reader sees — in Google, it often is.
 - Don't include statistics, client names or quotes unless they're real and you have permission to use them.
 - Keep the title under about 60 characters so it isn't cut off in Google results.
 
@@ -120,4 +116,4 @@ A category only appears as a filter on the blog page once a published post uses 
 
 ## Need help?
 
-If something doesn't look right, or the admin shows an error, contact the site owner or info@securitymarketingcompany.com.
+If something doesn't look right or the admin shows an error, contact the site admin or info@securitymarketingcompany.com.

@@ -27,9 +27,15 @@ services:
         sync: false
       - key: LEAD_NOTIFY_FROM
         value: Security Marketing Company <onboarding@resend.dev>
-      # Blog admin (/admin) GitHub sign-in: the GitHub OAuth App's credentials.
-      # Callback URL on the OAuth App: https://<this service>/api/auth/callback
-      - key: GITHUB_CLIENT_ID
+      # Blog admin (/admin): session signing secret, Cloudinary for images,
+      # and the Vercel Deploy Hook that rebuilds the site after publishing.
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLOUDINARY_CLOUD_NAME
         sync: false
-      - key: GITHUB_CLIENT_SECRET
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: VERCEL_DEPLOY_HOOK_URL
         sync: false

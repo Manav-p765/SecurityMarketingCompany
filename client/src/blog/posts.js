@@ -1,68 +1,49 @@
+import publishedPosts from 'virtual:blog-posts';
+
 /**
  * Blog posts. `loadPosts()` is the only function that knows where posts come
- * from. Today that is the markdown files in src/content/blog/ (rendered to
- * HTML at build time by the Vite plugin in vite.config.js), written by hand
- * or through the blog admin at /admin (Sveltia CMS). To move to a
- * headless CMS or WordPress, change loadPosts() to return the same shape and
- * leave everything else alone.
+ * from: every published post, fetched from the API's public endpoint at
+ * build time (scripts/blog-source.js, through the `virtual:blog-posts`
+ * module in vite.config.js). Posts are written in the admin panel at /admin
+ * and stored in MongoDB; drafts are never returned by the API.
  *
  * Post shape:
- *   { slug, title, date: 'YYYY-MM-DD', excerpt, category, author,
- *     coverImage?, readingTime (minutes), service?, html }
+ *   { slug, title, date: 'YYYY-MM-DD', updated: 'YYYY-MM-DD', excerpt,
+ *     category, author, coverImage (URL or null), readingTime (minutes),
+ *     service (null: the in-article box picks one from the category), html,
+ *     seoTitle, seoDescription }
  *
  * The same module runs in the browser and, through Vite, in
  * scripts/prerender.js, so pages, sitemap and schema always agree.
  */
 
 const WORDS_PER_MINUTE = 225;
-const REQUIRED = ['title', 'date', 'excerpt', 'category', 'author'];
 
-/** `draft: true` in the frontmatter (the "Draft" switch in /admin). */
-export const isDraft = (frontmatter) => frontmatter.draft === true || frontmatter.draft === 'true';
+/** Words in post HTML, for the reading time. */
+const wordCount = (html) =>
+  html
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&[a-z#0-9]+;/gi, ' ')
+    .split(/\s+/)
+    .filter(Boolean).length;
 
-const text = (value) => (value == null ? '' : String(value).trim());
-
-/** 2026-10-01, or a full date/time the admin might write, as YYYY-MM-DD. */
-function toDate(value) {
-  if (value instanceof Date) return value.toISOString().slice(0, 10);
-  return text(value).slice(0, 10);
-}
-
-function toPost(doc, file) {
-  const fm = doc.frontmatter;
-  const fileSlug = file.split('/').pop().replace(/\.md$/, '');
-  for (const key of REQUIRED) {
-    if (!text(fm[key])) throw new Error(`Blog post ${file}: frontmatter "${key}" is missing.`);
-  }
-  const date = toDate(fm.date);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    throw new Error(`Blog post ${file}: date must be YYYY-MM-DD, got "${fm.date}".`);
-  }
-  return {
-    slug: text(fm.slug) || fileSlug,
-    title: text(fm.title),
-    date,
-    excerpt: text(fm.excerpt),
-    category: text(fm.category),
-    author: text(fm.author),
-    coverImage: text(fm.coverImage) || null,
-    service: text(fm.service) || null,
-    readingTime: Number(fm.readingTime) || Math.max(1, Math.ceil(doc.words / WORDS_PER_MINUTE)),
-    html: doc.html,
-  };
-}
-
-/**
- * Every published post, newest first. Drafts (`draft: true`) are left out
- * before anything else looks at them, so they get no page, no card, no
- * sitemap entry and no prerendered HTML — and an unfinished draft missing a
- * field can never break the build.
- */
+/** Every published post, newest first. */
 export function loadPosts() {
-  const modules = import.meta.glob('../content/blog/*.md', { eager: true, import: 'default' });
-  const posts = Object.entries(modules)
-    .filter(([, doc]) => !isDraft(doc.frontmatter))
-    .map(([file, doc]) => toPost(doc, file));
+  const posts = publishedPosts.map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    date: post.date,
+    updated: post.updated || post.date,
+    excerpt: post.excerpt,
+    category: post.category,
+    author: post.author,
+    coverImage: post.coverImage || null,
+    service: post.service || null,
+    readingTime: Math.max(1, Math.ceil(wordCount(post.html) / WORDS_PER_MINUTE)),
+    html: post.html,
+    seoTitle: post.seoTitle || '',
+    seoDescription: post.seoDescription || '',
+  }));
 
   const seen = new Set();
   for (const post of posts) {

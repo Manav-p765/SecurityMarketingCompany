@@ -56,16 +56,18 @@ function ServiceCta({ service }) {
   );
 }
 
-function Post({ post }) {
-  useReveal();
-  const schema = useMemo(() => postSchema(post), [post]);
-  usePageMeta(postMeta(post), schema);
+/**
+ * The article itself: hero (breadcrumb, category, title, excerpt, meta),
+ * cover, and the post HTML with the service box in the middle. Used by the
+ * post page and by the admin's Preview, so a preview looks exactly like the
+ * live post.
+ */
+export function PostArticle({ post }) {
   const navigate = useNavigate();
-  const [before, after] = useMemo(() => splitForCta(post.html), [post]);
-  const related = relatedPosts(post);
+  const [before, after] = useMemo(() => splitForCta(post.html), [post.html]);
   const service = serviceFor(post);
 
-  // Internal links inside the markdown are plain <a> tags; route them in the
+  // Internal links inside the post HTML are plain <a> tags; route them in the
   // app instead of reloading the page.
   const onProseClick = (event) => {
     const link = event.target.closest('a');
@@ -76,6 +78,47 @@ function Post({ post }) {
   };
 
   return (
+    <article className="post">
+      <header className="svc-hero dark-field post__hero">
+        <div className="container post__narrow">
+          <Breadcrumb
+            items={[
+              { label: 'Home', to: '/' },
+              { label: copy.breadcrumb, to: copy.meta.path },
+              { label: post.title },
+            ]}
+          />
+          <p className="post-card__category post__category">{post.category}</p>
+          <h1>{post.title}</h1>
+          <p className="svc-hero__subhead">{post.excerpt}</p>
+          <PostMeta post={post} author />
+        </div>
+      </header>
+
+      <div className="dark-field dark-field--quiet post__body">
+        <div className="container post__narrow">
+          <PostCover post={post} large />
+          {/* Post HTML, sanitized by the API when it was saved. The click
+              handler only reroutes internal links (keyboard Enter on a link
+              fires click too). */}
+          <div className="prose-text post__content" onClick={onProseClick}>
+            <div dangerouslySetInnerHTML={{ __html: before }} />
+            {service && <ServiceCta service={service} />}
+            {after && <div dangerouslySetInnerHTML={{ __html: after }} />}
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function Post({ post }) {
+  useReveal();
+  const schema = useMemo(() => postSchema(post), [post]);
+  usePageMeta(postMeta(post), schema);
+  const related = relatedPosts(post);
+
+  return (
     <div className="page detail-page">
       <a className="skip-link" href="#main">
         Skip to content
@@ -84,37 +127,7 @@ function Post({ post }) {
       <Header />
 
       <main id="main" tabIndex={-1}>
-        <article className="post">
-          <header className="svc-hero dark-field post__hero">
-            <div className="container post__narrow">
-              <Breadcrumb
-                items={[
-                  { label: 'Home', to: '/' },
-                  { label: copy.breadcrumb, to: copy.meta.path },
-                  { label: post.title },
-                ]}
-              />
-              <p className="post-card__category post__category">{post.category}</p>
-              <h1>{post.title}</h1>
-              <p className="svc-hero__subhead">{post.excerpt}</p>
-              <PostMeta post={post} author />
-            </div>
-          </header>
-
-          <div className="dark-field dark-field--quiet post__body">
-            <div className="container post__narrow">
-              <PostCover post={post} large />
-              {/* Markdown rendered to HTML at build time from our own files.
-                  The click handler only reroutes internal links (keyboard
-                  Enter on a link fires click too). */}
-              <div className="prose-text post__content" onClick={onProseClick}>
-                <div dangerouslySetInnerHTML={{ __html: before }} />
-                {service && <ServiceCta service={service} />}
-                {after && <div dangerouslySetInnerHTML={{ __html: after }} />}
-              </div>
-            </div>
-          </div>
-        </article>
+        <PostArticle post={post} />
 
         {related.length > 0 && (
           <section className="section section--tight dark-field" id="related-posts">

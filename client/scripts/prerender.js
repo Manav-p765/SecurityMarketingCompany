@@ -15,10 +15,11 @@
  *    home page index.html also gets their Review schema.
  *    dist/privacy.html and dist/terms.html; dist/thank-you.html with
  *    "noindex, nofollow"; dist/blog.html and dist/blog/<slug>.html for every
- *    post in src/content/blog/ (Article + BreadcrumbList schema). The blog is
- *    loaded through Vite (ssrLoadModule), so this script runs the exact same
- *    loadPosts() as the browser: a new markdown file gets its page and
- *    sitemap entry with no other change.
+ *    published post (Article + BreadcrumbList schema). Posts come from the
+ *    API (scripts/blog-source.js) through the same loadPosts() the browser
+ *    uses, loaded via Vite (ssrLoadModule), so a post published in /admin
+ *    gets its page and sitemap entry on the next build with no other change.
+ *    /admin itself is never prerendered or listed.
  * 3. dist/sitemap.xml — every indexable page written above, plus the home
  *    page. /thank-you is left out on purpose.
  *    robots.txt (static, in public/) points crawlers at it.
@@ -58,8 +59,10 @@ import {
 const here = path.dirname(fileURLToPath(import.meta.url));
 const dist = path.resolve(here, '../dist');
 
-// Blog modules use import.meta.glob and .md imports, so load them through
-// Vite (same config and markdown plugin as the build) rather than natively.
+// Blog modules import `virtual:blog-posts`, so load them through Vite (same
+// config and plugin as the build). BLOG_STRICT makes the plugin fail rather
+// than fall back to an empty blog, exactly as in the build itself.
+process.env.BLOG_STRICT = '1';
 const vite = await createServer({
   root: path.resolve(here, '..'),
   configFile: path.resolve(here, '../vite.config.js'),
@@ -72,6 +75,9 @@ const vite = await createServer({
 const { posts, postPath } = await vite.ssrLoadModule('/src/blog/posts.js');
 const { blogSchema, postMeta, postSchema } = await vite.ssrLoadModule('/src/blog/schema.js');
 await vite.close();
+if (!posts.length && process.env.ALLOW_EMPTY_BLOG !== '1') {
+  throw new Error('prerender: no published blog posts were loaded — refusing to build an empty blog.');
+}
 const index = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
 
 fs.writeFileSync(path.join(dist, '404.html'), index);

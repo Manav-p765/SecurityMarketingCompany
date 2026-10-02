@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage.jsx';
 import ServicesPage from './pages/ServicesPage.jsx';
@@ -12,6 +12,10 @@ import LegalPage from './pages/LegalPage.jsx';
 import { privacyPolicy, termsPage } from './data/content.js';
 import NotFound from './components/NotFound.jsx';
 import { trackPageView } from './analytics.js';
+
+// The admin panel is its own lazy-loaded chunk (JS + CSS), fetched only when
+// someone opens /admin, so the public site's bundle does not grow.
+const AdminApp = lazy(() => import('./admin/AdminApp.jsx'));
 
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -80,6 +84,8 @@ function PageViews() {
   const { pathname, search } = useLocation();
 
   useEffect(() => {
+    // Admin screens are not site traffic.
+    if (pathname === '/admin' || pathname.startsWith('/admin/')) return;
     const page = pathname + search;
     if (page === lastTrackedPage) return;
     lastTrackedPage = page;
@@ -107,6 +113,14 @@ export default function App() {
         <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/privacy" element={<LegalPage key="privacy" doc={privacyPolicy} />} />
         <Route path="/terms" element={<LegalPage key="terms" doc={termsPage} />} />
+        <Route
+          path="/admin/*"
+          element={
+            <Suspense fallback={<div className="admin-boot">Loading admin…</div>}>
+              <AdminApp />
+            </Suspense>
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <PageViews />

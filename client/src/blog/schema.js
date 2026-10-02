@@ -2,11 +2,15 @@ import { blogPage, COMPANY } from '../data/content.js';
 import { absoluteUrl } from '../seo.js';
 import { postPath, posts } from './posts.js';
 
-/** Per-post meta for usePageMeta and prerender.js. */
+/**
+ * Per-post meta for usePageMeta and prerender.js. The optional SEO title and
+ * description set in the admin replace the defaults (title + site name,
+ * and the excerpt).
+ */
 export const postMeta = (post) => ({
   path: postPath(post),
-  title: `${post.title} | ${COMPANY.name}`,
-  description: post.excerpt,
+  title: post.seoTitle || `${post.title} | ${COMPANY.name}`,
+  description: post.seoDescription || post.excerpt,
   ogType: 'article',
 });
 
@@ -17,7 +21,11 @@ const publisher = {
   logo: { '@type': 'ImageObject', url: absoluteUrl('/logo/logo-horizontal.png') },
 };
 
-const imageFor = (post) => absoluteUrl(post.coverImage || '/logo/logo-horizontal.png');
+// Cover images uploaded in the admin are full Cloudinary URLs.
+const imageFor = (post) =>
+  post.coverImage && /^https?:\/\//.test(post.coverImage)
+    ? post.coverImage
+    : absoluteUrl(post.coverImage || '/logo/logo-horizontal.png');
 
 /** Article + BreadcrumbList for /blog/:slug. */
 export function postSchema(post) {
@@ -31,7 +39,7 @@ export function postSchema(post) {
         headline: post.title,
         description: post.excerpt,
         datePublished: post.date,
-        dateModified: post.date,
+        dateModified: post.updated || post.date,
         articleSection: post.category,
         author: { '@type': 'Organization', name: post.author, url: COMPANY.siteUrl },
         publisher,

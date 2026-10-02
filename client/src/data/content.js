@@ -1599,7 +1599,7 @@ export const thankYouPage = {
 };
 
 /* ==========================================================================
-   /blog — posts are markdown files in src/content/blog/ (see blog/posts.js)
+   /blog — posts are written in the admin (/admin), stored in MongoDB and fetched at build time (see blog/posts.js)
    ========================================================================== */
 
 export const blogPage = {

@@ -1,6 +1,6 @@
 # Security Marketing Company: Site Content Summary
 
-Updated on 2026-10-01 for the blog admin at /admin. Before that, on 2026-09-30, for the single business email (info@securitymarketingcompany.com) and the five-item header with footer quick links. Earlier updates: the Privacy Policy, Terms, thank-you page and blog; the About and Contact pages and home page client reviews (samples, hidden on the live site); 2026-09-26, the expanded service page copy, service page graphics, Services dropdown and Google Analytics; 2026-09-24, the US retargeting, the Services page and the individual service pages. The first version was compiled on 2026-09-23 from commit `da29ff0`.
+Updated on 2026-10-02 for the custom blog admin panel at /admin (posts now stored in MongoDB; same URLs and content). Before that, on 2026-09-30, for the single business email (info@securitymarketingcompany.com) and the five-item header with footer quick links. Earlier updates: the Privacy Policy, Terms, thank-you page and blog; the About and Contact pages and home page client reviews (samples, hidden on the live site); 2026-09-26, the expanded service page copy, service page graphics, Services dropdown and Google Analytics; 2026-09-24, the US retargeting, the Services page and the individual service pages. The first version was compiled on 2026-09-23 from commit `da29ff0`.
 
 **Sources:** `client/src/data/content.js` (almost all copy: every service and its detail page under `services`, the overview under `servicesPage`), the components in `client/src/components/` and `client/src/pages/`, `client/index.html` (home page meta and site-wide JSON-LD), `client/scripts/prerender.js` (meta for `/services` and each service page), and the server's lead routes and email templates.
 
@@ -553,7 +553,7 @@ Sections: Start with the basics: verification and accurate details · Choose cat
 
 All three are by "Security Marketing Company Team" and contain no statistics, client stories or quotes.
 
-**Blog admin (`/admin`, not linked from the site, noindex):** non-developers write and publish posts in Sveltia CMS, signing in with GitHub (write access to the repo required). Fields: Title, Web address (optional), Publish date, Excerpt, Category (from the list in Blog Settings), Cover image (optional, uploaded to `/images/blog/`), Author (default "Security Marketing Company Team"), Related service (optional), Draft, Article. Draft posts are saved but never shown on the site or in the sitemap. Each save goes live after the normal deploy, usually within a few minutes. Editor guide: `docs/blog-admin-guide.md`.
+**Blog admin (`/admin`, not linked from the site, noindex):** posts are written in a custom admin panel and stored in MongoDB; the site fetches published posts at build time and prerenders them, so pages, sitemap and schema work exactly as before. Editors sign in with email and password. Fields: Title, Web address (auto from the title, fixed after first publish), Excerpt (with character count), Category, Author, Cover image (Cloudinary), Article (rich-text editor with headings, lists, quotes, links and images), optional SEO title/description with a Google preview. Save draft / Publish / Unpublish; drafts autosave every 30 seconds and are never shown on the site. After publishing: "Published. The post will be live in about 2–3 minutes." Admins also see Leads (with CSV export), Categories and Users. Editor guide: `docs/blog-admin-guide.md`.
 
 ---
 
@@ -681,7 +681,7 @@ The thank-you page shows the email only through the footer. Sending address: unc
 | `/contact` | Contact: lead form, email, "What happens next", FAQ |
 | `/thank-you` | After a successful form submission (noindex, not in the sitemap) |
 | `/blog` | Blog listing: featured post, category filter, card grid |
-| `/blog/<slug>` | One page per markdown post (3 so far) |
+| `/blog/<slug>` | One page per published post (3 so far), written in the admin panel |
 | `/privacy` | Privacy Policy |
 | `/terms` | Terms & Conditions |
 | any other path, including `/services/<unknown>` | 404 page (returns a 404 status and `noindex, follow`) |

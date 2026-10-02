@@ -23,10 +23,11 @@ after form submissions (`/thank-you`), the blog (`/blog`, `/blog/:slug`), and th
 | Layer | Technology |
 | --- | --- |
 | Frontend | React 18 + Vite + React Router |
-| Blog | Markdown files, rendered at build time with `marked` (dev dependency — nothing ships to the browser) |
+| Blog | Written in the admin panel (`/admin`), stored in MongoDB, fetched and prerendered at build time |
+| Admin | React (lazy-loaded chunk) + TipTap editor; email/password sign-in; images on Cloudinary |
 | Analytics | Google Analytics 4 (gtag.js), production domain only — see "Google Analytics (GA4)" |
-| Backend | Node + Express (contact-form endpoint) |
-| Database | MongoDB via Mongoose (stores leads) |
+| Backend | Node + Express: contact form, public blog API, admin API |
+| Database | MongoDB Atlas via Mongoose: leads, posts, categories, admin users |
 | Styling | Hand-written CSS with brand tokens — no UI framework, no icon library |
 
 ---
@@ -39,12 +40,11 @@ securitymarketingcompany/
 ├── .env.example              # Copy to server/.env
 ├── client/                   # Vite + React app
 │   ├── index.html            # Home page meta tags, fonts, site-wide JSON-LD
-│   ├── vite.config.js        # Dev proxy, Google tag, blog markdown plugin
-│   ├── vercel.json           # cleanUrls: serves dist/services.html at /services
+│   ├── vite.config.js        # /api proxy, Google tag, `virtual:blog-posts` plugin
+│   ├── vercel.json           # cleanUrls, /api/* rewrite to Render, /admin → app shell
 │   ├── scripts/prerender.js  # Post-build: a static HTML file per page, 404.html, sitemap.xml
-│   ├── scripts/markdown.js   # Build-time markdown → HTML for blog posts (marked)
+│   ├── scripts/blog-source.js # Fetches published posts from the API at build time
 │   ├── public/
-│   │   ├── admin/            # ← BLOG ADMIN (/admin): Sveltia CMS page + config.yml
 │   │   ├── logo/             # ← LOGO FILES (see logo/README.md)
 │   │   └── hero/             # ← OPTIONAL HERO PHOTO (see hero/README.md)
 │   └── src/
@@ -53,9 +53,8 @@ securitymarketingcompany/
 │       ├── seo.js            # Page meta + Service/BreadcrumbList JSON-LD (app and prerender.js)
 │       ├── data/content.js   # ← ALL SITE COPY. Edit text here, not in JSX.
 │       ├── data/legal/       # ← PRIVACY POLICY and TERMS text (privacy.js, terms.js)
-│       ├── content/blog/     # ← BLOG POSTS, one markdown file each
-│       ├── content/blog-settings.yml # Categories offered in the blog admin
 │       ├── blog/             # posts.js (loadPosts — the one place posts are loaded), schema.js
+│       ├── admin/            # ← ADMIN PANEL (/admin): AdminApp, pages/, RichEditor, admin.css
 │       ├── pages/
 │       │   ├── HomePage.jsx      # Home section order
 │       │   ├── ServicesPage.jsx  # /services: hero, service blocks, process, industries, FAQ, CTA
@@ -87,9 +86,14 @@ securitymarketingcompany/
     ├── src/index.js          # Express app
     ├── src/config.js         # BUSINESS_EMAIL (must match COMPANY.email; the build checks)
     ├── src/db.js             # Mongo connection
-    ├── src/models/Lead.js    # Lead schema
-    ├── src/routes/leads.js   # POST /api/leads
-    └── src/routes/auth.js    # GitHub sign-in for the blog admin (/api/auth)
+    ├── src/models/           # Lead, Post, Category, AdminUser, AppState
+    ├── src/routes/leads.js   # POST /api/leads (contact form)
+    ├── src/routes/public.js  # GET /api/public/posts — published posts, used by the build
+    ├── src/routes/admin/     # /api/admin/*: auth, posts, categories, uploads, users, leads
+    ├── src/auth/session.js   # Session cookie (JWT), role guard, Origin check
+    ├── src/services/         # sanitize (post HTML), slug, images (Cloudinary), deploy (hook)
+    ├── scripts/create-admin.js       # npm run create-admin
+    └── scripts/migrate-blog-posts.js # One-time markdown → MongoDB import (already run)
 ```
 
 ---
@@ -123,6 +127,9 @@ MONGODB_URI=mongodb://127.0.0.1:27017/security-marketing
 MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/security-marketing?retryWrites=true&w=majority
 ```
 
+For the admin panel also set `JWT_SECRET`, the `CLOUDINARY_*` values and
+`VERCEL_DEPLOY_HOOK_URL` — see "Blog admin (/admin)" below.
+
 ### 4. Develop
 
 ```bash
@@ -133,7 +140,11 @@ npm run dev
 - API: <http://localhost:5000>
 
 Vite proxies `/api` to Express, so there is no CORS setup in development. Run them separately with
-`npm run dev:client` / `npm run dev:server`.
+`npm run dev:client` / `npm run dev:server`. The admin panel is at <http://localhost:5173/admin>.
+
+Blog posts are fetched from the API when Vite starts. By default that is the live API; to use your
+local one, start the client with `BLOG_API_URL=http://localhost:5000`. If the API can't be reached,
+the dev server carries on with an empty blog and a warning (a build never does — see below).
 
 ### 5. Build and deploy
 
@@ -155,9 +166,10 @@ writes, from `content.js`:
   `BreadcrumbList` on detail pages) swapped in;
 - `dist/privacy.html`, `dist/terms.html` and `dist/thank-you.html` (the last with
   `noindex, nofollow`);
-- `dist/blog.html` (`Blog` schema) and `dist/blog/<slug>.html` for every post (`Article` +
-  `BreadcrumbList` schema, `og:type` article). The blog modules are loaded through Vite
-  (`ssrLoadModule`), so prerender uses the same `loadPosts()` as the browser;
+- `dist/blog.html` (`Blog` schema) and `dist/blog/<slug>.html` for every published post
+  (`Article` + `BreadcrumbList` schema, `og:type` article). Posts come from the API (`GET
+  /api/public/posts`, see "Blog"); the blog modules are loaded through Vite (`ssrLoadModule`), so
+  prerender uses the same `loadPosts()` as the browser;
 - `dist/404.html`;
 - `dist/sitemap.xml` — every indexable page: home, `/services` and each service, `/about`,
   `/contact`, `/blog` and each post (with `<lastmod>`), `/privacy` and `/terms`. `/thank-you` is
@@ -182,8 +194,12 @@ sitemap entry. For a new *kind* of page, add a route in `App.jsx`, meta in `cont
 
 #### Split hosting: frontend on Vercel, API on Render
 
-The only backend work is the contact form (`POST /api/leads` into MongoDB), so the frontend can be
-hosted as a static site.
+The frontend is a static site on Vercel; the API (contact form, blog API, admin API) runs on Render.
+The browser always calls **relative `/api` URLs** on the site's own domain, and `client/vercel.json`
+**rewrites** `/api/*` to `https://securitymarketingcompany.onrender.com/api/*`. That keeps the admin
+session cookie first-party (no cross-site cookies) and means the frontend needs no API URL setting.
+If the Render URL ever changes, update it in `client/vercel.json` and in
+`client/scripts/blog-source.js` (`DEFAULT_BLOG_API`, or set `BLOG_API_URL` on Vercel).
 
 1. **Database — MongoDB Atlas.** Create a free cluster and a database user. Under Network Access,
    allow `0.0.0.0/0` (Render's free plan has no fixed outbound IP). Copy the `mongodb+srv://…`
@@ -192,10 +208,10 @@ hosted as a static site.
    `MONGODB_URI`, and leave `CORS_ORIGIN` as a placeholder until step 4. Once live, check
    `https://<service>.onrender.com/api/health` returns `"db":"connected"`.
 3. **Frontend — Vercel.** Import the repo, set **Root Directory** to `client` (Vite is
-   auto-detected). Add the environment variable `VITE_API_URL=https://<service>.onrender.com`, then
-   deploy.
-4. **Connect them.** Set `CORS_ORIGIN` on Render to the Vercel site's origin — and the custom domain
-   once added, comma-separated, no trailing slash. Render redeploys on save.
+   auto-detected), then deploy. The build fetches published posts from the API, so the API must be
+   up first.
+4. **CORS.** Not needed for the site (the rewrite makes calls same-origin). `CORS_ORIGIN` on Render
+   only matters for calling the API directly from another origin, e.g. a Vercel preview URL.
 
 #### Lead notification emails
 
@@ -226,8 +242,9 @@ the `"email"` in the site-wide JSON-LD in `client/index.html`. **The build fails
 differs from `COMPANY.email`, or if any other address appears in the built HTML. To change the
 email, update all three.
 
-`VITE_API_URL` is baked in at build time, so redeploy Vercel after changing it. Vercel preview
-deployments get their own URLs; add one to `CORS_ORIGIN` if you want to test the form there.
+Rate limits (10 contact submissions and 10 failed sign-ins per 15 minutes) are per visitor: the API
+reads the visitor's IP from the headers Vercel adds to rewritten requests (`server/src/clientIp.js`).
+`GET /api/health` reports `"via":"vercel"` when a request arrived through the rewrite.
 
 Render's free plan sleeps after 15 minutes idle and takes up to a minute to wake. The page pings
 `/api/health` on load to wake it early, but a paid instance removes the delay entirely.
@@ -525,112 +542,124 @@ header button always goes to `/contact`. All of this is in `StrategyCallLink` (`
 
 ## Blog
 
-Posts are markdown files in `client/src/content/blog/`. They are rendered to HTML at build time
-(`client/scripts/markdown.js`, via the `blog-markdown` plugin in `vite.config.js`), so there is no
-markdown parser in the browser bundle. Frontmatter is parsed with the `yaml` package (build time
-only), so hand-written posts and posts saved by the blog admin read the same way.
+Posts are written in the **admin panel at `/admin`** (next section; editor guide in
+`docs/blog-admin-guide.md`) and stored in MongoDB. The public blog is still fully prerendered:
 
-Non-developers write posts in the **blog admin at `/admin`** (next section, and the editor guide in
-`docs/blog-admin-guide.md`). It saves the same markdown files, so everything below applies to
-admin-written posts too.
+1. **At build time** `client/scripts/blog-source.js` fetches every published post from
+   `GET /api/public/posts` (the API on Render, or `BLOG_API_URL`). Drafts are never returned.
+2. The `virtual:blog-posts` plugin in `vite.config.js` bakes them into the build, and
+   `loadPosts()` in `client/src/blog/posts.js` — the one place posts are loaded — adds the reading
+   time. The browser and `prerender.js` use the same function, so `/blog`, each `/blog/<slug>`, the
+   sitemap and the Article schema always agree.
+3. Publishing, unpublishing, or editing/deleting a published post calls the **Vercel Deploy Hook**,
+   which rebuilds the site; the change is live in about 2–3 minutes.
 
-### Adding a post by hand
-
-1. Create `client/src/content/blog/<slug>.md`:
-
-   ```markdown
-   ---
-   title: Your Post Title
-   slug: your-post-title            # optional — defaults to the file name
-   date: 2026-10-01                 # YYYY-MM-DD; newest posts come first
-   excerpt: One or two sentences. Used on cards and as the meta description.
-   category: Local SEO              # becomes a filter chip on /blog
-   author: Security Marketing Company Team
-   coverImage: /images/blog/your-image.jpg # optional — file in client/public/images/blog/
-   readingTime: 6                   # optional — calculated from word count if missing
-   service: google-business-profile # optional — service slug for the in-article CTA box
-   draft: false                     # optional — true keeps it off the site
-   ---
-
-   Write the post in markdown. Use ## and ### for headings (the title is the page's H1).
-   ```
-
-2. Build. That's it: the post gets its page at `/blog/<slug>`, prerendered HTML with its own meta
-   and Article schema, a sitemap entry, and a card on `/blog`.
-
-- **Required fields:** `title`, `date`, `excerpt`, `category`, `author`. The build fails with a
-  clear message if one is missing, a date is malformed or two posts share a slug.
-- **Drafts:** `draft: true` posts are skipped by `loadPosts()` before anything else: no page, no
-  card, no sitemap entry, no prerendered HTML, and their missing fields never fail the build.
-- **No cover image?** The card and post show a generated graphic in the site style, based on the
-  category and slug.
-- **The CTA box** in the middle of each post links to `service` if set, otherwise to the service
-  mapped from the category in `blogPage.categoryServices` (content.js).
-- **Links:** `[text](/services/seo)` stays inside the app; `https://…` links open in a new tab.
+- **Never an empty blog by accident:** if the API can't be reached (after retries — Render's free
+  plan can take a minute to wake), answers with an error, or returns zero published posts, the
+  build **fails with a clear error** and Vercel keeps the previous deployment live. Set
+  `ALLOW_EMPTY_BLOG=1` only if an empty blog is really intended.
+- **Post HTML** is sanitized on the server on every save (`server/src/services/sanitize.js`): an
+  allowlist of headings (h2–h4, with ids for linking), paragraphs, lists, links, bold/italic,
+  blockquotes, images (https only) and code. External links get `target="_blank"
+  rel="noopener noreferrer"`.
+- **Web addresses:** the slug is generated from the title, kept unique, and editable only until
+  the post is first published, so published URLs never change.
+- **No cover image?** The card and post show a generated graphic in the site style.
+- **The CTA box** in the middle of each post links to the service mapped from the post's category
+  in `blogPage.categoryServices` (content.js).
+- **SEO title / description** set in the admin replace the defaults (title + site name, excerpt).
 - **Listing:** the newest post is featured, the rest form a grid, category chips filter on the
   client, and pagination appears once there are more than 9 posts.
-- **Moving to a CMS or WordPress later:** change `loadPosts()` in `client/src/blog/posts.js` to
-  fetch posts and return the same shape (`slug, title, date, excerpt, category, author,
-  coverImage, readingTime, service, html`). Nothing else reads the markdown files.
+- **Unknown slugs** show the 404 page (no prerendered file, so a real 404 status).
 
-Blog page copy (hero, labels, CTA text) is `blogPage` in content.js.
+The three original posts were imported from markdown with `server/scripts/migrate-blog-posts.js`
+(same slugs, dates and HTML); the markdown files are in git history before the "Replace Sveltia
+blog admin" commit. Blog page copy (hero, labels, CTA text) is `blogPage` in content.js.
 
 ---
 
 ## Blog admin (`/admin`)
 
-A Git-based admin for writing and publishing posts without touching code:
-[Sveltia CMS](https://sveltiacms.app), loaded from a CDN by a static page outside the React app.
+A custom admin panel for writing and publishing blog posts and reading leads. It is part of the
+React app but lazy-loaded as its own chunk (JS + CSS), so it adds nothing to the public pages.
 
-- **Files:** `client/public/admin/index.html` (loads the CMS) and `client/public/admin/config.yml`
-  (the "Blog Posts" collection, fields, media folder). Categories offered in the editor are in
-  `client/src/content/blog-settings.yml`, editable in the admin under **Blog Settings**. Adding a
-  category there only adds it to the dropdown; it shows on /blog once a published post uses it.
-- **How publishing works:** the admin signs in to GitHub and commits straight to `main` in
-  `Manav-p765/SecurityMarketingCompany`. Each save is a commit, which triggers the normal Vercel
-  build, so a published post is live a couple of minutes later. Posts are saved as markdown files in
-  `client/src/content/blog/` with the same frontmatter as hand-written ones; images go to
-  `client/public/images/blog/` and are referenced as `/images/blog/<file>`.
-- **Drafts:** the **Draft** switch writes `draft: true`. Draft posts are committed but never built
-  into the site.
-- **Sign-in:** GitHub OAuth through the API on Render: `GET /api/auth` and `GET /api/auth/callback`
-  (`server/src/routes/auth.js`). After GitHub sign-in the server checks the account has **write
-  access** to the repo before handing the token to the admin; anyone else is refused. The token
-  only reaches the live site's origins (or `CMS_ORIGINS`).
-- **Kept private:** `/admin` sends `noindex, nofollow` (meta tag, plus an `X-Robots-Tag` header from
-  `client/vercel.json` and from Express). It is not in the sitemap or prerender, and nothing on the
-  public site links to it. Vercel serves it as a static folder; Express has an explicit `/admin`
-  route ahead of the page handling.
+| Screen | Admin | Editor |
+| --- | --- | --- |
+| Dashboard (post counts, last deploy, latest 5 leads) | ✓ | ✓ (no leads) |
+| Blog posts: list, search, write, publish, delete | ✓ | ✓ |
+| Categories | ✓ | — |
+| Leads (table, detail, CSV export) | ✓ | — |
+| Users (add, remove, reset password) | ✓ | — |
+| My account (change password) | ✓ | ✓ |
 
-### One-time setup
+Every rule is enforced by the API (`server/src/routes/admin/`); the UI only hides what a role
+can't use.
 
-The API on Render must be running: the sign-in goes through it.
+- **Sign-in:** email + password (bcrypt, cost 12). The session is a signed JWT in an `httpOnly`,
+  `SameSite=Lax` cookie (`Secure` in production), scoped to `/api/admin`, valid 7 days. Because
+  `/api/*` is rewritten through the site's own domain, the cookie is first-party. Wrong email or
+  password always gets the same message. Failed sign-ins are limited to 10 per visitor and email
+  (30 per visitor) per 15 minutes. Changing or resetting a password signs that user out
+  everywhere. There is no email-based reset — an admin resets it under **Users**.
+- **Cross-site protection:** besides `SameSite=Lax`, admin writes are refused when their `Origin`
+  isn't the site (`checkOrigin` in `server/src/auth/session.js`).
+- **Editor:** title, auto web address, excerpt (with character count), category, cover image,
+  WYSIWYG content (TipTap: headings, bold, italic, lists, quotes, links, inline images), optional
+  SEO title/description with a Google snippet preview, Save draft / Publish / Unpublish, autosave
+  every 30 seconds for drafts, an unsaved-changes warning, and **Preview** using the real post
+  styles.
+- **Images:** jpg/png/webp up to 5 MB, checked by content, uploaded to Cloudinary (folder
+  `smc-blog`) and resized there to at most 1600 px wide. Replacing a cover or deleting a post
+  deletes the old cover from Cloudinary. (Images inside an article are not deleted automatically.)
+- **Deploys:** changes to live content call `VERCEL_DEPLOY_HOOK_URL`, debounced: several saves
+  within a minute trigger one deploy, a minute after the last. The dashboard shows when the last
+  deploy was triggered (and if it failed).
+- **Kept private:** `noindex, nofollow` (meta tag, plus an `X-Robots-Tag` header from
+  `client/vercel.json`, Express and every admin API response). Not in the sitemap or prerender,
+  not linked from the site, and admin screens send no Google Analytics page views.
 
-1. **Create a GitHub OAuth App.** GitHub → your avatar → **Settings** → **Developer settings** →
-   **OAuth Apps** → **New OAuth App**:
-   - Application name: `Security Marketing Company Blog Admin`
-   - Homepage URL: `https://www.securitymarketingcompany.com`
-   - Authorization callback URL — exactly:
-     **`https://securitymarketingcompany.onrender.com/api/auth/callback`**
-   - Leave "Enable Device Flow" off. Click **Register application**.
-   - On the next page, copy the **Client ID**, then click **Generate a new client secret** and copy
-     the secret (it is shown once).
-2. **Add the credentials on Render.** Render dashboard → the API service → **Environment** → add
-   `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` with the values from step 1 → **Save changes**
-   (Render redeploys). Never put them in the repo.
-3. **Give each editor access.** GitHub → the repo → **Settings** → **Collaborators** → **Add
-   people** → their GitHub username, with **Write** access (the default for collaborators on a
-   personal repo). They accept the email invitation, then sign in at
-   `https://www.securitymarketingcompany.com/admin`. You, as the owner, already have access.
+### Environment variables (server — Render, and `server/.env` locally)
 
-If the Render URL ever changes, update both the OAuth App's callback URL and `base_url` in
-`client/public/admin/config.yml`.
+| Variable | What it is |
+| --- | --- |
+| `MONGODB_URI` | Existing. Posts, categories and admin users live in the same database as leads. |
+| `JWT_SECRET` | Signs session cookies. 32+ random characters; `render.yaml` generates one. Changing it signs everyone out. (`SESSION_SECRET` also works.) |
+| `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Cloudinary → Settings → API Keys. Without them, image uploads say "not set up yet". |
+| `VERCEL_DEPLOY_HOOK_URL` | Vercel project → Settings → Git → Deploy Hooks (branch `main`). Treat it as a secret. |
+| `DEPLOY_DEBOUNCE_MS` | Optional. Default 60000 (one minute). |
 
-### Testing the admin locally
+Build-time (Vercel, optional): `BLOG_API_URL` (default `https://securitymarketingcompany.onrender.com`)
+and `ALLOW_EMPTY_BLOG`. Never commit any of these values.
 
-On `localhost` the admin also offers **Work with Local Repository**: pick this repo's folder (in
-Chrome or Edge) and edits are written straight to your working copy, with no GitHub sign-in.
-Run `npm run build && npm --prefix client run preview` and open `http://localhost:4173/admin`.
+### First admin
+
+```bash
+npm run create-admin
+```
+
+Asks for name, email and password (at least 10 characters, typed hidden) and creates an **admin**
+in the database `MONGODB_URI` points to — use the production connection string in `server/.env`
+to create the live admin. There are no default accounts. More people are added from **Users** in
+the panel.
+
+### Cloudinary
+
+1. Create a free account at cloudinary.com.
+2. Dashboard → **Settings → API Keys**: copy the cloud name, API key and API secret.
+3. Set the three `CLOUDINARY_*` variables on Render (and in `server/.env` for local work).
+
+### Deploy hook
+
+Vercel → the project → **Settings → Git → Deploy Hooks** → name it (e.g. "Blog admin"), branch
+`main` → **Create Hook** → copy the URL into `VERCEL_DEPLOY_HOOK_URL` on Render. Anyone with the URL
+can trigger a build, so keep it out of the repo.
+
+### Local development
+
+`npm run dev`, then <http://localhost:5173/admin> (Vite proxies `/api`). Cookies aren't `Secure`
+outside production, so sign-in works over plain http. To test with a production build:
+`BLOG_API_URL=http://localhost:5000 npm run build`, then `npm --prefix client run preview` and
+<http://localhost:4173/admin> (the preview server proxies `/api` too).
 
 ---
 
@@ -743,6 +772,10 @@ down.
 
 ### Reading the leads
 
+In the admin panel: **Leads** (admins only) — search, date filter, a detail view and **Export CSV**
+(the same filters; cells that start with `=`, `+`, `-` or `@` are prefixed with `'` so spreadsheets
+never run them as formulas). From a terminal:
+
 ```bash
 mongosh "mongodb://127.0.0.1:27017/security-marketing"
 db.leads.find().sort({ createdAt: -1 }).limit(20)
@@ -757,8 +790,9 @@ db.leads.find().sort({ createdAt: -1 }).limit(20)
 - Visible focus rings in brand red.
 - `prefers-reduced-motion` disables the scroll reveal, the smooth scrolling and the tilt transition.
 - Scroll reveal uses one `IntersectionObserver` and unobserves each element after it fires.
-- No UI framework and no icon library — every icon is inline SVG. Production bundle is ~374kb JS and
-  ~82kb CSS before gzip (~117kb / ~15kb gzipped), including the blog post and legal text.
+- No UI framework and no icon library — every icon is inline SVG. Public bundle is ~376kb JS and
+  ~82kb CSS before gzip (~117kb / ~15kb gzipped), including the blog post and legal text. The admin
+  panel is a separate ~452kb JS / ~12kb CSS chunk loaded only at /admin.
 - Header "Services" dropdown: a disclosure button with `aria-expanded`, `aria-haspopup` and
   `aria-controls`. It opens on hover (mouse only) and on click, Enter or Space, and ArrowDown
   moves into the list. Escape closes it and returns focus to the button, and so do a click outside,
@@ -782,6 +816,8 @@ db.leads.find().sort({ createdAt: -1 }).limit(20)
   data retention wording matches what you actually do.
 - Replace the placeholder thank-you page copy (`thankYouPage` in content.js) when the final text
   is ready.
+- Admin panel: run `npm run create-admin` for the first admin, and set the Cloudinary keys and
+  deploy hook on Render (see "Blog admin (/admin)").
 - Supply light-on-dark logo originals (SVG if possible) to replace the derived `-light` PNGs.
 - Add client logos, case studies or results figures once cleared — see "Two things to fill in".
 

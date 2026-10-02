@@ -6,9 +6,10 @@ import { IconAlert, IconArrowRight } from './Icons.jsx';
 
 const EMPTY = { name: '', company: '', email: '', service: '', message: '', website: '' };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-// Where the API lives. Empty = same origin (dev proxy, or Express serving the
-// build). Set VITE_API_URL when the API is hosted separately, e.g. on Render.
-const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+// The API is always called at relative /api URLs: on the live site a Vercel
+// rewrite (client/vercel.json) forwards them to the API on Render; locally
+// the Vite dev/preview servers proxy them to Express.
+const API_URL = '';
 
 /** Mirrors the server-side rules in server/src/routes/leads.js. */
 function validate(values) {
@@ -100,7 +101,7 @@ export default function ContactForm({ location }) {
   // up to a minute to wake. Nudge it on page load so it is awake by the time
   // someone finishes the form.
   useEffect(() => {
-    if (API_URL) fetch(`${API_URL}/api/health`).catch(() => {});
+    fetch(`${API_URL}/api/health`).catch(() => {});
   }, []);
 
   const handleChange = (event) => {

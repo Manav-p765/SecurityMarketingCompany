@@ -3,6 +3,7 @@ import rateLimit from 'express-rate-limit';
 import { Lead, SERVICES } from '../models/Lead.js';
 import { isDatabaseReady } from '../db.js';
 import { BUSINESS_EMAIL } from '../config.js';
+import { clientIp } from '../clientIp.js';
 import {
   isConfirmationConfigured,
   isEmailConfigured,
@@ -17,6 +18,8 @@ const submitLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
+  // Per visitor, also when the request arrives through the Vercel rewrite.
+  keyGenerator: clientIp,
   message: { ok: false, message: 'Too many submissions. Please try again shortly.' },
 });
 
