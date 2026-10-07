@@ -1007,3 +1007,131 @@
     gap: var(--space-md);
   }
 }
+
+/* --------------------------------------------------------------------------
+   Cookie banner (components/CookieBanner.jsx) and its footer link
+   -------------------------------------------------------------------------- */
+
+/* "Cookie settings" is a button (it opens the banner, it goes nowhere) styled
+   like the legal links beside it. */
+.footer__cookie-settings {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--on-dark-2);
+  cursor: pointer;
+  transition: color 0.2s var(--ease);
+}
+
+.footer__cookie-settings:hover {
+  color: var(--security-red);
+}
+
+/* A small card pinned to the bottom of the screen, clear of the fixed header
+   and its CTA at the top. Full width minus the gutter on phones, a compact
+   card in the bottom-left corner from tablet up. Above the header (z 100),
+   below the skip link (z 200). */
+.cookie-banner {
+  position: fixed;
+  z-index: 150;
+  left: var(--space-sm);
+  right: var(--space-sm);
+  bottom: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--security-black);
+  border: 1px solid var(--on-dark-line);
+  border-top: 2px solid var(--security-red);
+  border-radius: var(--radius-card);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.4);
+  color: var(--on-dark-2);
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  animation: cookie-banner-in 0.35s var(--ease-out);
+}
+
+.cookie-banner:focus {
+  outline: none;
+}
+
+.cookie-banner:focus-visible {
+  outline: 2px solid var(--security-red);
+  outline-offset: 3px;
+}
+
+.cookie-banner__title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  line-height: var(--lh-heading);
+  color: var(--on-dark-1);
+}
+
+.cookie-banner__text {
+  margin: 0 0 var(--space-sm);
+}
+
+.cookie-banner__text a {
+  color: var(--pure-white);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cookie-banner__text a:hover {
+  color: var(--security-red);
+}
+
+.cookie-banner__actions {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+/* Accept and Decline share one style and width: equal prominence. */
+.cookie-banner__btn {
+  flex: 1 1 0;
+  padding: 0.85rem 1.25rem;
+}
+
+/* Phones: tighter, so the card takes as little of the screen as possible. */
+@media (max-width: 759px) {
+  .cookie-banner {
+    padding: var(--space-sm);
+    font-size: var(--fs-xs);
+    line-height: 1.5;
+  }
+
+  .cookie-banner__title {
+    font-size: var(--fs-small);
+  }
+
+  .cookie-banner__text {
+    margin-bottom: var(--space-xs);
+  }
+
+  .cookie-banner__btn {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (min-width: 760px) {
+  .cookie-banner {
+    left: var(--gutter);
+    right: auto;
+    bottom: var(--space-md);
+    width: min(28rem, calc(100vw - 2 * var(--gutter)));
+  }
+}
+
+@keyframes cookie-banner-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cookie-banner {
+    animation: none;
+  }
+}

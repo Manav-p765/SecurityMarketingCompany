@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { COMPANY, LEGAL_LINKS, NAV_LINKS, QUICK_LINKS, SOCIALS, services } from '../data/content.js';
+import { COMPANY, COOKIE_BANNER, LEGAL_LINKS, NAV_LINKS, QUICK_LINKS, SOCIALS, services } from '../data/content.js';
 import { SOCIAL_ICONS } from './Icons.jsx';
 import { EmailText, sectionPath, telHref } from './Links.jsx';
+import { openCookieSettings } from '../analytics.js';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -115,6 +116,10 @@ export default function Footer() {
               <Link to={link.to}>{link.label}</Link>
             </span>
           ))}
+          <span aria-hidden="true"> · </span>
+          <button type="button" className="footer__cookie-settings" onClick={openCookieSettings}>
+            {COOKIE_BANNER.settingsLink}
+          </button>
         </nav>
         <p>{COMPANY.promise}</p>
       </div>

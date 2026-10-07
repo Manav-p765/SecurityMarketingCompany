@@ -11,6 +11,7 @@ import BlogPostPage from './pages/BlogPostPage.jsx';
 import LegalPage from './pages/LegalPage.jsx';
 import { privacyPolicy, termsPage } from './data/content.js';
 import NotFound from './components/NotFound.jsx';
+import CookieBanner from './components/CookieBanner.jsx';
 import { trackPageView } from './analytics.js';
 
 // The admin panel is its own lazy-loaded chunk (JS + CSS), fetched only when
@@ -124,6 +125,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
       <PageViews />
+      <CookieBanner />
     </>
   );
 }

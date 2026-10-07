@@ -287,6 +287,19 @@ history events"**. While it is on, GA sends its own `page_view` on every route c
 to* the app's, so every page after the first one is counted twice. Leave the other enhanced
 measurement options (scrolls, outbound clicks and so on) as you like.
 
+**Cookie consent (Google Consent Mode v2).** The head snippet sets consent defaults before the
+`config` call: in the UK, EEA and Switzerland (`CONSENT_REGIONS` in `analytics.js`) analytics and
+ads are `denied`; everywhere else analytics is `granted` and ads are `denied`; both with
+`wait_for_update: 500`. A saved choice is applied right after the defaults. The banner
+(`client/src/components/CookieBanner.jsx`, copy in `COOKIE_BANNER` in content.js) shows until the
+visitor picks Accept or Decline, saves the choice in localStorage (`smc-cookie-consent`) for 12
+months and sends `gtag('consent', 'update', { analytics_storage })`. Ad signals are never updated, so they
+stay denied. Decline also deletes any `_ga` cookies already set. The footer's "Cookie settings"
+link reopens the banner. It never shows on /admin. `page_view` and `generate_lead` have no
+consent checks of their own: gtag applies the consent state. Because the tag always loads
+("advanced" Consent Mode), Google still receives cookieless pings after a Decline; the privacy
+policy says so.
+
 **Content Security Policy.** The site does not set one at the moment (no `helmet`, no `headers`
 in `vercel.json`). If you add one, allow `https://www.googletagmanager.com` in `script-src` and
 `https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com` in
@@ -679,8 +692,8 @@ outside production, so sign-in works over plain http. To test with a production 
 - Governing law is "applicable U.S. federal and state law". A comment in `terms.js` shows where
   to name a state.
 - The privacy policy has U.S. state, UK/EU (UK GDPR / GDPR) and Australian (Privacy Act) rights
-  sections. **There is no cookie consent banner yet**: GA4 loads for every visitor, and UK/EU rules
-  usually require opt-in consent first. See the `COOKIE CONSENT` comment in `privacy.js`.
+  sections. Its "Analytics and cookies" section describes the cookie banner (below); update it if
+  the banner or the consent defaults change.
 - The footer's "Privacy Policy · Terms" links come from `LEGAL_LINKS`, and the line under every
   form ("By submitting, you agree to our Privacy Policy.") from `CONTACT_FORM.privacyNotice`.
 

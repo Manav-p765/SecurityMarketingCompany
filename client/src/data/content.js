@@ -55,6 +55,20 @@ export const LEGAL_LINKS = [
   { label: 'Terms', to: '/terms' },
 ];
 
+/**
+ * Cookie banner (components/CookieBanner.jsx) and the footer link that
+ * reopens it. `{privacy}` becomes a link to the Privacy Policy's analytics
+ * section. Keep Accept and Decline equally prominent.
+ */
+export const COOKIE_BANNER = {
+  title: 'Cookies',
+  text: 'We use analytics cookies to understand how people use our site. You can accept or decline them, and change your choice at any time from Cookie settings in the footer. See our {privacy}.',
+  privacyLinkLabel: 'Privacy Policy',
+  accept: 'Accept',
+  decline: 'Decline',
+  settingsLink: 'Cookie settings',
+};
+
 /** Path of the contact page. "Book Strategy Call" buttons off the home page go here. */
 export const CONTACT_PATH = '/contact';
 

@@ -98,14 +98,16 @@ export const privacyPolicy = {
       blocks: [
         'Our live website uses Google Analytics 4, a web analytics service provided by Google LLC. Google Analytics uses cookies (small files stored in your browser, such as `_ga`) and similar technologies to collect information such as the pages you visit, how you arrived at our site, your approximate location based on your IP address, your device and browser type, and actions such as submitting a form. When a form is submitted, we record that it happened and which form was used — not what you wrote.',
         'We use this information in aggregate to understand how our website is used and to improve it. Google processes this information under its own terms and [Privacy Policy](https://policies.google.com/privacy). You can read more in [How Google uses information from sites or apps that use its services](https://policies.google.com/technologies/partner-sites).',
-        'You can control cookies through your browser settings, including blocking or deleting them. You can also prevent Google Analytics from collecting data about your visits by installing the [Google Analytics Opt-out Browser Add-on](https://tools.google.com/dlpage/gaoptout).',
-        // COOKIE CONSENT — not built yet. There is no consent banner: GA4 sets its
-        // cookies on the live site for every visitor (see client/src/analytics.js).
-        // UK (PECR) and EU (ePrivacy) rules usually require opt-in consent before
-        // analytics cookies are set. Add a consent banner (or Google Consent Mode
-        // with GA held until consent) before relying on this section for UK/EU
-        // visitors, then update this paragraph to describe how consent is asked for.
-        'Privacy and electronic communications laws in some regions, including the UK and the European Union, may require websites to ask for your consent before setting analytics cookies. Where that applies, you can withdraw your consent at any time by blocking or deleting cookies as described above.',
+        '**Your choice.** When you first visit, a cookie banner asks whether you accept analytics cookies. Both options are equally available:',
+        {
+          list: [
+            '**Accept:** Google Analytics may set its cookies (such as `_ga`) to measure your visits.',
+            '**Decline:** Google Analytics does not set cookies, and we delete any it has already set. Google may still receive limited signals without cookies — for example, that a page was viewed — which it uses in aggregate to estimate overall site usage. These signals are not linked to a cookie identifier on your device.',
+          ],
+        },
+        'If you are in the UK, the European Economic Area or Switzerland, analytics cookies are off until you accept. Elsewhere, they are on unless you decline. Your choice is saved in your browser for 12 months, and the banner does not appear again during that time. You can change your choice at any time with the **Cookie settings** link at the bottom of every page.',
+        'We use Google Consent Mode to pass your choice to Google. Advertising signals are always set to “denied”, whatever you choose.',
+        'You can also control cookies through your browser settings, including blocking or deleting them, and you can prevent Google Analytics from collecting data about your visits by installing the [Google Analytics Opt-out Browser Add-on](https://tools.google.com/dlpage/gaoptout).',
         'We do not use advertising cookies on our website.',
       ],
     },
