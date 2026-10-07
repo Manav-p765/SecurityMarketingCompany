@@ -68,7 +68,7 @@ export const HOME_META = {
   path: '/',
   title: 'Security Marketing Company — Marketing Built for Security Companies',
   description:
-    'Marketing for US security companies: websites, SEO & AI SEO, paid ads, social, lead generation, Google Business Profile and CRM automation to win more contracts.',
+    'Marketing for security companies: websites, SEO & AI SEO, paid ads, social, lead generation, Google Business Profile and CRM automation to win more contracts.',
   socialDescription: 'More visibility. Bigger contracts. We grow security companies online.',
 };
 
@@ -77,11 +77,11 @@ export const HOME_META = {
  * accent — same structure as a two-tone display headline.
  */
 export const HERO = {
-  eyebrow: 'B2B marketing for the US security industry',
+  eyebrow: 'B2B marketing for the security industry',
   headlineTop: 'Marketing Built to Help Security Companies',
   headlineBottom: 'Win More Contracts',
   paragraphs: [
-    'We help security companies generate qualified leads, improve online visibility, and build a digital presence that turns prospects into long-term clients.',
+    'We help security companies in the US, UK, Australia and beyond generate qualified leads, improve online visibility, and build a digital presence that turns prospects into long-term clients.',
   ],
   ctaPrimary: 'Book Strategy Call',
   ctaSecondary: 'View Services',
@@ -100,7 +100,7 @@ export const STATS = [
   { value: '50+', label: 'Experienced Team' },
 ];
 
-/** "Industries we serve" — the US security businesses we market. */
+/** "Industries we serve" — the security businesses we market. */
 export const INDUSTRIES = [
   'Security Guard Services',
   'Armed & Unarmed Security',
@@ -108,7 +108,7 @@ export const INDUSTRIES = [
   'Event Security',
   'Construction Site Security',
   'Retail & Commercial Security',
-  'HOA & Residential Security',
+  'Residential & Community Security',
   'Healthcare Security',
   'Alarm Installation & Monitoring',
   'CCTV & Video Surveillance',
@@ -186,7 +186,7 @@ export const services = [
         icon: 'badge',
         title: 'Trust signals up front',
         description:
-          'Licenses, certifications and insurance shown where commercial and residential buyers look for them. Industry memberships and the states you are licensed in can sit alongside them. For a buyer trusting you with their property, this is often what earns the call.',
+          'Licenses, certifications and insurance shown where commercial and residential buyers look for them. Industry memberships and the states, regions or countries you are licensed in can sit alongside them. For a buyer trusting you with their property, this is often what earns the call.',
       },
       {
         icon: 'mobile',
@@ -299,7 +299,7 @@ export const services = [
     seo: {
       title: 'Website Design & Development for Security Companies | Security Marketing Company',
       description:
-        'Websites for US guard, alarm, CCTV and access control companies: service and city pages, quote forms, trust signals and call tracking built to win inquiries.',
+        'Websites for guard, alarm, CCTV and access control companies: service and city pages, quote forms, trust signals and call tracking built to win inquiries.',
     },
   },
   {
@@ -337,7 +337,7 @@ export const services = [
         icon: 'map',
         title: 'Service-area pages',
         description:
-          'A dedicated page for each city and county you cover, so you can be found beyond your office address. Each page is written for that area and the services you offer there. They are built to be useful to a buyer, not copies with the city name swapped.',
+          'A dedicated page for each city, county or region you cover, so you can be found beyond your office address. Each page is written for that area and the services you offer there. They are built to be useful to a buyer, not copies with the city name swapped.',
       },
       {
         icon: 'sparkle',
@@ -426,7 +426,7 @@ export const services = [
       'Guard and patrol companies competing for commercial contracts in a defined metro area',
       'Alarm and CCTV installers who want steady inbound calls without paying for every click',
       'Access control and systems integrators targeting commercial and facilities buyers',
-      'Security companies expanding into new cities or counties',
+      'Security companies expanding into new cities or regions',
     ],
     faqs: [
       {
@@ -439,7 +439,7 @@ export const services = [
       },
       {
         q: 'Can you help us rank in cities where we do not have an office?',
-        a: 'Service-area pages help you appear in searches for the cities and counties you serve, though map results favor your business address. We set out what is realistic for each area in the plan.',
+        a: 'Service-area pages help you appear in searches for the cities and regions you serve, though map results favor your business address. We set out what is realistic for each area in the plan.',
       },
       {
         q: 'Do you guarantee first-page rankings?',
@@ -455,7 +455,7 @@ export const services = [
     seo: {
       title: 'SEO & AI SEO for Security Companies | Security Marketing Company',
       description:
-        'SEO and AI SEO for US security companies: service-area pages, technical fixes, citations and content that get guard, alarm and CCTV firms found in search.',
+        'SEO and AI SEO for security companies: service-area pages, technical fixes, citations and content that get guard, alarm and CCTV firms found in search.',
     },
   },
   {
@@ -487,7 +487,7 @@ export const services = [
         icon: 'map',
         title: 'Local Services Ads',
         description:
-          'Setup and management of Google Local Services Ads where your category and location qualify. We work through the profile, service areas and verification steps with you. Leads are reviewed, and ones that do not qualify can be disputed where Google allows it.',
+          'Setup and management of Google Local Services Ads where your country, category and location qualify — the program is not available everywhere. We work through the profile, service areas and verification steps with you. Leads are reviewed, and ones that do not qualify can be disputed where Google allows it.',
       },
       {
         icon: 'layers',
@@ -591,7 +591,7 @@ export const services = [
       },
       {
         q: 'Do you manage Google Local Services Ads?',
-        a: 'Yes, where your category and location are eligible. Local Services Ads appear above standard search ads and charge per lead rather than per click. We handle setup and ongoing management.',
+        a: 'Yes, where your country, category and location are eligible. Local Services Ads appear above standard search ads and charge per lead rather than per click. We handle setup and ongoing management.',
       },
       {
         q: 'How do you stop job seekers from clicking our ads?',
@@ -611,7 +611,7 @@ export const services = [
     seo: {
       title: 'Paid Ads for Security Companies | Security Marketing Company',
       description:
-        'Google Search and Local Services Ads for US security companies: campaigns by service and city, job-seeker filtering, landing pages and cost-per-lead reporting.',
+        'Google Search and, where available, Local Services Ads for security companies: campaigns by service and city, job-seeker filtering, landing pages and cost-per-lead reporting.',
     },
   },
   {
@@ -735,7 +735,7 @@ export const services = [
       'A monthly engagement report',
     ],
     bestFor: [
-      'Companies selling to commercial and HOA buyers who research vendors before shortlisting',
+      'Companies selling to commercial buyers and residential communities that research vendors before shortlisting',
       'Guard companies that also recruit officers online',
       'Installers and integrators with project work worth showing',
       'Security companies whose profiles have gone quiet',
@@ -767,7 +767,7 @@ export const services = [
     seo: {
       title: 'Social Media Marketing for Security Companies | Security Marketing Company',
       description:
-        'Social media for US security companies: LinkedIn, Facebook and Instagram content that builds credibility with commercial buyers and helps recruit officers.',
+        'Social media for security companies: LinkedIn, Facebook and Instagram content that builds credibility with commercial buyers and helps recruit officers.',
     },
   },
   {
@@ -811,13 +811,13 @@ export const services = [
         icon: 'send',
         title: 'Outbound campaigns',
         description:
-          'Targeted campaigns to commercial prospects such as property managers and general contractors. Messages are short, specific to the recipient’s industry and aimed at starting a conversation. Every campaign follows CAN-SPAM requirements.',
+          'Targeted campaigns to commercial prospects such as property managers and general contractors. Messages are short, specific to the recipient’s industry and aimed at starting a conversation. Every campaign follows the email rules in the countries you target, such as CAN-SPAM in the US, PECR in the UK and the Spam Act in Australia.',
       },
       {
         icon: 'shield',
         title: 'List setup and compliance',
         description:
-          'List building, segmentation and CAN-SPAM compliant templates. Contacts are grouped by buyer type, service interest and stage. Unsubscribes are honored automatically, and sending health is monitored so your emails keep reaching inboxes.',
+          'List building, segmentation and templates that meet the email rules where you send. Contacts are grouped by buyer type, service interest and stage. Unsubscribes are honored automatically, and sending health is monitored so your emails keep reaching inboxes.',
       },
       {
         icon: 'chart',
@@ -898,8 +898,8 @@ export const services = [
     ],
     faqs: [
       {
-        q: 'Is cold email allowed in the US?',
-        a: 'Commercial email is governed by the CAN-SPAM Act, which allows outreach to business contacts as long as messages are accurate, identify the sender, include a physical address and honor opt-outs. Every campaign we send is set up to meet those requirements.',
+        q: 'Is cold email allowed?',
+        a: 'It depends on where your prospects are. In the US, the CAN-SPAM Act allows outreach to business contacts as long as messages are accurate, identify the sender, include a physical address and honor opt-outs. The UK (PECR and UK GDPR), Australia (the Spam Act) and Canada (CASL) have their own rules on consent and opt-outs, which are generally stricter. We check the rules for each market you target, and every campaign we send is set up to meet them.',
       },
       {
         q: 'Where do the contacts come from?',
@@ -923,7 +923,7 @@ export const services = [
     seo: {
       title: 'Email Marketing & Lead Generation for Security Companies | Security Marketing Company',
       description:
-        'Email marketing for US security companies: lead magnets, nurture sequences, newsletters and CAN-SPAM compliant outbound campaigns to commercial buyers.',
+        'Email marketing for security companies: lead magnets, nurture sequences, newsletters and compliant outbound campaigns to commercial buyers.',
     },
   },
   {
@@ -1079,7 +1079,7 @@ export const services = [
     seo: {
       title: 'Google Business Profile Management for Security Companies | Security Marketing Company',
       description:
-        'Google Business Profile management for US security companies: categories, service areas, posts, reviews and spam monitoring for “near me” map results.',
+        'Google Business Profile management for security companies: categories, service areas, posts, reviews and spam monitoring for “near me” map results.',
     },
   },
   {
@@ -1235,7 +1235,7 @@ export const services = [
     seo: {
       title: 'CRM Automation for Security Companies | Security Marketing Company',
       description:
-        'CRM automation for US security companies: one pipeline for every inquiry, instant replies, quote follow-up reminders and response-time reporting.',
+        'CRM automation for security companies: one pipeline for every inquiry, instant replies, quote follow-up reminders and response-time reporting.',
     },
   },
 ];
@@ -1371,13 +1371,13 @@ export const servicesPage = {
     path: '/services',
     title: 'Security Company Marketing Services | Security Marketing Company',
     description:
-      'Websites, SEO & AI SEO, paid ads, Google Business Profile, social, email and CRM automation for US guard, alarm, CCTV and access control companies.',
+      'Websites, SEO & AI SEO, paid ads, Google Business Profile, social, email and CRM automation for guard, alarm, CCTV and access control companies.',
   },
 
   hero: {
     eyebrow: 'Services',
     headlineTop: 'Marketing Services for',
-    headlineBottom: 'US Security Companies',
+    headlineBottom: 'Security Companies',
     subhead:
       'Guard companies, alarm installers, CCTV providers and access control integrators each sell to different buyers. We build the websites, search visibility, advertising and follow-up that put you in front of them — and turn inquiries into signed work.',
     cta: 'Book Strategy Call',
@@ -1430,7 +1430,7 @@ export const servicesPage = {
       },
       {
         q: 'Do you work with small or regional security companies?',
-        a: 'Yes. Many security companies serve one metro area or a handful of counties, and local SEO, Google Business Profile and service-area pages are built for exactly that. Each engagement is scoped to your size and the areas you cover.',
+        a: 'Yes. Many security companies serve one metro area or a handful of surrounding towns, and local SEO, Google Business Profile and service-area pages are built for exactly that. Each engagement is scoped to your size and the areas you cover.',
       },
       {
         q: 'Do you only work with guard companies?',
@@ -1491,7 +1491,7 @@ export const reviews = [
     name: 'Danielle R.',
     role: 'Operations Manager',
     company: 'Brightline Alarm & Camera',
-    location: 'Phoenix, AZ',
+    location: 'Manchester, UK',
     rating: 5,
     isSample: true,
   },
@@ -1502,7 +1502,7 @@ export const reviews = [
     name: 'Kevin S.',
     role: 'General Manager',
     company: 'Crestview Access Systems',
-    location: 'Charlotte, NC',
+    location: 'Toronto, Canada',
     isSample: true,
   },
   // SAMPLE — replace with real client review before launch
@@ -1512,7 +1512,7 @@ export const reviews = [
     name: 'Angela M.',
     role: 'Owner',
     company: 'Harborline Security Group',
-    location: 'Tampa, FL',
+    location: 'Melbourne, Australia',
     rating: 5,
     isSample: true,
   },
@@ -1607,7 +1607,7 @@ export const blogPage = {
     path: '/blog',
     title: 'Blog: Marketing Advice for Security Companies | Security Marketing Company',
     description:
-      'Practical marketing advice for US guard, alarm, CCTV and access control companies: Google Business Profile, websites, lead follow-up and more.',
+      'Practical marketing advice for guard, alarm, CCTV and access control companies: Google Business Profile, websites, lead follow-up and more.',
   },
   breadcrumb: 'Blog',
   hero: {
@@ -1632,7 +1632,7 @@ export const blogPage = {
     ctaKicker: 'Want help with this?',
     /** `{service}` becomes the related service's name. */
     ctaTitle: 'See how our {service} service works',
-    ctaBody: 'We do this work every day for US security companies. See what is included and how we deliver it.',
+    ctaBody: 'We do this work every day for security companies. See what is included and how we deliver it.',
     ctaButton: 'Learn more',
   },
   /** In-content CTA target when a post has no `service` in its frontmatter. */
@@ -1667,13 +1667,13 @@ export const aboutPage = {
     path: '/about',
     title: 'About Us | Security Marketing Company',
     description:
-      'A B2B marketing agency that works only with US security companies: guard services, alarm and CCTV installers, access control firms and security integrators.',
+      'A B2B marketing agency that works only with security companies in the US, UK, Australia and beyond: guard services, alarm and CCTV installers, access control firms and security integrators.',
   },
 
   hero: {
     eyebrow: 'About us',
     headlineTop: 'The Marketing Agency Built Only',
-    headlineBottom: 'for US Security Companies',
+    headlineBottom: 'for Security Companies',
     subhead:
       'We help guard services, alarm and CCTV installers, access control firms and security integrators win more contracts and better leads online.',
     cta: 'Book Strategy Call',
@@ -1684,7 +1684,7 @@ export const aboutPage = {
     label: 'Who we are',
     title: 'One industry. One focus.',
     paragraphs: [
-      'Security Marketing Company is a B2B digital marketing agency that works only with US security companies: guard and patrol services, alarm and CCTV installers, access control firms and security systems integrators.',
+      'Security Marketing Company is a B2B digital marketing agency that works only with security companies in the US, UK, Australia and beyond: guard and patrol services, alarm and CCTV installers, access control firms and security systems integrators.',
       'We build the websites, search visibility, advertising and follow-up that help them win more contracts and qualified leads online. We market security companies — we never provide security services or compete with our clients for work.',
     ],
   },
@@ -1728,7 +1728,7 @@ export const aboutPage = {
       },
       {
         title: 'No shortcuts that put you at risk',
-        body: 'We do not buy, write or incentivize reviews, we do not guarantee rankings no one controls, and every email campaign follows CAN-SPAM requirements.',
+        body: 'We do not buy, write or incentivize reviews, we do not guarantee rankings no one controls, and every email campaign follows the email rules of the country it is sent to.',
       },
       {
         title: 'Terms in writing from the start',

@@ -12,6 +12,10 @@ import { PRODUCTION_HOSTNAMES } from './site.js';
  * hostname, so localhost, `vite preview` and Vercel preview deployments send
  * nothing. Off those hosts `window.gtag` is never defined and trackPageView
  * does nothing.
+ *
+ * No cookie consent yet: GA4 loads for every visitor on the live site. UK/EU
+ * visitors usually have to opt in before analytics cookies are set (PECR /
+ * ePrivacy) — see the COOKIE CONSENT note in data/legal/privacy.js.
  */
 
 export const GA_MEASUREMENT_ID = 'G-CBBT708R7T';

@@ -13,7 +13,11 @@ import { publishedReviews } from './site.js';
  * build time, so the static HTML and the in-app tags come from one source.
  */
 
-export const US = { '@type': 'Country', name: 'United States' };
+/** Markets we serve: areaServed in every schema here (client/index.html has the same list — keep in step). */
+export const AREA_SERVED = ['United States', 'United Kingdom', 'Australia', 'Canada'].map((name) => ({
+  '@type': 'Country',
+  name,
+}));
 
 export const absoluteUrl = (path) => `${COMPANY.siteUrl}${path === '/' ? '/' : path}`;
 
@@ -39,7 +43,7 @@ function serviceNode(service) {
     description: service.hero.subheadline,
     url,
     provider,
-    areaServed: US,
+    areaServed: AREA_SERVED,
     audience: { '@type': 'BusinessAudience', audienceType: 'Security companies' },
   };
 }
@@ -54,7 +58,7 @@ function pageSchema(type, meta, extra = {}) {
     name: meta.title,
     description: meta.description,
     inLanguage: 'en-US',
-    about: { ...provider, areaServed: US },
+    about: { ...provider, areaServed: AREA_SERVED },
     ...extra,
   };
 }
@@ -71,7 +75,7 @@ export const contactSchema = () =>
         '@type': 'ContactPoint',
         contactType: 'sales',
         email: COMPANY.email,
-        areaServed: US,
+        areaServed: AREA_SERVED,
         availableLanguage: 'English',
       },
     },

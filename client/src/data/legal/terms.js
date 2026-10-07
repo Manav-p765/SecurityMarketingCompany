@@ -13,7 +13,7 @@ export const termsPage = {
       'The terms that apply to your use of the Security Marketing Company website, including information about our services, intellectual property and limitations.',
   },
   title: 'Terms & Conditions',
-  lastUpdated: 'September 26, 2026',
+  lastUpdated: 'October 7, 2026',
   intro: [
     'These terms apply to your use of the {company} website. Please read them carefully. If you have a question about them, email us at {email}.',
   ],
@@ -29,7 +29,7 @@ export const termsPage = {
       id: 'use-of-the-website',
       heading: 'Use of the website',
       blocks: [
-        'Our website provides information about our marketing services for security companies across the United States. You may use it for lawful purposes connected with learning about and contacting us. You agree not to:',
+        'Our website provides information about our marketing services for security companies. You may use it for lawful purposes connected with learning about and contacting us. You agree not to:',
         {
           list: [
             'Use the website in any way that breaks applicable law',
@@ -77,7 +77,7 @@ export const termsPage = {
       id: 'disclaimers',
       heading: 'Disclaimers',
       blocks: [
-        'The website and its content are provided “as is” and “as available”. To the fullest extent permitted by law, we make no warranties of any kind, express or implied, including warranties of merchantability, fitness for a particular purpose, accuracy and non-infringement. We do not warrant that the website will be uninterrupted, error-free or free of harmful components, or that its content is complete or current.',
+        'The website and its content are provided “as is” and “as available”. To the fullest extent permitted by law, we make no warranties of any kind, express or implied, including warranties of merchantability, satisfactory quality, fitness for a particular purpose, accuracy and non-infringement. We do not warrant that the website will be uninterrupted, error-free or free of harmful components, or that its content is complete or current.',
       ],
     },
     {
@@ -92,7 +92,7 @@ export const termsPage = {
       id: 'indemnification',
       heading: 'Indemnification',
       blocks: [
-        'You agree to defend, indemnify and hold harmless {company} and its owners, employees and contractors from any claims, losses, liabilities and expenses (including reasonable attorneys’ fees) arising out of your misuse of the website or your breach of these terms.',
+        'You agree to defend, indemnify and hold harmless {company} and its owners, employees and contractors from any claims, losses, liabilities and expenses (including reasonable legal fees) arising out of your misuse of the website or your breach of these terms.',
       ],
     },
     {

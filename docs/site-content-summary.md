@@ -1,6 +1,6 @@
 # Security Marketing Company: Site Content Summary
 
-Updated on 2026-10-02 for the custom blog admin panel at /admin (posts now stored in MongoDB; same URLs and content). Before that, on 2026-09-30, for the single business email (info@securitymarketingcompany.com) and the five-item header with footer quick links. Earlier updates: the Privacy Policy, Terms, thank-you page and blog; the About and Contact pages and home page client reviews (samples, hidden on the live site); 2026-09-26, the expanded service page copy, service page graphics, Services dropdown and Google Analytics; 2026-09-24, the US retargeting, the Services page and the individual service pages. The first version was compiled on 2026-09-23 from commit `da29ff0`.
+Updated on 2026-10-07 for the move from US-only to international positioning (security companies in the US, UK, Australia and beyond): copy, meta, `areaServed` and new UK/EU and Australian privacy sections. Before that, on 2026-10-02, for the custom blog admin panel at /admin (posts now stored in MongoDB; same URLs and content). Before that, on 2026-09-30, for the single business email (info@securitymarketingcompany.com) and the five-item header with footer quick links. Earlier updates: the Privacy Policy, Terms, thank-you page and blog; the About and Contact pages and home page client reviews (samples, hidden on the live site); 2026-09-26, the expanded service page copy, service page graphics, Services dropdown and Google Analytics; 2026-09-24, the US retargeting, the Services page and the individual service pages. The first version was compiled on 2026-09-23 from commit `da29ff0`.
 
 **Sources:** `client/src/data/content.js` (almost all copy: every service and its detail page under `services`, the overview under `servicesPage`), the components in `client/src/components/` and `client/src/pages/`, `client/index.html` (home page meta and site-wide JSON-LD), `client/scripts/prerender.js` (meta for `/services` and each service page), and the server's lead routes and email templates.
 
@@ -17,20 +17,20 @@ Quotes are copied exactly from the source. Items marked **⚠** still need your 
 | Brand name | "Security Marketing Company" (the web manifest uses "SMC") |
 | Tagline | "Growing security companies online." |
 | Brand promise | "More visibility. Bigger contracts." |
-| Home hero eyebrow | "B2B marketing for the US security industry" |
-| Footer description | "A B2B digital marketing agency for US security companies. We market security companies — we do not provide security services." |
-| JSON-LD description | "Digital marketing agency for US security companies — guard and patrol services, alarm installers, CCTV providers, access control and security systems integrators: website design, SEO and AI SEO, paid ads, social media, email marketing and lead generation, Google Business Profile management and CRM automation." |
+| Home hero eyebrow | "B2B marketing for the security industry" |
+| Footer description | "A B2B digital marketing agency for security companies in the US, UK, Australia and beyond. We market security companies — we do not provide security services." |
+| JSON-LD description | "Digital marketing agency for security companies in the US, UK, Australia and beyond — guard and patrol services, alarm installers, CCTV providers, access control and security systems integrators: website design, SEO and AI SEO, paid ads, social media, email marketing and lead generation, Google Business Profile management and CRM automation." |
 | Positioning line (home hero) | "**One industry. One focus.** We market security companies — we never sell security." |
 
 ### Core value proposition
 
-> "We help security companies generate qualified leads, improve online visibility, and build a digital presence that turns prospects into long-term clients." (Home hero)
+> "We help security companies in the US, UK, Australia and beyond generate qualified leads, improve online visibility, and build a digital presence that turns prospects into long-term clients." (Home hero)
 
 > "Guard companies, alarm installers, CCTV providers and access control integrators each sell to different buyers. We build the websites, search visibility, advertising and follow-up that put you in front of them — and turn inquiries into signed work." (Services hero)
 
 ### Target audience
 
-The target is US security companies of these kinds: guard and patrol services, alarm installers, CCTV and video surveillance providers, access control integrators, and security systems integrators. Cybersecurity firms are **not** included.
+The target is security companies in the US, UK, Australia and beyond (US English is used site-wide) of these kinds: guard and patrol services, alarm installers, CCTV and video surveillance providers, access control integrators, and security systems integrators. Cybersecurity firms are **not** included.
 
 These are the 12 industries listed on the site. They appear in the "Industries we serve / Security Companies We Help" grid on both pages and in the ticker band on the home page.
 
@@ -40,7 +40,7 @@ These are the 12 industries listed on the site. They appear in the "Industries w
 - Event Security
 - Construction Site Security
 - Retail & Commercial Security
-- HOA & Residential Security
+- Residential & Community Security
 - Healthcare Security
 - Alarm Installation & Monitoring
 - CCTV & Video Surveillance
@@ -114,7 +114,7 @@ Each hero has an illustration built in markup, in the same style as the home pag
   - **Custom design** — Built around your services, your service area and your brand — not a generic template. The layout is planned for the buyers you sell to, whether that is a facilities director reviewing vendors or a homeowner comparing alarm companies. Every page ends with a clear next step.
   - **Service and city pages** — A page for each service you sell and each area you cover, written for how your buyers search. Guard services, patrol, alarm monitoring, video surveillance and access control each get their own explanation instead of sharing one list. The same pages give search engines something specific to rank.
   - **Quote and survey forms** — Quote, site survey and consultation requests on every key page, so a ready buyer never has to hunt for the next step. Forms ask for the details your team needs to respond, such as property type and service needed, without becoming a chore to fill in.
-  - **Trust signals up front** — Licenses, certifications and insurance shown where commercial and residential buyers look for them. Industry memberships and the states you are licensed in can sit alongside them. For a buyer trusting you with their property, this is often what earns the call.
+  - **Trust signals up front** — Licenses, certifications and insurance shown where commercial and residential buyers look for them. Industry memberships and the states, regions or countries you are licensed in can sit alongside them. For a buyer trusting you with their property, this is often what earns the call.
   - **Fast, mobile-first build** — Quick to load on a phone and easy for your team to update in-house. Many buyers first look you up on a phone, often between other tasks. The site stays fast and readable on any screen.
   - **Call and form tracking** — Every call and form submission is recorded, so you can see which pages produce inquiries. Tracking is set up in analytics from launch. That gives you a baseline to judge the site by and a clear view of what to improve next.
 - **How it works:** 1. Discovery — We review your current site, your services, your service area and the buyers you want more of. 2. Structure and copy — We plan the pages and write the copy for each service and area, built around quote and survey requests. 3. Design and build — We design and build the site, set up forms and tracking, and share it with you for review. 4. Launch — We launch, redirect your old URLs so existing search visibility carries over, and test every form and call path.
@@ -161,7 +161,7 @@ Each hero has an illustration built in markup, in the same style as the home pag
 - **What's included:**
   - **Technical SEO audit** — Site speed, indexing, structure and errors reviewed and fixed so search engines can crawl every page. Issues are ranked by impact, so the fixes that matter most happen first. You get a plain-English summary of what was found and what changed.
   - **Keyword research** — The searches your buyers actually use, mapped by service and by city. Commercial guard services, alarm monitoring and access control are searched for differently, so each gets its own targets. Terms that attract job seekers or DIY shoppers are flagged and left out.
-  - **Service-area pages** — A dedicated page for each city and county you cover, so you can be found beyond your office address. Each page is written for that area and the services you offer there. They are built to be useful to a buyer, not copies with the city name swapped.
+  - **Service-area pages** — A dedicated page for each city, county or region you cover, so you can be found beyond your office address. Each page is written for that area and the services you offer there. They are built to be useful to a buyer, not copies with the city name swapped.
   - **AI search optimization** — Content structured to be understood and cited by AI search tools such as Google AI Overviews and ChatGPT. That means clear service descriptions, locations, licensing and direct answers to the questions buyers ask. The same clarity supports traditional search as well.
   - **Local citations** — Consistent business listings across local and security industry directories. Your name, address, phone number and services match everywhere they appear. Outdated or conflicting listings are found and corrected.
   - **Monthly reporting** — Rankings and traffic for context — and the inquiries search actually produces. Each report explains what was done that month and what comes next. You see how search contributes to calls and form submissions, not just visits.
@@ -181,11 +181,11 @@ Each hero has an illustration built in markup, in the same style as the home pag
   - Guard and patrol companies competing for commercial contracts in a defined metro area
   - Alarm and CCTV installers who want steady inbound calls without paying for every click
   - Access control and systems integrators targeting commercial and facilities buyers
-  - Security companies expanding into new cities or counties
+  - Security companies expanding into new cities or regions
 - **FAQ:**
   - *How long does SEO take to work?* "SEO builds over months rather than weeks, and the pace depends on your market, your competitors and the state of your current site. We set expectations for your market after the audit, and paid ads can cover the gap in the meantime."
   - *What is AI SEO?* "More buyers now ask AI tools such as Google AI Overviews and ChatGPT for recommendations. AI SEO structures your content — clear service descriptions, locations, licensing and answers to common questions — so those tools can understand it and cite it."
-  - *Can you help us rank in cities where we do not have an office?* "Service-area pages help you appear in searches for the cities and counties you serve, though map results favor your business address. We set out what is realistic for each area in the plan."
+  - *Can you help us rank in cities where we do not have an office?* "Service-area pages help you appear in searches for the cities and regions you serve, though map results favor your business address. We set out what is realistic for each area in the plan."
   - *Do you guarantee first-page rankings?* "No. No one controls Google’s rankings, and a guarantee is a warning sign. We commit to the work, report on it openly every month and focus on the inquiries search produces."
   - *How is SEO reported?* "A monthly report covering rankings for your target searches, traffic, and the calls and form submissions that came from search."
 - **Related:** `/services/google-business-profile`, `/services/website`, `/services/paid-ads`
@@ -207,7 +207,7 @@ Each hero has an illustration built in markup, in the same style as the home pag
   - **Every security company — Test a new service or market:** Entering a new city or launching a new service? Ads show how buyers respond before you invest in longer-term channels such as SEO.
 - **What's included:**
   - **Google Search Ads** — Campaigns targeting the searches buyers use when they need security services now. Ads are written for each service and area, with clear calls to action for quotes and site surveys. Ad schedules can follow the hours your team answers the phone.
-  - **Local Services Ads** — Setup and management of Google Local Services Ads where your category and location qualify. We work through the profile, service areas and verification steps with you. Leads are reviewed, and ones that do not qualify can be disputed where Google allows it.
+  - **Local Services Ads** — Setup and management of Google Local Services Ads where your country, category and location qualify — the program is not available everywhere. We work through the profile, service areas and verification steps with you. Leads are reviewed, and ones that do not qualify can be disputed where Google allows it.
   - **Campaign structure** — Campaigns split by service, city and buyer type, so budget goes where the work is. Commercial guard services and residential alarm installs never compete for the same budget. You can raise or lower spend on each line of business separately.
   - **Negative keywords** — Filters that keep out job seekers, DIY searches and other clicks that will not become customers. Terms such as “jobs”, “hiring” and “training” are excluded from the start. The list grows as we review what people actually searched for.
   - **Landing pages** — A dedicated page for each campaign, built to turn a click into a call or quote request. The page matches the ad the buyer clicked, so they land on exactly what they searched for. Calls and forms on it are tracked separately from your main website.
@@ -231,7 +231,7 @@ Each hero has an illustration built in markup, in the same style as the home pag
   - Any security company that needs inquiries while SEO builds
 - **FAQ:**
   - *How much should we spend on ads?* "It depends on your market, your services and how much new work you can take on. We recommend a starting budget after the audit, and you approve every budget before it is spent."
-  - *Do you manage Google Local Services Ads?* "Yes, where your category and location are eligible. Local Services Ads appear above standard search ads and charge per lead rather than per click. We handle setup and ongoing management."
+  - *Do you manage Google Local Services Ads?* "Yes, where your country, category and location are eligible. Local Services Ads appear above standard search ads and charge per lead rather than per click. We handle setup and ongoing management."
   - *How do you stop job seekers from clicking our ads?* "With careful keyword choice and negative keywords. Searches that include terms such as “jobs”, “hiring” or “salary” are excluded, and we review the search terms report regularly to catch new ones."
   - *How quickly can ads produce inquiries?* "Ads can start producing calls soon after launch because they do not depend on rankings. The first weeks show which searches and areas convert, and the campaigns are refined from there."
   - *How do we know what we are getting for the spend?* "Every call and form submission is tracked to the campaign that produced it, and the monthly report shows spend, cost per lead and the number of inquiries."
@@ -272,7 +272,7 @@ Each hero has an illustration built in markup, in the same style as the home pag
   - A monthly engagement report
 - **Pricing:** "Custom quote"
 - **Best for:**
-  - Companies selling to commercial and HOA buyers who research vendors before shortlisting
+  - Companies selling to commercial buyers and residential communities that research vendors before shortlisting
   - Guard companies that also recruit officers online
   - Installers and integrators with project work worth showing
   - Security companies whose profiles have gone quiet
@@ -303,8 +303,8 @@ Each hero has an illustration built in markup, in the same style as the home pag
   - **Lead magnets** — Offers such as security checklists and assessment requests that turn website visitors into contacts. They give a buyer who is not ready to call a reason to leave their details. Each one is written for a specific audience, such as property managers or retail owners.
   - **Nurture sequences** — Automated emails for commercial and residential prospects that move them toward a quote. Each sequence answers the questions buyers have at each stage, from what affects pricing to what a site survey involves. A sequence stops as soon as someone replies or books.
   - **Newsletters** — Regular updates to past inquiries and current clients. Content covers practical security topics, company news and seasonal reminders. It keeps your name in front of people between contracts.
-  - **Outbound campaigns** — Targeted campaigns to commercial prospects such as property managers and general contractors. Messages are short, specific to the recipient’s industry and aimed at starting a conversation. Every campaign follows CAN-SPAM requirements.
-  - **List setup and compliance** — List building, segmentation and CAN-SPAM compliant templates. Contacts are grouped by buyer type, service interest and stage. Unsubscribes are honored automatically, and sending health is monitored so your emails keep reaching inboxes.
+  - **Outbound campaigns** — Targeted campaigns to commercial prospects such as property managers and general contractors. Messages are short, specific to the recipient’s industry and aimed at starting a conversation. Every campaign follows the email rules in the countries you target, such as CAN-SPAM in the US, PECR in the UK and the Spam Act in Australia.
+  - **List setup and compliance** — List building, segmentation and templates that meet the email rules where you send. Contacts are grouped by buyer type, service interest and stage. Unsubscribes are honored automatically, and sending health is monitored so your emails keep reaching inboxes.
   - **Reporting** — Open, click and reply reporting for every campaign. Replies and booked calls are tracked alongside the standard email metrics. What works feeds into the next round of subject lines, timing and targeting.
 - **How it works:** 1. Audit — We review your existing contacts, your email tools and the buyers you want to reach. 2. Build — We set up lists, segments, templates and lead magnets. 3. Launch — Nurture sequences, newsletters and outbound campaigns go live after your approval. 4. Refine — We track opens, clicks and replies, and adjust subject lines, timing and targeting.
 - **What to expect:**
@@ -324,7 +324,7 @@ Each hero has an illustration built in markup, in the same style as the home pag
   - Alarm companies following up on past quotes and existing customers
   - Security companies with a contact list that is not being used
 - **FAQ:**
-  - *Is cold email allowed in the US?* "Commercial email is governed by the CAN-SPAM Act, which allows outreach to business contacts as long as messages are accurate, identify the sender, include a physical address and honor opt-outs. Every campaign we send is set up to meet those requirements."
+  - *Is cold email allowed?* "It depends on where your prospects are. In the US, the CAN-SPAM Act allows outreach to business contacts as long as messages are accurate, identify the sender, include a physical address and honor opt-outs. The UK (PECR and UK GDPR), Australia (the Spam Act) and Canada (CASL) have their own rules on consent and opt-outs, which are generally stricter. We check the rules for each market you target, and every campaign we send is set up to meet them."
   - *Where do the contacts come from?* "From your own inquiries and clients, from signups through lead magnets on your website and, for outbound campaigns, from targeted lists of commercial prospects in your service area."
   - *Which email platform do you use?* "We work with the platform you already have, or recommend one that fits your size and connects to your CRM."
   - *How often will emails go out?* "It depends on the audience. Nurture sequences run automatically after someone inquires, newsletters go out on a regular schedule, and outbound campaigns follow a plan agreed with you."
@@ -452,7 +452,7 @@ None. The softer commitments are:
 
 1. **"Do you require a long-term contract?"** "Terms depend on the work. A website build is scoped as a project; ongoing services such as SEO, paid ads and Google Business Profile management run on an agreed monthly basis. The term, scope and notice period are set out in writing before any work starts."
 2. **"How long before we see results?"** "It depends on the channel. Paid ads can produce inquiries soon after launch. Google Business Profile improvements often show within the first few months. SEO builds over a longer period, depending on your market and competition. We set expectations for each channel after the audit."
-3. **"Do you work with small or regional security companies?"** "Yes. Many security companies serve one metro area or a handful of counties, and local SEO, Google Business Profile and service-area pages are built for exactly that. Each engagement is scoped to your size and the areas you cover."
+3. **"Do you work with small or regional security companies?"** "Yes. Many security companies serve one metro area or a handful of surrounding towns, and local SEO, Google Business Profile and service-area pages are built for exactly that. Each engagement is scoped to your size and the areas you cover."
 4. **"Do you only work with guard companies?"** "No. We work with guard and patrol companies and with alarm, CCTV, access control and systems integration firms. Their buyers differ — service contracts versus residential and commercial installs — so the strategy does too."
 5. **"What do you need from us?"** "A kickoff call; access to your website, Google Business Profile, ad accounts and analytics; and details of your licenses, service areas and the work you want more of. After that, a quick review of key pages and campaigns before they go live, and a monthly check-in."
 6. **"How do you report on results?"** "A monthly report built around inquiries: calls, form submissions, booked surveys and where each one came from. Traffic and rankings are included for context, but the focus is the leads that turn into contracts."
@@ -467,9 +467,9 @@ None. The softer commitments are:
 
 Sections in order: hero, who we are, why we focus on security companies, how we work, what we do (all 7 services, each linking to its page), the home page stats row (same component and values), closing CTA card. No founding story, dates, team, clients or awards.
 
-- **Hero:** eyebrow "About us"; H1 "The Marketing Agency Built Only for US Security Companies" (second part in red); subhead "We help guard services, alarm and CCTV installers, access control firms and security integrators win more contracts and better leads online."; buttons "Book Strategy Call" (to `/contact`) and "View Services" (to `/services`)
+- **Hero:** eyebrow "About us"; H1 "The Marketing Agency Built Only for Security Companies" (second part in red); subhead "We help guard services, alarm and CCTV installers, access control firms and security integrators win more contracts and better leads online."; buttons "Book Strategy Call" (to `/contact`) and "View Services" (to `/services`)
 - **Who we are — One industry. One focus.:**
-  - "Security Marketing Company is a B2B digital marketing agency that works only with US security companies: guard and patrol services, alarm and CCTV installers, access control firms and security systems integrators."
+  - "Security Marketing Company is a B2B digital marketing agency that works only with security companies in the US, UK, Australia and beyond: guard and patrol services, alarm and CCTV installers, access control firms and security systems integrators."
   - "We build the websites, search visibility, advertising and follow-up that help them win more contracts and qualified leads online. We market security companies — we never provide security services or compete with our clients for work."
 - **Why we focus on security companies** — "Security is not a typical local service. The way buyers choose a provider shapes every part of the marketing."
   - **We understand your buyers:** Facilities managers, property managers, business owners, homeowners and IT directors each buy security differently. We write and target for each of them, not for a generic customer.
@@ -479,7 +479,7 @@ Sections in order: hero, who we are, why we focus on security companies, how we 
 - **How we work — Four commitments on every engagement** (each restates a commitment already made on the service pages or the /services FAQ):
   - **Reporting built around inquiries:** Monthly reports show the calls, form submissions and booked surveys our work produces and where each came from. Traffic and rankings are there for context.
   - **You approve before anything goes live:** You approve every ad budget before it is spent, and review copy, content calendars and campaigns before they are published.
-  - **No shortcuts that put you at risk:** We do not buy, write or incentivize reviews, we do not guarantee rankings no one controls, and every email campaign follows CAN-SPAM requirements.
+  - **No shortcuts that put you at risk:** We do not buy, write or incentivize reviews, we do not guarantee rankings no one controls, and every email campaign follows the email rules of the country it is sent to.
   - **Terms in writing from the start:** The scope, term and notice period are set out in writing before any work starts, whether it is a one-off website build or an ongoing program.
 - **What we do — Services for security companies:** one tile per service (icon, name, short description), plus "View all services"
 - **Stats:** the home page row, unchanged ("10+", "500+", "5+", "50+")
@@ -507,15 +507,15 @@ The home page contact section keeps its "We reply the same business day" note. A
 
 ### Privacy Policy (`/privacy`) and Terms & Conditions (`/terms`)
 
-**⚠ Templates — have both reviewed before relying on them legally.** Text lives in `client/src/data/legal/privacy.js` and `terms.js`. "Last updated: September 26, 2026" on both. No business address anywhere; the contact email is the `COMPANY` email (info@securitymarketingcompany.com). Governing law: "applicable U.S. federal and state law" (a code comment marks where a state can be added).
+**⚠ Templates — have both reviewed before relying on them legally.** Text lives in `client/src/data/legal/privacy.js` and `terms.js`. "Last updated: October 7, 2026" on both. No business address anywhere; the contact email is the `COMPANY` email (info@securitymarketingcompany.com). Governing law: "applicable U.S. federal and state law" (a code comment marks where a state can be added).
 
-- **Privacy Policy sections:** `#information-we-collect` Information we collect · `#how-we-use-information` How we use your information · `#where-your-information-goes` Where your information goes · `#no-sale-of-data` We do not sell your information · `#analytics-and-cookies` Analytics and cookies · `#data-retention` How long we keep information · `#your-choices` Access, correction and deletion · `#us-state-privacy-rights` U.S. state privacy rights · `#security` Security · `#children` Children’s privacy · `#other-websites` Links to other websites · `#changes` Changes to this policy · `#contact` Contact us
+- **Privacy Policy sections:** `#information-we-collect` Information we collect · `#how-we-use-information` How we use your information · `#where-your-information-goes` Where your information goes · `#no-sale-of-data` We do not sell your information · `#analytics-and-cookies` Analytics and cookies · `#data-retention` How long we keep information · `#your-choices` Access, correction and deletion · `#us-state-privacy-rights` U.S. state privacy rights · `#uk-eu-privacy-rights` UK and EU privacy rights · `#australian-privacy-rights` Australian privacy rights · `#security` Security · `#children` Children’s privacy · `#other-websites` Links to other websites · `#changes` Changes to this policy · `#contact` Contact us
   - Lists the form fields actually collected (name, company, work email, service, optional message), plus the user agent and timestamp saved with each submission and the IP address used for rate limiting.
   - Names the providers the code uses: Vercel (site hosting), Render (API server), MongoDB Atlas (lead storage), Resend (team notification and visitor confirmation emails), Google (Analytics 4 and Google Fonts).
-  - GA4 cookies explained, with links to Google’s privacy policy, "How Google uses information from sites or apps" and the Google Analytics Opt-out Browser Add-on.
-  - No sale of personal information and no sharing for targeted advertising; retention described in general terms (**⚠ confirm it matches your practice**); requests by email, answered "within a reasonable time and within any period required by applicable law"; a U.S. state privacy rights section (California, Virginia, Colorado, Connecticut, Utah); not directed at children under 13.
+  - GA4 cookies explained, with links to Google’s privacy policy, "How Google uses information from sites or apps" and the Google Analytics Opt-out Browser Add-on, plus a note that some regions (UK, EU) may require consent before analytics cookies are set. **⚠ There is no cookie consent banner yet** — GA4 loads for every visitor on the live site; a `COOKIE CONSENT` code comment in `privacy.js` (and a note in `analytics.js`) marks the gap.
+  - No sale of personal information and no sharing for targeted advertising; retention described in general terms (**⚠ confirm it matches your practice**); requests by email, answered "within a reasonable time and within any period required by applicable law"; a U.S. state privacy rights section (California, Virginia, Colorado, Connecticut, Utah); a UK and EU section (UK GDPR / GDPR: controller, lawful bases — steps at your request before a contract and legitimate interests for form data, consent for analytics cookies where required — rights of access, correction, deletion, objection, portability and restriction, international transfers to US-based providers, and complaints to the ICO or an EU supervisory authority); an Australian section (Privacy Act 1988 and APPs "may apply", access and correction, overseas disclosure to US providers, complaints to the OAIC); not directed at children under 13.
 - **Terms sections:** `#acceptance` Acceptance of terms · `#use-of-the-website` Use of the website · `#services-information` Information about our services · `#intellectual-property` Intellectual property · `#user-submissions` Information you submit · `#third-party-links` Third-party links · `#disclaimers` Disclaimers · `#limitation-of-liability` Limitation of liability · `#indemnification` Indemnification · `#governing-law` Governing law · `#changes` Changes to these terms · `#general` General · `#contact` Contact us
-  - Liability for claims about the website is capped at US$100 (**⚠ review**); separate written service agreements take precedence.
+  - Use of the website is described as for "security companies" (no country). Liability for claims about the website is capped at US$100 (**⚠ review**); separate written service agreements take precedence. Disclaimer covers "merchantability, satisfactory quality, fitness…"; indemnity covers "reasonable legal fees".
 - **Footer:** "Privacy Policy · Terms" in the bottom row. **Under every form:** "By submitting, you agree to our Privacy Policy." (linked to /privacy).
 
 ### Thank-you page (`/thank-you`)
@@ -533,8 +533,8 @@ Both forms (home and /contact) go here after a successful submission; errors sta
 
 - **Hero:** eyebrow "Blog"; H1 "Marketing Advice for Security Companies"; intro "Practical guides for owners and managers of guard, alarm, CCTV and access control companies — on getting found, turning visitors into inquiries and winning more contracts."
 - **Listing:** "Latest post" (the newest post, featured), then a card grid; category chips ("All" + each category); pagination only past 9 posts. Cards: cover (or a generated graphic), category, title, excerpt, date, read time.
-- **Post pages:** breadcrumb (Home / Blog / title), title, excerpt, date · read time · "By Security Marketing Company Team", cover, article, an in-article box ("Want help with this?" / "See how our {Service} service works" / "We do this work every day for US security companies. See what is included and how we deliver it." / "Learn more") linking to the related service, "Related articles" (2–3, same category first), closing CTA "Put this to work for your company".
-- **Meta:** /blog title "Blog: Marketing Advice for Security Companies | Security Marketing Company", description "Practical marketing advice for US guard, alarm, CCTV and access control companies: Google Business Profile, websites, lead follow-up and more.", `Blog` schema. Each post: title "{Post title} | Security Marketing Company", description = excerpt, `og:type` article, `Article` + `BreadcrumbList` schema.
+- **Post pages:** breadcrumb (Home / Blog / title), title, excerpt, date · read time · "By Security Marketing Company Team", cover, article, an in-article box ("Want help with this?" / "See how our {Service} service works" / "We do this work every day for security companies. See what is included and how we deliver it." / "Learn more") linking to the related service, "Related articles" (2–3, same category first), closing CTA "Put this to work for your company".
+- **Meta:** /blog title "Blog: Marketing Advice for Security Companies | Security Marketing Company", description "Practical marketing advice for guard, alarm, CCTV and access control companies: Google Business Profile, websites, lead follow-up and more.", `Blog` schema. Each post: title "{Post title} | Security Marketing Company", description = excerpt, `og:type` article, `Article` + `BreadcrumbList` schema.
 
 | Date | Post | Category | Words | CTA service |
 | --- | --- | --- | --- | --- |
@@ -563,7 +563,7 @@ All three are by "Security Marketing Company Team" and contain no statistics, cl
 
 | Page / section | Label | Headline | Lead |
 | --- | --- | --- | --- |
-| Home hero | "B2B marketing for the US security industry" | "Marketing Built to Help Security Companies **Win More Contracts**" | See §1 |
+| Home hero | "B2B marketing for the security industry" | "Marketing Built to Help Security Companies **Win More Contracts**" | See §1 |
 | Home industries | "Industries we serve" | "Security Companies We Help" | none |
 | Home services | "What we do" | "Marketing Services Built for Security Companies" | "From your website and Google visibility to paid advertising, lead generation and automated follow-up, we build the digital systems security companies need to generate consistent opportunities and grow." |
 | Home band | none | "More visibility. *Bigger contracts.*" | Service and industry tickers |
@@ -572,7 +572,7 @@ All three are by "Security Marketing Company Team" and contain no statistics, cl
 | Home Why Us | "Why us" | "Why Security Companies Choose Us" | See §1 |
 | Home process | "How it works" | "Audit. Strategy. Build. Grow." | See §2 |
 | Home contact | "Book a strategy call" | "Tell us what you want to win" | "Tell us the contracts you are chasing and the areas you cover. We will come back with a straight assessment of what it takes to win them — no obligation." |
-| Services hero | "Services" | "Marketing Services for **US Security Companies**" | See §1 |
+| Services hero | "Services" | "Marketing Services for **Security Companies**" | See §1 |
 | Services process | "How we work" | "Audit. Strategy. Launch. Optimize. Report." | See §2 |
 | Services FAQ | "FAQ" | "Questions security company owners ask us" | none |
 | Services CTA | "Next step" | "Tell us what you want to win" | Same text as the home contact lead, plus "We reply the same business day." |
@@ -608,9 +608,9 @@ All three are by "Security Marketing Company Team" and contain no statistics, cl
 - **Client reviews (home page, after "How it works" and before the contact form):** "Client reviews" / "What Security Company Owners Say" — "Guard companies, alarm and CCTV installers and access control firms on working with us."
   - **⚠ All four are samples** written for layout (`isSample: true`). They show on every environment, including the live site, with a small low-contrast line under the heading: "Sample reviews shown. Client testimonials coming soon." The line disappears once every review has isSample: false. Samples are never added to the Review schema. See the README, "Client reviews — how to make them live".
   - (sample) "Almost all of our new contracts used to come from referrals. Now property managers find us on Google and call about specific sites, and the inquiries are for the kind of work we actually want. The monthly report makes it easy to see where each lead came from." — Marcus T., Owner, Ironside Patrol Services, Houston, TX · 5 stars
-  - (sample) "We were paying for clicks from people shopping for DIY cameras and looking for security jobs. The campaigns are much tighter now, and the calls we get are homeowners and businesses ready to talk about an install." — Danielle R., Operations Manager, Brightline Alarm & Camera, Phoenix, AZ · 5 stars
-  - (sample) "Our sales cycle is long, and good leads used to go quiet after the first proposal. With automatic follow-ups and one clear pipeline, our team knows exactly which quotes need attention each week." — Kevin S., General Manager, Crestview Access Systems, Charlotte, NC · no rating
-  - (sample) "Our Google Business Profile had not been touched in years. It is complete and active now, clients leave reviews without us chasing them, and more of our calls come from people who found us in the map results." — Angela M., Owner, Harborline Security Group, Tampa, FL · 5 stars
+  - (sample) "We were paying for clicks from people shopping for DIY cameras and looking for security jobs. The campaigns are much tighter now, and the calls we get are homeowners and businesses ready to talk about an install." — Danielle R., Operations Manager, Brightline Alarm & Camera, Manchester, UK · 5 stars
+  - (sample) "Our sales cycle is long, and good leads used to go quiet after the first proposal. With automatic follow-ups and one clear pipeline, our team knows exactly which quotes need attention each week." — Kevin S., General Manager, Crestview Access Systems, Toronto, Canada · no rating
+  - (sample) "Our Google Business Profile had not been touched in years. It is complete and active now, clients leave reviews without us chasing them, and more of our calls come from people who found us in the map results." — Angela M., Owner, Harborline Security Group, Melbourne, Australia · 5 stars
 
 - **Real testimonials, case studies, client logos:** none yet.
 - **Stats row (under the home hero):** "10+" Security Companies Served · "500+" Leads Generated · "5+" Years Marketing Experience · "50+" Experienced Team. These are public claims; keep them accurate.
@@ -703,24 +703,24 @@ The thank-you page shows the email only through the footer. Sending address: unc
 | | Home (`/`) | Services (`/services`) |
 | --- | --- | --- |
 | Title | "Security Marketing Company — Marketing Built for Security Companies" | "Security Company Marketing Services \| Security Marketing Company" |
-| Meta description | "Marketing for US security companies: websites, SEO & AI SEO, paid ads, social, lead generation, Google Business Profile and CRM automation to win more contracts." | "Websites, SEO & AI SEO, paid ads, Google Business Profile, social, email and CRM automation for US guard, alarm, CCTV and access control companies." |
+| Meta description | "Marketing for security companies: websites, SEO & AI SEO, paid ads, social, lead generation, Google Business Profile and CRM automation to win more contracts." | "Websites, SEO & AI SEO, paid ads, Google Business Profile, social, email and CRM automation for guard, alarm, CCTV and access control companies." |
 | Canonical | https://www.securitymarketingcompany.com/ | https://www.securitymarketingcompany.com/services |
 | OG / Twitter description | "More visibility. Bigger contracts. We grow security companies online." | Same as the meta description |
-| Structured data | `ProfessionalService`, areaServed United States, `sameAs` social profiles | Plus 7 `Service` entries, each with areaServed United States |
+| Structured data | `ProfessionalService`, areaServed United States, United Kingdom, Australia and Canada, `sameAs` social profiles | Plus 7 `Service` entries, each with areaServed United States, United Kingdom, Australia and Canada |
 
-**About and Contact:** `/about` — title "About Us | Security Marketing Company", description "A B2B marketing agency that works only with US security companies: guard services, alarm and CCTV installers, access control firms and security integrators.", `AboutPage` schema. `/contact` — title "Contact Us | Security Marketing Company", description "Book a strategy call with Security Marketing Company. Tell us the contracts you are chasing and the areas you cover, and we will come back with a plan.", `ContactPage` schema with the email as a sales `ContactPoint`. Both have their own canonical and Open Graph/Twitter tags in the prerendered HTML (`dist/about.html`, `dist/contact.html`). The home page gets `Review` schema only from real (non-sample) reviews.
+**About and Contact:** `/about` — title "About Us | Security Marketing Company", description "A B2B marketing agency that works only with security companies in the US, UK, Australia and beyond: guard services, alarm and CCTV installers, access control firms and security integrators.", `AboutPage` schema. `/contact` — title "Contact Us | Security Marketing Company", description "Book a strategy call with Security Marketing Company. Tell us the contracts you are chasing and the areas you cover, and we will come back with a plan.", `ContactPage` schema with the email as a sales `ContactPoint`. Both have their own canonical and Open Graph/Twitter tags in the prerendered HTML (`dist/about.html`, `dist/contact.html`). The home page gets `Review` schema only from real (non-sample) reviews.
 
-**Service detail pages:** title format "{Service} for Security Companies | Security Marketing Company". Structured data: one `Service` (provider Security Marketing Company, areaServed United States) plus a `BreadcrumbList`.
+**Service detail pages:** title format "{Service} for Security Companies | Security Marketing Company". Structured data: one `Service` (provider Security Marketing Company, areaServed United States, United Kingdom, Australia and Canada) plus a `BreadcrumbList`.
 
 | Page | Title | Meta description |
 | --- | --- | --- |
-| `/services/website` | "Website Design & Development for Security Companies | Security Marketing Company" | "Websites for US guard, alarm, CCTV and access control companies: service and city pages, quote forms, trust signals and call tracking built to win inquiries." |
-| `/services/seo` | "SEO & AI SEO for Security Companies | Security Marketing Company" | "SEO and AI SEO for US security companies: service-area pages, technical fixes, citations and content that get guard, alarm and CCTV firms found in search." |
-| `/services/paid-ads` | "Paid Ads for Security Companies | Security Marketing Company" | "Google Search and Local Services Ads for US security companies: campaigns by service and city, job-seeker filtering, landing pages and cost-per-lead reporting." |
-| `/services/social-media` | "Social Media Marketing for Security Companies | Security Marketing Company" | "Social media for US security companies: LinkedIn, Facebook and Instagram content that builds credibility with commercial buyers and helps recruit officers." |
-| `/services/email-marketing` | "Email Marketing & Lead Generation for Security Companies | Security Marketing Company" | "Email marketing for US security companies: lead magnets, nurture sequences, newsletters and CAN-SPAM compliant outbound campaigns to commercial buyers." |
-| `/services/google-business-profile` | "Google Business Profile Management for Security Companies | Security Marketing Company" | "Google Business Profile management for US security companies: categories, service areas, posts, reviews and spam monitoring for “near me” map results." |
-| `/services/crm-automation` | "CRM Automation for Security Companies | Security Marketing Company" | "CRM automation for US security companies: one pipeline for every inquiry, instant replies, quote follow-up reminders and response-time reporting." |
+| `/services/website` | "Website Design & Development for Security Companies | Security Marketing Company" | "Websites for guard, alarm, CCTV and access control companies: service and city pages, quote forms, trust signals and call tracking built to win inquiries." |
+| `/services/seo` | "SEO & AI SEO for Security Companies | Security Marketing Company" | "SEO and AI SEO for security companies: service-area pages, technical fixes, citations and content that get guard, alarm and CCTV firms found in search." |
+| `/services/paid-ads` | "Paid Ads for Security Companies | Security Marketing Company" | "Google Search and, where available, Local Services Ads for security companies: campaigns by service and city, job-seeker filtering, landing pages and cost-per-lead reporting." |
+| `/services/social-media` | "Social Media Marketing for Security Companies | Security Marketing Company" | "Social media for security companies: LinkedIn, Facebook and Instagram content that builds credibility with commercial buyers and helps recruit officers." |
+| `/services/email-marketing` | "Email Marketing & Lead Generation for Security Companies | Security Marketing Company" | "Email marketing for security companies: lead magnets, nurture sequences, newsletters and compliant outbound campaigns to commercial buyers." |
+| `/services/google-business-profile` | "Google Business Profile Management for Security Companies | Security Marketing Company" | "Google Business Profile management for security companies: categories, service areas, posts, reviews and spam monitoring for “near me” map results." |
+| `/services/crm-automation` | "CRM Automation for Security Companies | Security Marketing Company" | "CRM automation for security companies: one pipeline for every inquiry, instant replies, quote follow-up reminders and response-time reporting." |
 
 The meta for `/services` and every service page is written into static HTML at build time (`dist/services.html`, `dist/services/<slug>.html`), so it's present on a direct load, including for crawlers and link previews that don't run JavaScript. Several service titles run past 60 characters because the required format includes the full service name; search results may truncate them.
 
@@ -739,7 +739,7 @@ The meta for `/services` and every service page is written into static HTML at b
 | 3 | The four stats need checking | **Changed.** Restored at your request: 10+, 500+, 5+ and 50+. The last label is now "Experienced Team" (Title Case, like the others). Make sure all four stay accurate. |
 | 4 | Fictional "Northgate" mockups with UK domains | **Done.** Replaced with "Summit Guard Co." on a `.example` domain, with a visible "Example illustration" tag and no ranking claims. |
 | 5 | ICP left out electronic security | **Done.** Industries now include alarm, CCTV, access control and systems integration (12 in total). |
-| 6 | US market not reflected | **Done.** US English throughout ("inquiries", "city by city", "guard-service margins"), a Dallas example, `areaServed` set to United States, and "US" in the eyebrow and meta. |
+| 6 | US market not reflected | **Done.** US English throughout ("inquiries", "city by city", "guard-service margins"), a Dallas example, `areaServed` set to United States, and "US" in the eyebrow and meta. **Superseded 2026-10-07:** the site is now international (US, UK, Australia and beyond); US English and the Dallas example are kept, `areaServed` lists the four countries, and "US" is gone from the eyebrow and meta. |
 | 7 | No pricing, tiers or guarantees | **Changed.** "Custom quote" shows on every service block, and the pricing config is ready for "Starting at $X". There are still no tiers or guarantees, by design. |
 | 8 | No phone, address or calendar link | **Changed.** The site now supports a phone number and calendar link. Both are still open until you provide them. |
 | 9 | Services had no descriptions or deliverables | **Done.** The Services page has a problem, 6 inclusions and a "best for" line per service. Please review them (see §2). |

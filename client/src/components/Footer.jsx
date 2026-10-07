@@ -23,7 +23,7 @@ export default function Footer() {
           />
           <p className="footer__tagline">{COMPANY.tagline}</p>
           <p>
-            A B2B digital marketing agency for US security companies. We market security companies —
+            A B2B digital marketing agency for security companies in the US, UK, Australia and beyond. We market security companies —
             we do not provide security services.
           </p>
         </div>

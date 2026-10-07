@@ -24,9 +24,9 @@ export const privacyPolicy = {
       'How Security Marketing Company collects, uses and protects information submitted through its website, including analytics and your privacy rights.',
   },
   title: 'Privacy Policy',
-  lastUpdated: 'September 26, 2026',
+  lastUpdated: 'October 7, 2026',
   intro: [
-    '{company} (“we”, “us”, “our”) is a B2B digital marketing agency that works with security companies across the United States. This policy explains what information we collect through our website, how we use it, who we share it with and the choices you have.',
+    '{company} (“we”, “us”, “our”) is a B2B digital marketing agency that works with security companies in the US, UK, Australia and other countries. This policy explains what information we collect through our website, how we use it, who we share it with and the choices you have.',
     'If you have a question about this policy or your information, email us at {email}.',
   ],
   sections: [
@@ -99,6 +99,13 @@ export const privacyPolicy = {
         'Our live website uses Google Analytics 4, a web analytics service provided by Google LLC. Google Analytics uses cookies (small files stored in your browser, such as `_ga`) and similar technologies to collect information such as the pages you visit, how you arrived at our site, your approximate location based on your IP address, your device and browser type, and actions such as submitting a form. When a form is submitted, we record that it happened and which form was used — not what you wrote.',
         'We use this information in aggregate to understand how our website is used and to improve it. Google processes this information under its own terms and [Privacy Policy](https://policies.google.com/privacy). You can read more in [How Google uses information from sites or apps that use its services](https://policies.google.com/technologies/partner-sites).',
         'You can control cookies through your browser settings, including blocking or deleting them. You can also prevent Google Analytics from collecting data about your visits by installing the [Google Analytics Opt-out Browser Add-on](https://tools.google.com/dlpage/gaoptout).',
+        // COOKIE CONSENT — not built yet. There is no consent banner: GA4 sets its
+        // cookies on the live site for every visitor (see client/src/analytics.js).
+        // UK (PECR) and EU (ePrivacy) rules usually require opt-in consent before
+        // analytics cookies are set. Add a consent banner (or Google Consent Mode
+        // with GA held until consent) before relying on this section for UK/EU
+        // visitors, then update this paragraph to describe how consent is asked for.
+        'Privacy and electronic communications laws in some regions, including the UK and the European Union, may require websites to ask for your consent before setting analytics cookies. Where that applies, you can withdraw your consent at any time by blocking or deleting cookies as described above.',
         'We do not use advertising cookies on our website.',
       ],
     },
@@ -136,6 +143,48 @@ export const privacyPolicy = {
         'As described above, we do not sell personal information or use it for targeted advertising.',
         'The categories of personal information we collect are described in [Information we collect](#information-we-collect): identifiers (such as your name and email address), professional information (your company and the service you are interested in), and internet activity information (such as how you use our website). We collect it from you directly and automatically through your browser, use it for the purposes in [How we use your information](#how-we-use-information), and disclose it only to the service providers listed above.',
         'To make a request, email {email} with “Privacy request” in the subject line. You may use an authorized agent to make a request on your behalf, and we may ask for proof of that authorization. If we decline your request, you can appeal by replying to our response. If you are not satisfied with the result of your appeal, you may contact your state attorney general.',
+      ],
+    },
+    {
+      id: 'uk-eu-privacy-rights',
+      heading: 'UK and EU privacy rights',
+      blocks: [
+        'If you are in the United Kingdom or the European Economic Area, the UK General Data Protection Regulation (UK GDPR) or the EU General Data Protection Regulation (GDPR) applies to your personal data. {company} is the controller of the personal data described in this policy.',
+        '**Why we use your information (lawful basis).** We rely on the following lawful bases:',
+        {
+          list: [
+            '**Contact form submissions and emails you send us:** taking steps at your request before entering into a contract (responding to your inquiry and arranging a strategy call), and our legitimate interests in answering business inquiries and developing our business',
+            '**Confirmation emails:** the same bases, because the email confirms the request you made',
+            '**Spam and abuse protection (including the brief use of your IP address):** our legitimate interests in keeping our website and forms secure',
+            '**Analytics cookies:** your consent, where the law requires it (see [Analytics and cookies](#analytics-and-cookies))',
+            '**Legal and record-keeping requirements:** compliance with our legal obligations',
+          ],
+        },
+        'Where we rely on legitimate interests, we have considered that those interests are not overridden by your rights. You can ask us for more detail.',
+        '**Your rights.** Subject to certain conditions and exceptions, you have the right to:',
+        {
+          list: [
+            'Access the personal data we hold about you and receive a copy of it',
+            'Have inaccurate personal data corrected',
+            'Have your personal data deleted',
+            'Object to our use of your personal data where we rely on legitimate interests, and to any use of it for direct marketing',
+            'Receive the personal data you gave us in a portable format, and ask us to send it to another organization',
+            'Ask us to restrict how we use your personal data',
+            'Withdraw your consent at any time, where we rely on consent',
+          ],
+        },
+        'To exercise any of these rights, email {email}. We will respond within one month, which may be extended where the law allows.',
+        '**International transfers.** Our service providers (listed in [Where your information goes](#where-your-information-goes)) are US-based companies, and your personal data is stored and processed in the United States. The United States may not offer the same level of protection as UK or EU law. Where we transfer personal data from the UK or EEA, we rely on the safeguards our providers offer, such as the EU-U.S. Data Privacy Framework and its UK Extension where a provider is certified, or standard contractual clauses approved for this purpose. You can email us for more information about these safeguards.',
+        '**Complaints.** You have the right to complain to a data protection authority. In the UK, that is the Information Commissioner’s Office ([ico.org.uk](https://ico.org.uk)). In the EU, it is the supervisory authority in the country where you live or work, or where you believe a breach happened. We would appreciate the chance to deal with your concerns first, so please contact us at {email}.',
+      ],
+    },
+    {
+      id: 'australian-privacy-rights',
+      heading: 'Australian privacy rights',
+      blocks: [
+        'If you are in Australia, the Privacy Act 1988 (Cth) and the Australian Privacy Principles may apply to how we handle your personal information. You can ask to access the personal information we hold about you, or to correct it, by emailing {email}.',
+        'As described in [Where your information goes](#where-your-information-goes), our service providers are located in the United States, so your personal information will be disclosed to and stored with providers outside Australia.',
+        'If you have a complaint about how we have handled your personal information, email us first and we will respond within 30 days. If you are not satisfied with our response, you can complain to the Office of the Australian Information Commissioner ([oaic.gov.au](https://www.oaic.gov.au)).',
       ],
     },
     {

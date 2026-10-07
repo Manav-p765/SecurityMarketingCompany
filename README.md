@@ -1,7 +1,7 @@
 # Security Marketing Company
 
-Marketing site for **Security Marketing Company** — a B2B digital marketing agency for US security
-companies: guard and patrol services, alarm installers, CCTV/video surveillance providers, access
+Marketing site for **Security Marketing Company** — a B2B digital marketing agency for security
+companies in the US, UK, Australia and beyond: guard and patrol services, alarm installers, CCTV/video surveillance providers, access
 control integrators and security systems integrators.
 
 Pages: the home page (`/`), a Services overview (`/services`), a detail page for each service
@@ -678,6 +678,9 @@ outside production, so sign-in works over plain http. To test with a production 
   Google Fonts. **If you add a form field, a provider or a cookie, update it.**
 - Governing law is "applicable U.S. federal and state law". A comment in `terms.js` shows where
   to name a state.
+- The privacy policy has U.S. state, UK/EU (UK GDPR / GDPR) and Australian (Privacy Act) rights
+  sections. **There is no cookie consent banner yet**: GA4 loads for every visitor, and UK/EU rules
+  usually require opt-in consent first. See the `COOKIE CONSENT` comment in `privacy.js`.
 - The footer's "Privacy Policy · Terms" links come from `LEGAL_LINKS`, and the line under every
   form ("By submitting, you agree to our Privacy Policy.") from `CONTACT_FORM.privacyNotice`.
 
