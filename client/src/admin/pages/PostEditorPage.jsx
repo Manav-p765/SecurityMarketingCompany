@@ -339,10 +339,17 @@ export default function PostEditorPage() {
 
           <div className="admin-card">
             <Field label="Article" htmlFor="post-content" error={errors.contentHtml}>
-              <RichEditor key={editorKey} initialHtml={form.contentHtml} invalid={Boolean(errors.contentHtml)} onChange={(html) => change('contentHtml', html)} />
+              <RichEditor
+                key={editorKey}
+                title={form.title}
+                initialHtml={form.contentHtml}
+                invalid={Boolean(errors.contentHtml)}
+                onChange={(html) => change('contentHtml', html)}
+              />
             </Field>
             <p className="admin-hint">
-              Use <b>H2</b> for section headings and <b>H3</b> for sub-sections — the title is already the page heading.
+              The title is the page's main heading. Start sections with <b>Heading</b>, use <b>Subheading</b> inside a
+              section and <b>Small heading</b> below that.
             </p>
           </div>
 

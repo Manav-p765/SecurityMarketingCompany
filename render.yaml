@@ -29,6 +29,10 @@ services:
         value: Security Marketing Company <onboarding@resend.dev>
       # Blog admin (/admin): session signing secret, Cloudinary for images,
       # and the Vercel Deploy Hook that rebuilds the site after publishing.
+      # CLOUDINARY_CLOUD_NAME is the Cloudinary "Cloud name" (Settings → API
+      # Keys), not the company name. VERCEL_DEPLOY_HOOK_URL is the full URL:
+      # https://api.vercel.com/v1/integrations/deploy/prj_XXXX/YYYY
+      # /admin's dashboard (System status) checks both.
       - key: JWT_SECRET
         generateValue: true
       - key: CLOUDINARY_CLOUD_NAME

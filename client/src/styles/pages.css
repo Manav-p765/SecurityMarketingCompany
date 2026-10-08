@@ -407,6 +407,13 @@
   color: var(--pure-white);
 }
 
+.prose-text h4 {
+  margin-top: 1.6em;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  color: var(--pure-white);
+}
+
 .prose-text section:first-child h2,
 .prose-text > div:first-child > h2:first-child {
   margin-top: 0;

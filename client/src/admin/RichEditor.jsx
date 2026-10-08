@@ -6,10 +6,21 @@ import { ACCEPT_IMAGES, uploadImage } from './components.jsx';
 
 /**
  * WYSIWYG editor for the article body (TipTap). Offers only what the
- * server's sanitizer keeps: headings 2–3, paragraphs, bold, italic, lists,
- * quotes, links, images and code. `initialHtml` is read once (remount with a
- * new key to load another post); every change calls onChange(html).
+ * server's sanitizer keeps: headings 2–4, paragraphs, bold, italic, lists,
+ * quotes, links, images and code. The post title is the page's H1, so the
+ * body never has one: the title is shown above the editor, and pasted H1s
+ * become H2s. `initialHtml` is read once (remount with a new key to load
+ * another post); every change calls onChange(html).
  */
+
+/** h1 → h2 and h5/h6 → h4, so pasted headings keep their place in the outline. */
+const fixHeadings = (html) =>
+  html.replace(/<(\/?)h1(?=[\s>])/gi, '<$1h2').replace(/<(\/?)h[56](?=[\s>])/gi, '<$1h4');
+
+const sameText = (a, b) => {
+  const norm = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  return Boolean(norm(a)) && norm(a) === norm(b);
+};
 function ToolButton({ label, active, onClick, disabled, children }) {
   return (
     <button
@@ -27,7 +38,7 @@ function ToolButton({ label, active, onClick, disabled, children }) {
   );
 }
 
-export default function RichEditor({ initialHtml, onChange, invalid }) {
+export default function RichEditor({ initialHtml, onChange, invalid, title = '' }) {
   const fileInput = useRef(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
@@ -35,20 +46,34 @@ export default function RichEditor({ initialHtml, onChange, invalid }) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        heading: { levels: [2, 3] },
+        heading: { levels: [2, 3, 4] },
         underline: false, // not part of the site's allowed formatting
         link: { openOnClick: false, autolink: true, defaultProtocol: 'https' },
       }),
       Image.configure({ inline: false }),
     ],
-    content: initialHtml || '',
+    content: fixHeadings(initialHtml || ''),
     shouldRerenderOnTransaction: true,
-    editorProps: { attributes: { class: 'prose-text admin-editor__content', 'aria-label': 'Article' } },
+    editorProps: {
+      attributes: { class: 'prose-text admin-editor__content', 'aria-label': 'Article' },
+      transformPastedHTML: fixHeadings,
+    },
     onUpdate: ({ editor: e }) => onChange(e.isEmpty ? '' : e.getHTML()),
   });
 
   if (!editor) return null;
   const chain = () => editor.chain().focus();
+
+  // The first line repeats the title (common when pasting a whole document).
+  const first = editor.state.doc.firstChild;
+  const titleRepeated = Boolean(first?.isTextblock && sameText(first.textContent, title));
+  const removeFirstLine = () =>
+    chain()
+      .command(({ tr, state }) => {
+        tr.delete(0, state.doc.firstChild.nodeSize);
+        return true;
+      })
+      .run();
 
   const setLink = () => {
     const previous = editor.getAttributes('link').href || '';
@@ -76,12 +101,19 @@ export default function RichEditor({ initialHtml, onChange, invalid }) {
 
   return (
     <div className={`admin-editor${invalid ? ' has-error' : ''}`}>
+      <p className={`admin-editor__title${title.trim() ? '' : ' is-empty'}`} aria-hidden="true">
+        <span className="admin-editor__title-tag">Title — the page's main heading (H1)</span>
+        {title.trim() || 'Your title appears here'}
+      </p>
       <div className="admin-editor__toolbar" role="toolbar" aria-label="Formatting">
-        <ToolButton label="Heading 2" active={editor.isActive('heading', { level: 2 })} onClick={() => chain().toggleHeading({ level: 2 }).run()}>
-          H2
+        <ToolButton label="Heading (H2): starts a section" active={editor.isActive('heading', { level: 2 })} onClick={() => chain().toggleHeading({ level: 2 }).run()}>
+          Heading
         </ToolButton>
-        <ToolButton label="Heading 3" active={editor.isActive('heading', { level: 3 })} onClick={() => chain().toggleHeading({ level: 3 }).run()}>
-          H3
+        <ToolButton label="Subheading (H3): a part of a section" active={editor.isActive('heading', { level: 3 })} onClick={() => chain().toggleHeading({ level: 3 }).run()}>
+          Subheading
+        </ToolButton>
+        <ToolButton label="Small heading (H4)" active={editor.isActive('heading', { level: 4 })} onClick={() => chain().toggleHeading({ level: 4 }).run()}>
+          Small heading
         </ToolButton>
         <span className="admin-tool__sep" />
         <ToolButton label="Bold" active={editor.isActive('bold')} onClick={() => chain().toggleBold().run()}>
@@ -117,6 +149,14 @@ export default function RichEditor({ initialHtml, onChange, invalid }) {
         </ToolButton>
       </div>
       {uploadError && <p className="admin-error admin-editor__error">{uploadError}</p>}
+      {titleRepeated && (
+        <p className="admin-editor__dupe" role="status">
+          The title is already shown at the top. You can remove this line.
+          <button type="button" className="admin-btn admin-btn--ghost" onClick={removeFirstLine}>
+            Remove line
+          </button>
+        </p>
+      )}
       <EditorContent editor={editor} />
     </div>
   );

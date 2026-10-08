@@ -70,16 +70,29 @@ export function ConfirmButton({ children, message, onConfirm, className = 'admin
 export const ACCEPT_IMAGES = 'image/jpeg,image/png,image/webp';
 const MAX_BYTES = 5 * 1024 * 1024;
 
-/** Uploads one image to /api/admin/uploads; resolves { url, publicId }. */
+/**
+ * Uploads one image to /api/admin/uploads; resolves { url, publicId }.
+ * Errors carry the server's reason; a reply without one (e.g. the proxy's
+ * own 413 or 504 page) gets a reason from its status.
+ */
 export async function uploadImage(file) {
   if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
-    throw new Error('Use a JPG, PNG or WebP image.');
+    throw new Error('Only JPG, PNG or WebP images are allowed.');
   }
-  if (file.size > MAX_BYTES) throw new Error('Images must be 5 MB or smaller.');
+  if (file.size > MAX_BYTES) {
+    throw new Error(`Image is larger than 5 MB (this one is ${(file.size / 1024 / 1024).toFixed(1)} MB). Use a smaller image.`);
+  }
   const form = new FormData();
   form.append('image', file);
-  const { image } = await api('/uploads', { method: 'POST', form });
-  return image;
+  try {
+    const { image } = await api('/uploads', { method: 'POST', form });
+    return image;
+  } catch (err) {
+    if (!/^Something went wrong \(/.test(err.message)) throw err;
+    if (err.status === 413) throw new Error('Image is larger than the server accepts. Use an image under 5 MB.');
+    if (err.status >= 502) throw new Error('The server did not respond in time (it may be starting up). Wait a minute and try again.');
+    throw err;
+  }
 }
 
 /** Cover image picker with preview. `value` is { url, publicId } or null. */

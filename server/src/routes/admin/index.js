@@ -2,7 +2,10 @@ import express, { Router } from 'express';
 import { checkOrigin, requireAuth } from '../../auth/session.js';
 import { Post } from '../../models/Post.js';
 import { Lead } from '../../models/Lead.js';
-import { lastDeploy } from '../../services/deploy.js';
+import mongoose from 'mongoose';
+import { isDatabaseReady } from '../../db.js';
+import { deployNow, lastDeploy } from '../../services/deploy.js';
+import { images } from '../../services/images.js';
 import authRoutes from './auth.js';
 import postRoutes from './posts.js';
 import categoryRoutes from './categories.js';
@@ -13,7 +16,7 @@ import leadRoutes from './leads.js';
 /**
  * Everything under /api/admin. Login is the only route without a session;
  * every other route is guarded on the server, by role:
- *   admin  — posts, categories, uploads, users, leads
+ *   admin  — posts, categories, uploads, users, leads, health, deploy
  *   editor — posts and uploads (and reading the category list)
  */
 export default function adminRoutes({ allowedOrigins }) {
@@ -51,6 +54,39 @@ export default function adminRoutes({ allowedOrigins }) {
         }))
       : null;
     res.json({ posts: { published, drafts }, latestLeads, deploy });
+  });
+
+  // What the blog admin depends on: configured, and answering?
+  router.get('/health', requireAuth('admin'), async (_req, res) => {
+    const database = async () => {
+      if (!isDatabaseReady()) return { ok: false, error: 'Not connected to MongoDB.' };
+      try {
+        await mongoose.connection.db.admin().ping();
+        return { ok: true, error: null };
+      } catch (err) {
+        return { ok: false, error: err.message };
+      }
+    };
+    const [db, cloudinary, deploy] = await Promise.all([database(), images.check(), lastDeploy()]);
+    const hook = deploy.problem
+      ? { ok: false, error: deploy.problem }
+      : deploy.at && !deploy.ok
+        ? { ok: false, error: `Last call failed: ${deploy.error}` }
+        : { ok: true, error: null };
+    res.json({
+      database: db,
+      cloudinary: { configured: images.isConfigured(), ...cloudinary },
+      deployHook: { configured: deploy.configured, ...hook },
+    });
+  });
+
+  // Rebuild the public site now (e.g. after a failed deploy hook call).
+  router.post('/deploy', requireAuth('admin'), async (req, res) => {
+    const deploy = await deployNow(req.user.email);
+    res.status(deploy.ok ? 200 : 502).json({
+      deploy: await lastDeploy(),
+      message: deploy.ok ? 'Rebuild started. The site updates in about 2–3 minutes.' : deploy.error,
+    });
   });
 
   router.use((_req, res) => res.status(404).json({ message: 'Not found.' }));

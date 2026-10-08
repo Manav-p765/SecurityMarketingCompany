@@ -37,7 +37,9 @@ You stay signed in on that browser for 7 days.
 
 Type in the **Article** box like a word processor. The toolbar above it has:
 
-- **H2** — a section heading. **H3** — a smaller sub-heading. (The title is already the page's main heading, so start sections with H2.)
+- **Heading** (H2) — starts a section. **Subheading** (H3) — a part of a section. **Small heading** (H4) — a smaller label below that.
+
+The **title is the page's main heading (H1)** and is shown in large type at the top of the Article box, so the article itself never needs it: don't repeat the title as the first line (you'll see a hint offering to remove it), and any main heading you paste in is turned into a **Heading** automatically.
 - **B** (bold) and ***I*** (italic).
 - **• List** and **1. List** — bulleted and numbered lists.
 - **“ Quote** — a highlighted quote block.
@@ -89,6 +91,8 @@ The website rebuilds itself automatically after you publish, unpublish, or save 
 
 To check: open https://www.securitymarketingcompany.com/blog and refresh the page.
 
+The **Dashboard** shows when the last rebuild was started. If it says **Failed**, the change is not on the website yet — an admin can fix the cause shown there and click **Rebuild site now**.
+
 ---
 
 ## Optional: search engine settings
@@ -107,7 +111,7 @@ Open **Search engine settings** under the article to set a different title or de
 
 ## Tips for good posts
 
-- Aim for 800–1,500 words, broken into sections with clear **H2** headings.
+- Aim for 800–1,500 words, broken into sections with clear **Heading**s.
 - Write the excerpt as if it were the only thing a reader sees — in Google, it often is.
 - Don't include statistics, client names or quotes unless they're real and you have permission to use them.
 - Keep the title under about 60 characters so it isn't cut off in Google results.

@@ -13,9 +13,12 @@
  */
 export const DEFAULT_BLOG_API = 'https://securitymarketingcompany.onrender.com';
 
-const ATTEMPTS = 4;
-const TIMEOUT_MS = 60_000; // Render's free plan can take up to a minute to wake
-const RETRY_DELAY_MS = 5_000;
+// Render's free plan sleeps when idle and can take a minute or more to wake.
+// Wake it first (GET /api/health), retrying with backoff: 5 attempts with
+// waits of 6, 12, 24 and 48 seconds (90s in all), each request allowed 90s.
+const ATTEMPTS = 5;
+const TIMEOUT_MS = 90_000;
+const FIRST_DELAY_MS = 6_000;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -31,31 +34,67 @@ function check(post, index) {
   return post;
 }
 
-/** Every published post from the API. Throws on any failure (see above). */
-export async function fetchPublishedPosts({ allowEmpty = process.env.ALLOW_EMPTY_BLOG === '1' } = {}) {
-  const url = `${blogApiUrl()}/api/public/posts`;
+/** fetch + JSON with retries and backoff. Throws the last error. */
+async function getJson(url, label) {
   let lastError;
   for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
+    const started = Date.now();
     try {
       const response = await fetch(url, { signal: AbortSignal.timeout(TIMEOUT_MS) });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
-      if (!Array.isArray(data?.posts)) throw new Error('response has no "posts" list');
-      const posts = data.posts.map(check);
-      if (!posts.length && !allowEmpty) {
-        throw new Error('the API returned zero published posts (set ALLOW_EMPTY_BLOG=1 if that is intended)');
-      }
-      return posts;
+      if (attempt > 1) console.log(`[blog] ${label}: answered on attempt ${attempt}`);
+      return data;
     } catch (err) {
       lastError = err;
-      // A wrong answer will not fix itself; only retry network problems.
-      if (/zero published|no "posts"|has no|bad date/.test(err.message)) break;
-      if (attempt < ATTEMPTS) await sleep(RETRY_DELAY_MS);
+      const seconds = ((Date.now() - started) / 1000).toFixed(1);
+      if (attempt < ATTEMPTS) {
+        const wait = FIRST_DELAY_MS * 2 ** (attempt - 1);
+        console.warn(`[blog] ${label}: attempt ${attempt}/${ATTEMPTS} failed after ${seconds}s (${err.message}); retrying in ${wait / 1000}s`);
+        await sleep(wait);
+      } else {
+        console.warn(`[blog] ${label}: attempt ${attempt}/${ATTEMPTS} failed after ${seconds}s (${err.message})`);
+      }
     }
   }
-  throw new Error(
-    `Blog: could not load published posts from ${url} — ${lastError?.message}.\n` +
+  throw lastError;
+}
+
+function stop(url, reason) {
+  return new Error(
+    `Blog: could not load published posts from ${url} — ${reason}.\n` +
       '  The build was stopped so the site is never deployed without its blog.\n' +
       '  Check that the API is running (GET /api/health), or set BLOG_API_URL to another API.'
   );
+}
+
+/**
+ * Every published post from the API. Throws on any failure (see above).
+ * Only network trouble is retried; a wrong answer will not fix itself.
+ */
+export async function fetchPublishedPosts({ allowEmpty = process.env.ALLOW_EMPTY_BLOG === '1' } = {}) {
+  const base = blogApiUrl();
+  const url = `${base}/api/public/posts`;
+  try {
+    await getJson(`${base}/api/health`, 'waking the API');
+  } catch (err) {
+    throw stop(url, `the API did not answer after ${ATTEMPTS} attempts (${err.message})`);
+  }
+  let data;
+  try {
+    data = await getJson(url, 'loading posts');
+  } catch (err) {
+    throw stop(url, err.message);
+  }
+  try {
+    if (!Array.isArray(data?.posts)) throw new Error('response has no "posts" list');
+    const posts = data.posts.map(check);
+    if (!posts.length && !allowEmpty) {
+      throw new Error('the API returned zero published posts (set ALLOW_EMPTY_BLOG=1 if that is intended)');
+    }
+    console.log(`[blog] loaded ${posts.length} published posts from ${base}`);
+    return posts;
+  } catch (err) {
+    throw stop(url, err.message);
+  }
 }
