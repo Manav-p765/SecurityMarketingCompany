@@ -625,7 +625,7 @@ All three are by "Security Marketing Company Team" and contain no statistics, cl
 | Business name | Security Marketing Company |
 | Email | info@securitymarketingcompany.com — the one business email (`COMPANY.email`), used everywhere on the site |
 | Website | securitymarketingcompany.com (footer; links to https://www.securitymarketingcompany.com) |
-| Named contact | None on the website. The visitor confirmation email (sent by the server) still says "Andy will reply" and is signed "Andy" — ⚠ confirm that is still right now that replies go to info@. |
+| Named contact | None on the website. The visitor confirmation email (sent by the server) says "we will reply" and is signed "The Security Marketing Company team"; replies go to info@. |
 | Response time | "Same business day" |
 | Phone | ⚠ Not set. Add it in `COMPANY.phone` and it will appear in the contact section and footer. |
 | Calendar link | ⚠ Not set. Add it in `COMPANY.calendarUrl` and every "Book Strategy Call" button will open it. |
@@ -650,7 +650,7 @@ All three are by "Security Marketing Company Team" and contain no statistics, cl
 | Team lead notification recipient | `LEAD_NOTIFY_TO` environment variable on Render (⚠ set it to info@; `.env.example` shows info@) |
 | `npm run test:email` default recipient | `LEAD_NOTIFY_TO`, else `BUSINESS_EMAIL` |
 
-The thank-you page shows the email only through the footer. Sending address: unchanged (`LEAD_NOTIFY_FROM`, default `onboarding@resend.dev`).
+The thank-you page shows the email only through the footer. Sending address: `RESEND_FROM`, default `Security Marketing Company <info@securitymarketingcompany.com>`.
 
 **Contact form fields:** "Your name" (required), "Company" (required), "Work email" (required), "Service interested in" (required), "What do you need?" (optional), plus a hidden honeypot field that catches spam bots.
 

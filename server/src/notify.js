@@ -1,26 +1,28 @@
 import { Resend } from 'resend';
-import { BUSINESS_EMAIL } from './config.js';
+import { BUSINESS_EMAIL, COMPANY_NAME, SITE_URL } from './config.js';
 
 /**
  * Lead emails through Resend (the `resend` SDK, which calls its HTTP API —
  * Render's free tier blocks outbound SMTP ports).
  *
- * Two emails per submission:
- *  - sendLeadEmail: the lead's details to the team (LEAD_NOTIFY_TO).
+ * Two emails per submission, both from emailSender() (RESEND_FROM, default
+ * DEFAULT_FROM below — the business address on the domain verified in
+ * Resend):
+ *  - sendLeadEmail: the lead's details to the team (LEAD_NOTIFY_TO,
+ *    comma-separated). Reply-To is the visitor.
  *  - sendLeadConfirmation: a "we got it" note to the visitor, with Reply-To
  *    set to the business email (BUSINESS_EMAIL in config.js), so a visitor's
  *    reply reaches the same inbox shown on the website.
  *
- * Needs RESEND_API_KEY and LEAD_NOTIFY_TO. LEAD_NOTIFY_FROM defaults to
- * Resend's shared test sender, which can only deliver to the address the
- * Resend account was created with. That is enough for the team email, but
- * the visitor confirmation needs a verified domain, so it only sends once
- * LEAD_NOTIFY_FROM is on one.
+ * Needs RESEND_API_KEY and LEAD_NOTIFY_TO. Visitor confirmations are skipped
+ * if RESEND_FROM is set to Resend's shared test sender (@resend.dev), which
+ * can only deliver to the Resend account's own address.
  */
 
-const DEFAULT_FROM = 'Security Marketing Company <onboarding@resend.dev>';
+export const DEFAULT_FROM = `${COMPANY_NAME} <${BUSINESS_EMAIL}>`;
 
-const sender = () => process.env.LEAD_NOTIFY_FROM || DEFAULT_FROM;
+/** The From header for every email the site sends. */
+export const emailSender = () => process.env.RESEND_FROM?.trim() || DEFAULT_FROM;
 
 export function isEmailConfigured() {
   return Boolean(process.env.RESEND_API_KEY && process.env.LEAD_NOTIFY_TO);
@@ -28,7 +30,7 @@ export function isEmailConfigured() {
 
 /** Visitor confirmations need a sender on a domain verified in Resend. */
 export function isConfirmationConfigured() {
-  return isEmailConfigured() && !sender().includes('@resend.dev');
+  return isEmailConfigured() && !emailSender().includes('@resend.dev');
 }
 
 const escapeHtml = (value) =>
@@ -39,17 +41,20 @@ const escapeHtml = (value) =>
     .replace(/"/g, '&quot;');
 
 const FONT = 'font-family:Arial,Helvetica,sans-serif';
+const SITE_HOST = SITE_URL.replace(/^https?:\/\//, '');
 
 // Created on first use, so the API key is read after dotenv has loaded it.
 let client;
 const resend = () => (client ??= new Resend(process.env.RESEND_API_KEY));
 
+/** Sends one email from emailSender(). Resolves Resend's email id. */
 async function send(payload) {
   // The SDK returns errors rather than throwing; throw so callers can log them.
-  const { error } = await resend().emails.send({ from: sender(), ...payload });
+  const { data, error } = await resend().emails.send({ from: emailSender(), ...payload });
   if (error) {
     throw new Error(`Resend: ${error.name ?? 'error'} — ${error.message}`);
   }
+  return data.id;
 }
 
 const detailRows = (lead) => [
@@ -82,7 +87,7 @@ const detailTable = (rows) => `
 export async function sendLeadEmail(lead) {
   const rows = detailRows(lead);
 
-  await send({
+  return send({
     to: process.env.LEAD_NOTIFY_TO.split(',').map((address) => address.trim()),
     replyTo: lead.email,
     subject: `New strategy call request — ${lead.name}, ${lead.company}`,
@@ -99,30 +104,35 @@ export async function sendLeadConfirmation(lead) {
   const firstName = lead.name.split(/\s+/)[0];
   const rows = detailRows(lead).filter(([label]) => label !== 'Email');
 
-  await send({
+  return send({
     to: [lead.email],
     replyTo: BUSINESS_EMAIL,
-    subject: 'We received your strategy call request — Security Marketing Company',
+    subject: `We received your strategy call request — ${COMPANY_NAME}`,
     html: `
     <p style="${FONT};font-size:15px">Hi ${escapeHtml(firstName)},</p>
-    <p style="${FONT};font-size:15px;line-height:1.6">Thanks for getting in touch. Your request is with us, and Andy will reply the same business day to arrange a time for your strategy call.</p>
+    <p style="${FONT};font-size:15px;line-height:1.6">Thanks for getting in touch. Your request is with us, and we will reply the same business day to arrange a time for your strategy call.</p>
     <p style="${FONT};font-size:15px;line-height:1.6">Here is what you sent:</p>
     ${detailTable(rows)}
     <p style="${FONT};font-size:15px;line-height:1.6">If you have anything to add, just reply to this email.</p>
-    <p style="${FONT};font-size:15px;line-height:1.6">Best,<br />Andy<br />Security Marketing Company</p>`,
+    <p style="${FONT};font-size:15px;line-height:1.6">Best regards,<br />The ${COMPANY_NAME} team</p>
+    <p style="${FONT};font-size:12px;line-height:1.5;color:#666;border-top:1px solid #ddd;padding-top:12px;margin-top:24px">
+      ${COMPANY_NAME} · <a href="${SITE_URL}" style="color:#e31b23">${SITE_HOST}</a> · <a href="mailto:${BUSINESS_EMAIL}" style="color:#e31b23">${BUSINESS_EMAIL}</a>
+    </p>`,
     text: [
       `Hi ${firstName},`,
       '',
-      'Thanks for getting in touch. Your request is with us, and Andy will reply the same business day to arrange a time for your strategy call.',
+      'Thanks for getting in touch. Your request is with us, and we will reply the same business day to arrange a time for your strategy call.',
       '',
       'Here is what you sent:',
       ...rows.map(([label, value]) => `${label}: ${value}`),
       '',
       'If you have anything to add, just reply to this email.',
       '',
-      'Best,',
-      'Andy',
-      'Security Marketing Company',
+      'Best regards,',
+      `The ${COMPANY_NAME} team`,
+      '',
+      '--',
+      `${COMPANY_NAME} · ${SITE_HOST} · ${BUSINESS_EMAIL}`,
     ].join('\n'),
   });
 }

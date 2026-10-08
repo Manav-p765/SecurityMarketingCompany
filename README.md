@@ -222,17 +222,18 @@ received if either succeeds, so a database outage doesn't lose leads.
 1. Sign up at resend.com and create an API key.
 2. On Render set `RESEND_API_KEY`, and `LEAD_NOTIFY_TO` to the inbox(es) that should get leads —
    normally the business inbox, `info@securitymarketingcompany.com` (comma-separate several).
-3. Until you verify a domain in Resend, the sender must stay `onboarding@resend.dev` and
-   `LEAD_NOTIFY_TO` can only be the address you signed up to Resend with. Verify
-   `securitymarketingcompany.com` (a few DNS records) to send from e.g.
-   `leads@securitymarketingcompany.com` to any address, then update `LEAD_NOTIFY_FROM`.
+3. Every email is sent from `RESEND_FROM`, default
+   `Security Marketing Company <info@securitymarketingcompany.com>` (the domain is verified in
+   Resend). It is the only sender setting; change it there if it ever needs to change.
 
 Team emails set Reply-To to the visitor, so replying goes straight to them.
 
-Once `LEAD_NOTIFY_FROM` is on a verified domain, each visitor also gets a confirmation email ("your
-request is in, Andy will reply the same business day") with a copy of what they sent. Its Reply-To is
-the business email, `BUSINESS_EMAIL` in `server/src/config.js` (`info@securitymarketingcompany.com`).
-It sends after the form responds, so a failure there never shows the visitor an error.
+Each visitor also gets a confirmation email ("We received your strategy call request" — we will
+reply the same business day) with a copy of what they sent, signed by the Security Marketing Company
+team. Its Reply-To is the business email, `BUSINESS_EMAIL` in `server/src/config.js`
+(`info@securitymarketingcompany.com`). It sends after the form responds, so a failure there never
+shows the visitor an error. `npm --prefix server run test:email -- you@example.com` sends a sample
+of it and prints the From and Reply-To that Resend recorded.
 
 **The business email** is `COMPANY.email` in `client/src/data/content.js`. Every visitor-facing
 address on the site comes from it: header/footer, contact page, legal pages, thank-you page, 404

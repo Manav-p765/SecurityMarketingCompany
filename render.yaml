@@ -20,13 +20,14 @@ services:
       # e.g. https://www.securitymarketingcompany.com,https://smc.vercel.app
       - key: CORS_ORIGIN
         sync: false
-      # Lead notification emails via Resend. LEAD_NOTIFY_TO is comma-separated.
+      # Lead emails via Resend. LEAD_NOTIFY_TO (who gets new leads) is
+      # comma-separated. RESEND_FROM is the From of every email the site sends.
       - key: RESEND_API_KEY
         sync: false
       - key: LEAD_NOTIFY_TO
         sync: false
-      - key: LEAD_NOTIFY_FROM
-        value: Security Marketing Company <onboarding@resend.dev>
+      - key: RESEND_FROM
+        value: Security Marketing Company <info@securitymarketingcompany.com>
       # Blog admin (/admin): session signing secret, Cloudinary for images,
       # and the Vercel Deploy Hook that rebuilds the site after publishing.
       # CLOUDINARY_CLOUD_NAME is the Cloudinary "Cloud name" (Settings → API

@@ -8,3 +8,7 @@
  * if the two differ.
  */
 export const BUSINESS_EMAIL = 'info@securitymarketingcompany.com';
+
+/** Name and website used in the emails the API sends (notify.js). */
+export const COMPANY_NAME = 'Security Marketing Company';
+export const SITE_URL = 'https://www.securitymarketingcompany.com';
