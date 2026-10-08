@@ -8,6 +8,7 @@ import Feature from '../components/Feature.jsx';
 import WhyUs from '../components/WhyUs.jsx';
 import Process from '../components/Process.jsx';
 import Reviews from '../components/Reviews.jsx';
+import LatestPosts from '../components/LatestPosts.jsx';
 import Contact from '../components/Contact.jsx';
 import Footer from '../components/Footer.jsx';
 import { SerpMockup, SiteMockup } from '../components/Mockups.jsx';
@@ -62,6 +63,7 @@ export default function HomePage() {
         <WhyUs />
         <Process />
         <Reviews />
+        <LatestPosts />
         <Contact />
       </main>
 

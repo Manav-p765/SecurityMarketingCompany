@@ -918,6 +918,233 @@
   color: var(--on-dark-2);
 }
 
+/* Hover and keyboard focus, shared by every post card (blog and home page):
+   lift, red border (from .surface), a soft glow and a slow image zoom. The
+   title link covers the card, so its focus ring is drawn on the card. */
+.post-card {
+  transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease),
+    transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+
+.post-card .post-cover > * {
+  transition: transform 0.6s var(--ease-out);
+}
+
+.post-card:hover,
+.post-card:has(.post-card__link:focus-visible) {
+  transform: translateY(-4px);
+  border-color: rgba(227, 27, 35, 0.55);
+  box-shadow: 0 18px 40px -24px rgba(227, 27, 35, 0.55);
+}
+
+.post-card:hover .post-cover > *,
+.post-card:has(.post-card__link:focus-visible) .post-cover > * {
+  transform: scale(1.05);
+}
+
+.post-card__link:focus-visible {
+  outline: none;
+}
+
+.post-card:has(.post-card__link:focus-visible) {
+  outline: 2px solid var(--security-red);
+  outline-offset: 3px;
+}
+
+.post-card:has(.post-card__link:focus-visible) .post-card__link {
+  color: var(--security-red);
+}
+
+/* Browsers without :has() keep the ring on the title link. */
+@supports not selector(:has(*)) {
+  .post-card__link:focus-visible {
+    outline: 2px solid var(--security-red);
+    outline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post-card,
+  .post-card .post-cover > * {
+    transition: none;
+  }
+
+  .post-card:hover,
+  .post-card:has(.post-card__link:focus-visible),
+  .post-card:hover .post-cover > *,
+  .post-card:has(.post-card__link:focus-visible) .post-cover > * {
+    transform: none;
+  }
+}
+
+/* Compact card (home page): tag and date, clamped title and excerpt. */
+.post-card__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.75rem;
+  font-size: var(--fs-xs);
+  color: var(--on-dark-3);
+}
+
+.post-card__tag {
+  padding: 0.2rem 0.6rem;
+  border: 1px solid rgba(227, 27, 35, 0.35);
+  border-radius: var(--radius-pill);
+  background: rgba(227, 27, 35, 0.1);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--security-red);
+}
+
+/* The tag under the cover already names the category. */
+.post-card--compact .post-cover__label {
+  display: none;
+}
+
+.post-card--compact .post-card__title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+.post-card--compact .post-card__excerpt {
+  display: -webkit-box;
+  flex: 0 0 auto;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.post-card--compact .post-card__more {
+  margin-top: auto;
+  padding-top: 0.4rem;
+}
+
+/* --------------------------------------------------------------------------
+   Home page: latest blog posts
+   -------------------------------------------------------------------------- */
+
+/* Phones: heading, cards, then the "View all" link. From 700px the link
+   moves up beside the heading. */
+.latest-posts__layout {
+  display: grid;
+  grid-template-areas:
+    'head'
+    'cards'
+    'all';
+  align-items: end;
+}
+
+.latest-posts__head {
+  grid-area: head;
+}
+
+.latest-posts__grid {
+  grid-area: cards;
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.latest-posts__grid > li {
+  display: grid;
+}
+
+.latest-posts__all {
+  grid-area: all;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: var(--space-lg);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pure-white);
+  transition: color 0.2s var(--ease);
+}
+
+.latest-posts__all svg {
+  width: 14px;
+  height: 14px;
+  color: var(--security-red);
+  transition: transform 0.25s var(--ease-out);
+}
+
+.latest-posts__all:hover {
+  color: var(--security-red);
+}
+
+.latest-posts__all:hover svg {
+  transform: translateX(4px);
+}
+
+/* Phones: one row that scrolls sideways inside the container (never the
+   page), card by card, with the next card peeking in — like the reviews. */
+@media (max-width: 699px) {
+  .latest-posts__grid {
+    grid-auto-flow: column;
+    grid-auto-columns: 86%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    margin-inline: calc(-1 * var(--gutter));
+    padding: 6px var(--gutter) var(--space-xs);
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: thin;
+  }
+
+  .latest-posts__grid > li {
+    scroll-snap-align: start;
+  }
+
+  /* No lift inside the scroller: it would be clipped. */
+  .latest-posts .post-card:hover {
+    transform: none;
+  }
+}
+
+@media (min-width: 700px) {
+  .latest-posts__layout {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'head all'
+      'cards cards';
+    column-gap: var(--space-lg);
+  }
+
+  .latest-posts__all {
+    justify-self: end;
+    margin: 0 0 var(--head-gap);
+  }
+
+  .latest-posts__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablet: two columns, so the two newest posts — a third would sit alone. */
+@media (min-width: 700px) and (max-width: 999px) {
+  .latest-posts__grid > li:nth-child(n + 3) {
+    display: none;
+  }
+}
+
+@media (min-width: 1000px) {
+  .latest-posts__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 .post-cover--large .post-cover__icon {
   width: 84px;
   height: 84px;

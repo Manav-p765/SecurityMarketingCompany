@@ -1540,6 +1540,16 @@ export const REVIEWS_SECTION = {
   sampleNote: 'Sample reviews shown. Client testimonials coming soon.',
 };
 
+/** Home page: the latest blog posts, between the reviews and the contact form. */
+export const HOME_BLOG_SECTION = {
+  label: 'From the blog',
+  title: 'Insights for Security Companies',
+  viewAll: 'View all articles',
+  readMore: 'Read more',
+  /** How many of the newest published posts to show. */
+  count: 3,
+};
+
 /* ==========================================================================
    Contact form (shared by the home page section and /contact)
    ========================================================================== */

@@ -25,7 +25,8 @@ export function PostCover({ post, large = false }) {
   if (post.coverImage) {
     return (
       <div className={`post-cover${large ? ' post-cover--large' : ''}`}>
-        <img src={post.coverImage} alt="" loading="lazy" />
+        {/* width/height give the browser the 16:9 ratio before the image loads. */}
+        <img src={post.coverImage} alt="" loading="lazy" decoding="async" width="1600" height="900" />
       </div>
     );
   }
@@ -64,6 +65,35 @@ export function PostMeta({ post, author = false }) {
         </>
       )}
     </p>
+  );
+}
+
+/**
+ * Compact card (home page): category tag and date on one line, title up to
+ * three lines, a two-line excerpt and "Read more". Same cover, surface and
+ * whole-card link as PostCard, so the two stay consistent.
+ */
+export function CompactPostCard({ post, readMore = blogPage.readMore, headingLevel: Heading = 'h3' }) {
+  return (
+    <article className="post-card post-card--compact surface">
+      <PostCover post={post} />
+      <div className="post-card__body">
+        <p className="post-card__top">
+          <span className="post-card__tag">{post.category}</span>
+          <time dateTime={post.date}>{formatDate(post.date)}</time>
+        </p>
+        <Heading className="post-card__title">
+          <Link to={postPath(post)} className="post-card__link">
+            {post.title}
+          </Link>
+        </Heading>
+        <p className="post-card__excerpt">{post.excerpt}</p>
+        <span className="post-card__more" aria-hidden="true">
+          {readMore}
+          <IconArrowRight />
+        </span>
+      </div>
+    </article>
   );
 }
 
