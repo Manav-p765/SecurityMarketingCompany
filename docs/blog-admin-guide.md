@@ -61,6 +61,13 @@ Keyboard shortcuts work too: Ctrl+B (bold), Ctrl+I (italic), Ctrl+Z (undo).
 
 No cover image? That's fine — the blog shows a branded graphic instead.
 
+### Cover image guidelines
+
+- **Size:** 1600 × 900 pixels (16:9). Other sizes are cropped to 16:9 to fit.
+- **Full-bleed:** the artwork should run to all four edges, with **no frame, border or margin** of its own. The website adds its own border; a frame built into the image shows up as a dark gap inside it.
+- **Format:** JPG or WebP (PNG works too), **under 5 MB**.
+- **Keep text away from the edges:** leave a clear margin around any words in the image, because covers are cropped slightly on some screens and shown small on the blog page and home page.
+
 **Pictures inside the article:**
 
 1. Click in the article where the picture should go.
