@@ -8,6 +8,7 @@ import ContactPage from './pages/ContactPage.jsx';
 import ThankYouPage from './pages/ThankYouPage.jsx';
 import BlogPage from './pages/BlogPage.jsx';
 import BlogPostPage from './pages/BlogPostPage.jsx';
+import AuthorPage from './pages/AuthorPage.jsx';
 import LegalPage from './pages/LegalPage.jsx';
 import { privacyPolicy, termsPage } from './data/content.js';
 import NotFound from './components/NotFound.jsx';
@@ -112,6 +113,8 @@ export default function App() {
         <Route path="/blog" element={<BlogPage />} />
         {/* Unknown slugs render the 404 page from inside BlogPostPage. */}
         <Route path="/blog/:slug" element={<BlogPostPage />} />
+        {/* Unknown authors render the 404 page from inside AuthorPage. */}
+        <Route path="/blog/author/:slug" element={<AuthorPage />} />
         <Route path="/privacy" element={<LegalPage key="privacy" doc={privacyPolicy} />} />
         <Route path="/terms" element={<LegalPage key="terms" doc={termsPage} />} />
         <Route

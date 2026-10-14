@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { blogPage } from '../data/content.js';
 import { formatDate, postPath } from '../blog/posts.js';
 import { FEATURE_ICONS, IconArrowRight } from './Icons.jsx';
+import { AuthorByline } from './AuthorCards.jsx';
 
 /** Icon on the generated cover, by category. Unknown categories get "pages". */
 const CATEGORY_ICONS = {
@@ -47,7 +48,7 @@ export function PostCover({ post, large = false }) {
   );
 }
 
-/** Date, read time (and optionally author) line. */
+/** Date, read time (and optionally the author's byline) line. */
 export function PostMeta({ post, author = false }) {
   return (
     <p className="post-meta">
@@ -58,10 +59,8 @@ export function PostMeta({ post, author = false }) {
       </span>
       {author && (
         <>
-          <span aria-hidden="true">·</span>
-          <span>
-            {blogPage.post.by} {post.author}
-          </span>
+          <span className="post-meta__sep--author" aria-hidden="true">·</span>
+          <AuthorByline author={post.author} />
         </>
       )}
     </p>

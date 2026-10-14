@@ -25,12 +25,20 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 export const blogApiUrl = () => (process.env.BLOG_API_URL || DEFAULT_BLOG_API).replace(/\/+$/, '');
 
 function check(post, index) {
-  for (const key of ['slug', 'title', 'date', 'excerpt', 'category', 'author', 'html']) {
+  for (const key of ['slug', 'title', 'date', 'excerpt', 'category', 'html']) {
     if (typeof post?.[key] !== 'string' || !post[key]) {
       throw new Error(`post ${index + 1} (${post?.slug ?? 'no slug'}) has no "${key}"`);
     }
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(post.date)) throw new Error(`post "${post.slug}" has a bad date "${post.date}"`);
+  // An author object ({ name, slug, ... }); an API from before authors sends
+  // just the name, which src/blog/posts.js turns into the team author.
+  const author = post.author;
+  const named = typeof author === 'string' ? author : author?.name;
+  if (typeof named !== 'string' || !named) throw new Error(`post "${post.slug}" has no author`);
+  if (typeof author === 'object' && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(author.slug ?? '')) {
+    throw new Error(`post "${post.slug}": author "${author.name}" has a bad slug "${author.slug}"`);
+  }
   return post;
 }
 

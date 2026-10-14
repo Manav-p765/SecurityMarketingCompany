@@ -72,10 +72,11 @@ const MAX_BYTES = 5 * 1024 * 1024;
 
 /**
  * Uploads one image to /api/admin/uploads; resolves { url, publicId }.
+ * `square` (author photos) has the server crop it to a square.
  * Errors carry the server's reason; a reply without one (e.g. the proxy's
  * own 413 or 504 page) gets a reason from its status.
  */
-export async function uploadImage(file) {
+export async function uploadImage(file, { square = false } = {}) {
   if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
     throw new Error('Only JPG, PNG or WebP images are allowed.');
   }
@@ -85,7 +86,7 @@ export async function uploadImage(file) {
   const form = new FormData();
   form.append('image', file);
   try {
-    const { image } = await api('/uploads', { method: 'POST', form });
+    const { image } = await api(square ? '/uploads?shape=square' : '/uploads', { method: 'POST', form });
     return image;
   } catch (err) {
     if (!/^Something went wrong \(/.test(err.message)) throw err;

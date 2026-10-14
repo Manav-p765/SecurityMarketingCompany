@@ -9,6 +9,7 @@ Replace these files in place — the markup already points at them.
 | `logo-horizontal.png` | Source file | Your original dark-on-white lockup. Use it on any light surface you add. |
 | `logo-mark.png` | Source for favicons | Original shield mark. The cropped favicon set in `client/public/` (`favicon.ico`, `favicon-*.png`, `apple-touch-icon.png`, `icon-*.png`) was generated from it — regenerate those if you replace it. |
 | `logo-badge-dark.png` | Not currently used | Circular badge. It has a baked-in black plate, so it shows as a square on the textured field. |
+| `author-team.jpg` | Blog: photo of the default author ("Security Marketing Company Team") | 400px square copy of `logo-badge-dark.png`, shown as a circle. Its URL is stored on the team author in the database; to change the photo, upload a new one under Authors in `/admin` instead. |
 | `email-signature.png` | Reference only | Not used on the site. |
 
 ## About the two "-light" files

@@ -1658,6 +1658,18 @@ export const blogPage = {
     ctaTitle: 'See how our {service} service works',
     ctaBody: 'We do this work every day for security companies. See what is included and how we deliver it.',
     ctaButton: 'Learn more',
+    /** Bio box at the end of a post. `{name}` becomes the author's name. */
+    aboutAuthorLabel: 'About the author',
+    moreByAuthor: 'More articles by {name}',
+  },
+  /** /blog/author/:slug. `{name}` becomes the author's name. */
+  author: {
+    eyebrow: 'Author',
+    postsTitle: 'Articles by {name}',
+    metaTitle: '{name} | Security Marketing Company Blog',
+    /** Meta description when the author has no bio. */
+    metaDescription: 'Articles by {name} on marketing for security companies.',
+    social: { linkedin: 'LinkedIn', x: 'X', website: 'Website' },
   },
   /** In-content CTA target when a post has no `service` in its frontmatter. */
   categoryServices: {

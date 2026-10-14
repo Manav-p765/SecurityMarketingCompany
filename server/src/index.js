@@ -55,9 +55,9 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(dist)) {
     app.get(`/${page}`, (_req, res) => res.sendFile(path.join(dist, `${page}.html`)));
   }
 
-  // /services/:slug and /blog/:slug: only slugs the build wrote a page for.
-  // Anything else falls through to the 404 below.
-  for (const folder of ['services', 'blog']) {
+  // /services/:slug, /blog/:slug and /blog/author/:slug: only slugs the
+  // build wrote a page for. Anything else falls through to the 404 below.
+  for (const folder of ['services', 'blog', 'blog/author']) {
     app.get(`/${folder}/:slug`, (req, res, next) => {
       const { slug } = req.params;
       const file = path.join(dist, folder, `${slug}.html`);

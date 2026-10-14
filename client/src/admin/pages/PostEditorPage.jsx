@@ -18,7 +18,7 @@ const EMPTY = {
   category: '',
   coverImage: null,
   contentHtml: '',
-  author: 'Security Marketing Company Team',
+  authorId: '', // '' = the team author (the server fills it in)
   seoTitle: '',
   seoDescription: '',
 };
@@ -26,6 +26,21 @@ const EMPTY = {
 const pick = (post) => Object.fromEntries(Object.keys(EMPTY).map((key) => [key, post[key] ?? EMPTY[key]]));
 const today = () => new Date().toISOString().slice(0, 10);
 const words = (html) => html.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
+
+/** The chosen author (or the team author) in the shape the public post page uses. */
+function previewAuthor(authors, authorId) {
+  const author = authors.find((a) => a.id === authorId) ?? authors.find((a) => a.isTeam);
+  if (!author) return { name: 'Security Marketing Company Team', slug: 'preview', role: '', bio: '', photo: null, links: {}, isTeam: true };
+  return {
+    name: author.name,
+    slug: author.slug,
+    role: author.role,
+    bio: author.bio,
+    photo: author.photo?.url || null,
+    links: { linkedin: author.linkedinUrl || null, x: author.xUrl || null, website: author.websiteUrl || null },
+    isTeam: author.isTeam,
+  };
+}
 
 /** How the post would look in a Google result. */
 function SnippetPreview({ form }) {
@@ -41,7 +56,7 @@ function SnippetPreview({ form }) {
 }
 
 /** Full-screen preview using the public post styles. */
-function Preview({ form, meta, onClose }) {
+function Preview({ form, meta, authors, onClose }) {
   useEffect(() => {
     const onKey = (event) => event.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
@@ -63,6 +78,7 @@ function Preview({ form, meta, onClose }) {
     html: form.contentHtml || '<p><em>No content yet.</em></p>',
     readingTime: Math.max(1, Math.ceil(words(form.contentHtml) / 225)),
     service: null,
+    author: previewAuthor(authors, form.authorId),
   };
   return createPortal(
     <div className="admin-preview" role="dialog" aria-modal="true" aria-label="Post preview">
@@ -83,7 +99,8 @@ function Preview({ form, meta, onClose }) {
 export default function PostEditorPage() {
   const { id: routeId } = useParams();
   const navigate = useNavigate();
-  const { setDirty: setGlobalDirty } = useAdmin();
+  const { setDirty: setGlobalDirty, user } = useAdmin();
+  const isAdmin = user.role === 'admin';
 
   const [id, setId] = useState(routeId || null);
   const [form, setForm] = useState(EMPTY);
@@ -97,6 +114,7 @@ export default function PostEditorPage() {
   const [notice, setNotice] = useState({ kind: 'info', text: '' });
   const [savedAt, setSavedAt] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [authors, setAuthors] = useState([]);
   const [showPreview, setShowPreview] = useState(false);
   const createdId = useRef(null);
 
@@ -113,6 +131,9 @@ export default function PostEditorPage() {
   useEffect(() => {
     api('/categories')
       .then((data) => setCategories(data.categories))
+      .catch(() => {});
+    api('/authors')
+      .then((data) => setAuthors(data.authors))
       .catch(() => {});
   }, []);
 
@@ -259,6 +280,7 @@ export default function PostEditorPage() {
   }
 
   const published = meta.status === 'published';
+  const teamId = authors.find((a) => a.isTeam)?.id ?? '';
 
   return (
     <>
@@ -397,8 +419,25 @@ export default function PostEditorPage() {
                 ))}
               </select>
             </Field>
-            <Field label="Author" htmlFor="post-author" error={errors.author}>
-              <input id="post-author" value={form.author} onChange={(e) => change('author', e.target.value)} />
+            <Field
+              label="Author"
+              htmlFor="post-author"
+              error={errors.authorId}
+              hint={isAdmin ? 'Add or edit authors under Authors.' : 'An admin can add authors.'}
+            >
+              <select
+                id="post-author"
+                value={form.authorId || teamId}
+                onChange={(e) => change('authorId', e.target.value === teamId ? '' : e.target.value)}
+              >
+                {!teamId && <option value="">Security Marketing Company Team</option>}
+                {authors.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.name}
+                    {a.isTeam ? ' (default)' : ''}
+                  </option>
+                ))}
+              </select>
             </Field>
           </div>
 
@@ -427,7 +466,7 @@ export default function PostEditorPage() {
         </aside>
       </div>
 
-      {showPreview && <Preview form={form} meta={meta} onClose={() => setShowPreview(false)} />}
+      {showPreview && <Preview form={form} meta={meta} authors={authors} onClose={() => setShowPreview(false)} />}
     </>
   );
 }

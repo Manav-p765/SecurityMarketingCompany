@@ -990,3 +990,60 @@
   background: rgba(245, 158, 11, 0.1);
   font-size: 0.88rem;
 }
+
+/* --- Authors -------------------------------------------------------------- */
+
+.admin-avatar {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--admin-line);
+  border-radius: 50%;
+  background: var(--admin-panel-2);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--pure-white);
+}
+
+.admin-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin-author-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-photo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.admin-author-form h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.admin-author-form > .admin-error {
+  margin: 0 0 1rem;
+}
+
+.admin-nowrap {
+  white-space: nowrap;
+}
+
+.admin-table tbody tr.admin-reassign-row td {
+  border-top: 0;
+  background: rgba(227, 27, 35, 0.06);
+}
+
+.admin-table tbody tr:has(+ .admin-reassign-row) td {
+  border-bottom: 0;
+}

@@ -27,7 +27,7 @@ after form submissions (`/thank-you`), the blog (`/blog`, `/blog/:slug`), and th
 | Admin | React (lazy-loaded chunk) + TipTap editor; email/password sign-in; images on Cloudinary |
 | Analytics | Google Analytics 4 (gtag.js), production domain only — see "Google Analytics (GA4)" |
 | Backend | Node + Express: contact form, public blog API, admin API |
-| Database | MongoDB Atlas via Mongoose: leads, posts, categories, admin users |
+| Database | MongoDB Atlas via Mongoose: leads, posts, categories, authors, admin users |
 | Styling | Hand-written CSS with brand tokens — no UI framework, no icon library |
 
 ---
@@ -89,11 +89,12 @@ securitymarketingcompany/
     ├── src/models/           # Lead, Post, Category, AdminUser, AppState
     ├── src/routes/leads.js   # POST /api/leads (contact form)
     ├── src/routes/public.js  # GET /api/public/posts — published posts, used by the build
-    ├── src/routes/admin/     # /api/admin/*: auth, posts, categories, uploads, users, leads
+    ├── src/routes/admin/     # /api/admin/*: auth, posts, categories, authors, uploads, users, leads
     ├── src/auth/session.js   # Session cookie (JWT), role guard, Origin check
     ├── src/services/         # sanitize (post HTML), slug, images (Cloudinary), deploy (hook)
     ├── scripts/create-admin.js       # npm run create-admin
-    └── scripts/migrate-blog-posts.js # One-time markdown → MongoDB import (already run)
+    ├── scripts/migrate-blog-posts.js # One-time markdown → MongoDB import (already run)
+    └── scripts/migrate-authors.js    # One-time: team author + post authorId (already run)
 ```
 
 ---
@@ -585,6 +586,16 @@ Posts are written in the **admin panel at `/admin`** (next section; editor guide
 - **Listing:** the newest post is featured, the rest form a grid, category chips filter on the
   client, and pagination appears once there are more than 9 posts.
 - **Unknown slugs** show the 404 page (no prerendered file, so a real 404 status).
+- **Authors** (`authors` collection, managed under Authors in the admin): each post has an
+  `authorId`; none means the default team author (`isTeam`). The public API embeds the author in
+  each post. A post shows a byline (avatar + name) and an "About the author" box; every author with
+  a published post gets `/blog/author/<slug>` (prerendered, in the sitemap, ProfilePage schema).
+  The Article schema's `author` is a Person (an Organization for the team author) with the author
+  page as `url` and the social links as `sameAs`. Editing or deleting an author with published
+  posts calls the deploy hook. An author with posts can only be deleted by moving the posts to
+  another author; the team author can't be deleted. `server/scripts/migrate-authors.js` created
+  the team author (photo: `client/public/logo/author-team.jpg`) and assigned the existing posts to
+  it — safe to re-run.
 
 The three original posts were imported from markdown with `server/scripts/migrate-blog-posts.js`
 (same slugs, dates and HTML); the markdown files are in git history before the "Replace Sveltia
@@ -602,6 +613,7 @@ React app but lazy-loaded as its own chunk (JS + CSS), so it adds nothing to the
 | Dashboard (post counts, last deploy, latest 5 leads) | ✓ | ✓ (no leads) |
 | Blog posts: list, search, write, publish, delete | ✓ | ✓ |
 | Categories | ✓ | — |
+| Authors (add, edit, photo, delete / move posts) | ✓ | — (picks an author per post) |
 | Leads (table, detail, CSV export) | ✓ | — |
 | Users (add, remove, reset password) | ✓ | — |
 | My account (change password) | ✓ | ✓ |

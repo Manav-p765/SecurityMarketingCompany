@@ -9,7 +9,8 @@
     "start": "node src/index.js",
     "test:email": "node scripts/test-email.js",
     "create-admin": "node scripts/create-admin.js",
-    "migrate-blog": "node scripts/migrate-blog-posts.js"
+    "migrate-blog": "node scripts/migrate-blog-posts.js",
+    "migrate-authors": "node scripts/migrate-authors.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

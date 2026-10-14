@@ -408,10 +408,21 @@ export function IconFacebook() {
   );
 }
 
+/** A website link (line style, like the UI icons). */
+export function IconGlobe() {
+  return (
+    <svg {...base}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18M12 3c2.5 2.5 3.75 5.5 3.75 9S14.5 18.5 12 21M12 3C9.5 5.5 8.25 8.5 8.25 12S9.5 18.5 12 21" />
+    </svg>
+  );
+}
+
 export const SOCIAL_ICONS = {
   linkedin: IconLinkedIn,
   facebook: IconFacebook,
   x: IconX,
   instagram: IconInstagram,
   youtube: IconYouTube,
+  website: IconGlobe,
 };

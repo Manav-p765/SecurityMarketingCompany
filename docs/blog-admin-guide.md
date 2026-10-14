@@ -30,7 +30,7 @@ You stay signed in on that browser for 7 days.
 | **Web address** | Filled in for you from the title. You can shorten it before you publish. Once a post is published, the address is fixed so links to it keep working. |
 | **Excerpt** | One or two sentences summing up the article. It appears on the blog page and in Google results. The counter shows how many characters you've used — about 160 fit in Google. |
 | **Category** | Pick one from the list. (Admins can add new categories under **Categories**.) |
-| **Author** | Already filled in as *Security Marketing Company Team*. Leave it, or change it. |
+| **Author** | Pick the author from the list. It starts as *Security Marketing Company Team* (the default). Their name and photo appear under the title, and their bio box at the end of the post. Authors are added under **Authors** (admins only) — see "Authors" below. |
 | **Article** | The article itself — see below. |
 
 ### Writing the article
@@ -113,6 +113,39 @@ Open **Search engine settings** under the article to set a different title or de
 - **Blog posts** lists every post with its status (**Published** or **Draft**), category and date. Use the search box or the status filter to find one.
 - **Edit** opens a post. **View live** opens the published post on the website.
 - **Delete** removes a post completely (you'll be asked to confirm). Deleting can't be undone — if you might want it back, **Unpublish** it instead.
+
+---
+
+## Authors
+
+Every post shows its author: a small photo and name under the title, and an **About the author** box at the end of the article (photo, name, role, bio, social links and "More articles by…"). Each author with at least one published post also gets their own page on the blog, listing their articles — e.g. `securitymarketingcompany.com/blog/author/jane-doe`.
+
+### Add an author (admins)
+
+1. Click **Authors** in the left menu, then **New author** (top right).
+2. Fill in the form:
+
+| Field | What to enter |
+| --- | --- |
+| **Photo** (optional) | A JPG, PNG or WebP up to 5 MB. It is cropped to a square and shown as a circle, so use a head-and-shoulders photo with the face near the middle. Without a photo, the author's initials are shown. |
+| **Name** | Their full name. It also sets the web address of their author page. |
+| **Role or title** | Shown under the name, e.g. *Head of SEO*. |
+| **Bio** | Plain text, up to 600 characters — two to four sentences on who they are and what they know about marketing for security companies. |
+| **LinkedIn / X / Website** (optional) | Full profile addresses, e.g. `https://www.linkedin.com/in/…`. They appear as round icon buttons and open in a new tab. Leave empty to hide. |
+
+3. Click **Add author**. They now appear in the **Author** list in the post editor.
+
+**Editing an author** (click **Edit**) updates their byline, bio box and author page on every post. If they have published posts, the website updates within about 2–3 minutes. The web address of an author page stays fixed once they have a published post.
+
+### Pick the author for a post
+
+Open the post, choose the person from the **Author** list on the right, and save (or publish). Use **Preview** to see the byline and bio box before it goes live. Editors can choose an author but can't add or edit authors — ask an admin.
+
+### Deleting an author
+
+- An author **with no posts** can be deleted straight away (**Delete**, then confirm).
+- An author **with posts** can't simply be deleted. Click **Delete…**, choose who should take over their posts (the team author is suggested), and click **Move posts & delete**. Their posts keep their web addresses; only the author changes.
+- **Security Marketing Company Team** is the default author and can't be deleted. You can still edit its bio and photo.
 
 ---
 

@@ -13,11 +13,49 @@ import publishedPosts from 'virtual:blog-posts';
  *     service (null: the in-article box picks one from the category), html,
  *     seoTitle, seoDescription }
  *
+ * Author shape (managed in /admin/authors):
+ *   { name, slug, role, bio, photo (URL or null),
+ *     links: { linkedin, x, website } (URL or null each), isTeam }
+ * isTeam marks the default "Security Marketing Company Team" author.
+ *
  * The same module runs in the browser and, through Vite, in
  * scripts/prerender.js, so pages, sitemap and schema always agree.
  */
 
 const WORDS_PER_MINUTE = 225;
+
+/**
+ * The default author. Only used for posts from an API that predates authors
+ * (it sends the author's name alone); the API itself sends the team author's
+ * stored details.
+ */
+const TEAM_AUTHOR = {
+  name: 'Security Marketing Company Team',
+  slug: 'security-marketing-company-team',
+  role: 'Marketing Team',
+  bio: 'We market security companies and nothing else: guard and patrol firms, alarm and CCTV installers, and access control integrators.',
+  photo: '/logo/author-team.jpg',
+  links: { linkedin: null, x: null, website: null },
+  isTeam: true,
+};
+
+/** A post's author in the shape above. */
+function readAuthor(author) {
+  if (!author || typeof author === 'string') return TEAM_AUTHOR;
+  return {
+    name: author.name,
+    slug: author.slug,
+    role: author.role || '',
+    bio: author.bio || '',
+    photo: author.photo || null,
+    links: {
+      linkedin: author.links?.linkedin || null,
+      x: author.links?.x || null,
+      website: author.links?.website || null,
+    },
+    isTeam: Boolean(author.isTeam),
+  };
+}
 
 /** Words in post HTML, for the reading time. */
 const wordCount = (html) =>
@@ -36,7 +74,7 @@ export function loadPosts() {
     updated: post.updated || post.date,
     excerpt: post.excerpt,
     category: post.category,
-    author: post.author,
+    author: readAuthor(post.author),
     coverImage: post.coverImage || null,
     service: post.service || null,
     readingTime: Math.max(1, Math.ceil(wordCount(post.html) / WORDS_PER_MINUTE)),
@@ -61,6 +99,26 @@ export const getPost = (slug) => posts.find((post) => post.slug === slug);
 export const categories = [...new Set(posts.map((post) => post.category))];
 
 export const postPath = (post) => `/blog/${post.slug}`;
+
+/**
+ * Every author with at least one published post (only they get a page), in
+ * order of their newest post. Two different authors cannot share a slug.
+ */
+export const authors = [];
+for (const post of posts) {
+  const known = authors.find((author) => author.slug === post.author.slug);
+  if (!known) authors.push(post.author);
+  else if (known.name !== post.author.name) {
+    throw new Error(`Blog: authors "${known.name}" and "${post.author.name}" share the slug "${known.slug}".`);
+  }
+}
+
+export const getAuthor = (slug) => authors.find((author) => author.slug === slug);
+
+export const authorPath = (author) => `/blog/author/${author.slug}`;
+
+/** An author's published posts, newest first. */
+export const postsBy = (author) => posts.filter((post) => post.author.slug === author.slug);
 
 /** "2026-09-24" -> "September 24, 2026" (no time zone shift). */
 export function formatDate(date) {

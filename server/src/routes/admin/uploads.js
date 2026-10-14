@@ -5,7 +5,8 @@ import { describeImageError, detectImageType, images, MAX_BYTES } from '../../se
 /**
  * POST /api/admin/uploads (multipart, field "image"): jpg, png or webp up to
  * 5 MB, checked by content rather than file name, then stored on
- * Cloudinary (resized there to at most 1600px wide). Every failure answers
+ * Cloudinary (resized there to at most 1600px wide; with ?shape=square, as
+ * for author photos, cropped to a 400px square). Every failure answers
  * with a message the editor can act on and is logged in full.
  */
 const router = Router();
@@ -32,7 +33,7 @@ router.post('/', (req, res) => {
       return res.status(415).json({ message: 'Only JPG, PNG or WebP images are allowed.' });
     }
     try {
-      const image = await images.upload(req.file.buffer);
+      const image = await images.upload(req.file.buffer, { square: req.query.shape === 'square' });
       return res.status(201).json({ image });
     } catch (uploadError) {
       const problem = describeImageError(uploadError);

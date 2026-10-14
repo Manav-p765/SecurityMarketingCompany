@@ -9,6 +9,8 @@ import mongoose from 'mongoose';
  * - contentHtml: sanitized on every save (services/sanitize.js).
  * - publishedAt: the date shown on the post; set on first publish and kept
  *   through unpublish/republish, so URLs and dates stay stable.
+ * - authorId: the post's author (models/Author.js). null means the team
+ *   author.
  */
 const imageSchema = new mongoose.Schema(
   {
@@ -26,7 +28,7 @@ const postSchema = new mongoose.Schema(
     category: { type: String, default: '', trim: true, maxlength: 80 },
     coverImage: { type: imageSchema, default: undefined },
     contentHtml: { type: String, default: '' },
-    author: { type: String, default: 'Security Marketing Company Team', trim: true, maxlength: 120 },
+    authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Author', default: null, index: true },
     status: { type: String, enum: ['draft', 'published'], default: 'draft', index: true },
     publishedAt: { type: Date, default: null },
     seoTitle: { type: String, default: '', trim: true, maxlength: 120 },

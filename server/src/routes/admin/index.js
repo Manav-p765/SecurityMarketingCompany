@@ -9,6 +9,7 @@ import { images } from '../../services/images.js';
 import authRoutes from './auth.js';
 import postRoutes from './posts.js';
 import categoryRoutes from './categories.js';
+import authorRoutes from './authors.js';
 import uploadRoutes from './uploads.js';
 import userRoutes from './users.js';
 import leadRoutes from './leads.js';
@@ -16,8 +17,8 @@ import leadRoutes from './leads.js';
 /**
  * Everything under /api/admin. Login is the only route without a session;
  * every other route is guarded on the server, by role:
- *   admin  — posts, categories, uploads, users, leads, health, deploy
- *   editor — posts and uploads (and reading the category list)
+ *   admin  — posts, categories, authors, uploads, users, leads, health, deploy
+ *   editor — posts and uploads (and reading the category and author lists)
  */
 export default function adminRoutes({ allowedOrigins }) {
   const router = Router();
@@ -33,6 +34,7 @@ export default function adminRoutes({ allowedOrigins }) {
   router.use('/auth', authRoutes);
   router.use('/posts', requireAuth('admin', 'editor'), postRoutes);
   router.use('/categories', requireAuth('admin', 'editor'), categoryRoutes);
+  router.use('/authors', requireAuth('admin', 'editor'), authorRoutes);
   router.use('/uploads', requireAuth('admin', 'editor'), uploadRoutes);
   router.use('/users', requireAuth('admin'), userRoutes);
   router.use('/leads', requireAuth('admin'), leadRoutes);

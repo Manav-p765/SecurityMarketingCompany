@@ -1243,6 +1243,244 @@
 }
 
 /* --------------------------------------------------------------------------
+   Blog: authors (components/AuthorCards.jsx, pages/AuthorPage.jsx)
+   -------------------------------------------------------------------------- */
+
+/* Photos are uploaded square and shown as circles; no photo shows initials. */
+.author-avatar {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  overflow: hidden;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--on-dark-line);
+  border-radius: 50%;
+  background: var(--dark-gray);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--pure-white);
+}
+
+.author-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.author-avatar--medium {
+  width: 88px;
+  height: 88px;
+  border: 2px solid var(--security-red);
+  font-size: 1.6rem;
+}
+
+.author-avatar--large {
+  width: clamp(96px, 80px + 5vw, 128px);
+  height: clamp(96px, 80px + 5vw, 128px);
+  border: 2px solid var(--security-red);
+  font-size: 2rem;
+}
+
+.post-meta {
+  align-items: center;
+}
+
+.author-byline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--on-dark-2);
+  transition: color 0.2s var(--ease);
+}
+
+.author-byline__name {
+  font-weight: 700;
+  color: var(--pure-white);
+  transition: color 0.2s var(--ease);
+}
+
+/* Phones: the byline gets its own row instead of wrapping after a "·". */
+@media (max-width: 599px) {
+  .post-meta__sep--author {
+    display: none;
+  }
+
+  .post-meta .author-byline {
+    flex-basis: 100%;
+    margin-top: 0.35rem;
+  }
+}
+
+.author-byline:hover .author-byline__name,
+.author-byline:focus-visible .author-byline__name {
+  color: var(--security-red);
+}
+
+/* Social links: round icon buttons, as in the footer. */
+.author-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.author-social a {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--on-dark-line);
+  border-radius: 50%;
+  color: var(--on-dark-2);
+  transition: background-color 0.25s var(--ease), border-color 0.25s var(--ease),
+    color 0.25s var(--ease), transform 0.25s var(--ease);
+}
+
+.author-social a:hover,
+.author-social a:focus-visible {
+  background: var(--security-red);
+  border-color: var(--security-red);
+  color: var(--pure-white);
+  transform: translateY(-2px);
+}
+
+.author-social svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Bio box at the end of a post: dark card with a red top rule. */
+.author-bio {
+  display: grid;
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+  padding: clamp(1.25rem, 1rem + 1vw, 2rem);
+  border: 1px solid var(--on-dark-line);
+  border-top: 3px solid var(--security-red);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.author-bio p {
+  margin: 0;
+}
+
+.author-bio__label {
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--security-red);
+}
+
+.author-bio__name {
+  margin-top: 0.35rem !important;
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: 800;
+  line-height: var(--lh-heading);
+}
+
+.author-bio__name a {
+  color: var(--pure-white);
+  transition: color 0.2s var(--ease);
+}
+
+.author-bio__name a:hover {
+  color: var(--security-red);
+}
+
+.author-bio__role {
+  margin-top: 0.2rem !important;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--on-dark-3);
+}
+
+.author-bio__bio {
+  margin-top: var(--space-sm) !important;
+  font-size: var(--fs-small);
+  line-height: var(--lh-body);
+  color: var(--on-dark-2);
+}
+
+.author-bio__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm) var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.author-bio__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--security-red);
+}
+
+.author-bio__more svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.25s var(--ease-out);
+}
+
+.author-bio__more:hover svg,
+.author-bio__more:focus-visible svg {
+  transform: translateX(4px);
+}
+
+@media (min-width: 600px) {
+  .author-bio {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+  }
+}
+
+/* Author page hero */
+.author-hero__profile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-md) var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+.author-hero__profile > div {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+
+.author-hero__profile h1 {
+  max-width: none;
+  margin-top: 0.4rem;
+  font-size: clamp(2rem, 1.4rem + 2.2vw, 3rem);
+}
+
+.author-hero__role {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  color: var(--on-dark-2);
+}
+
+.author-hero__bio {
+  margin-top: var(--space-lg);
+}
+
+.author-hero .author-social {
+  margin-top: var(--space-lg);
+}
+
+/* --------------------------------------------------------------------------
    Cookie banner (components/CookieBanner.jsx) and its footer link
    -------------------------------------------------------------------------- */
 

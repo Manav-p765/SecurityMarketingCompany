@@ -2,6 +2,7 @@ import { Router } from 'express';
 import mongoose from 'mongoose';
 import { Post } from '../../models/Post.js';
 import { Category } from '../../models/Category.js';
+import { Author, teamAuthor } from '../../models/Author.js';
 import { htmlText, sanitizePostHtml } from '../../services/sanitize.js';
 import { isValidSlug, slugify, uniqueSlug } from '../../services/slug.js';
 import { scheduleDeploy } from '../../services/deploy.js';
@@ -27,7 +28,7 @@ const toAdmin = (post) => ({
   category: post.category,
   coverImage: post.coverImage?.url ? { url: post.coverImage.url, publicId: post.coverImage.publicId || '' } : null,
   contentHtml: post.contentHtml,
-  author: post.author,
+  authorId: post.authorId ? String(post.authorId) : '',
   status: post.status,
   publishedAt: post.publishedAt,
   createdAt: post.createdAt,
@@ -38,20 +39,28 @@ const toAdmin = (post) => ({
   slugLocked: Boolean(post.publishedAt),
 });
 
-const LIMITS = { title: 200, excerpt: 400, author: 120, seoTitle: 120, seoDescription: 320 };
+const LIMITS = { title: 200, excerpt: 400, seoTitle: 120, seoDescription: 320 };
 
 /** Validates and normalizes editable fields from a request body. */
 async function readFields(body) {
   const errors = {};
   const fields = {};
-  for (const key of ['title', 'excerpt', 'author', 'seoTitle', 'seoDescription']) {
+  for (const key of ['title', 'excerpt', 'seoTitle', 'seoDescription']) {
     if (body[key] === undefined) continue;
     const value = String(body[key] ?? '').trim();
     if (value.length > LIMITS[key]) errors[key] = `Keep this under ${LIMITS[key]} characters.`;
     fields[key] = value;
   }
   if (fields.title !== undefined && !fields.title) errors.title = 'Add a title.';
-  if (fields.author !== undefined && !fields.author) fields.author = 'Security Marketing Company Team';
+
+  // No author chosen: the team author (null if it does not exist yet, which
+  // the public API also reads as the team author).
+  if (body.authorId !== undefined) {
+    const authorId = String(body.authorId ?? '').trim();
+    if (!authorId) fields.authorId = (await teamAuthor())?._id ?? null;
+    else if (!isId(authorId) || !(await Author.exists({ _id: authorId }))) errors.authorId = 'Choose an author from the list.';
+    else fields.authorId = authorId;
+  }
 
   if (body.category !== undefined) {
     const category = String(body.category ?? '').trim();
@@ -135,7 +144,8 @@ router.post('/', async (req, res) => {
   if (Object.keys(errors).length) return res.status(400).json({ errors });
 
   const slug = await uniqueSlug(requested || slugify(fields.title), slugTaken(null));
-  const post = await Post.create({ ...fields, slug, status: 'draft' });
+  const authorId = fields.authorId !== undefined ? fields.authorId : ((await teamAuthor())?._id ?? null);
+  const post = await Post.create({ ...fields, authorId, slug, status: 'draft' });
   return res.status(201).json({ post: toAdmin(post) });
 });
 

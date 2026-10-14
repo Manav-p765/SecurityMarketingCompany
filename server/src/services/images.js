@@ -3,12 +3,14 @@ import { v2 as cloudinary } from 'cloudinary';
 /**
  * Image storage on Cloudinary (CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY,
  * CLOUDINARY_API_SECRET). Uploads are resized on Cloudinary's side to at
- * most MAX_WIDTH pixels wide and stored in the "smc-blog" folder.
+ * most MAX_WIDTH pixels wide (author photos: cropped to a SQUARE_SIZE
+ * square) and stored in the "smc-blog" folder.
  *
  * `images.provider` is swappable so tests can run without Cloudinary.
  */
 export const MAX_BYTES = 5 * 1024 * 1024;
 export const MAX_WIDTH = 1600;
+export const SQUARE_SIZE = 400;
 const FOLDER = 'smc-blog';
 
 /** jpg, png or webp, judged by the file's first bytes rather than its name. */
@@ -64,7 +66,7 @@ const cloudinaryProvider = {
     await cloudinary.api.ping();
   },
 
-  upload(buffer) {
+  upload(buffer, { square = false } = {}) {
     configure();
     return new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
@@ -73,7 +75,13 @@ const cloudinaryProvider = {
           resource_type: 'image',
           timeout: 60_000,
           // Resize once on upload: never wider than MAX_WIDTH, quality tuned.
-          transformation: [{ width: MAX_WIDTH, crop: 'limit' }, { quality: 'auto:good' }],
+          // Square (author photos): cropped to SQUARE_SIZE around the subject.
+          transformation: [
+            square
+              ? { width: SQUARE_SIZE, height: SQUARE_SIZE, crop: 'fill', gravity: 'auto' }
+              : { width: MAX_WIDTH, crop: 'limit' },
+            { quality: 'auto:good' },
+          ],
         },
         (error, result) =>
           error
@@ -93,7 +101,7 @@ const cloudinaryProvider = {
 export const images = {
   provider: cloudinaryProvider,
   isConfigured: () => images.provider.isConfigured(),
-  upload: (buffer) => images.provider.upload(buffer),
+  upload: (buffer, options) => images.provider.upload(buffer, options),
   /** { ok, error } — whether Cloudinary is configured and accepts the account. */
   async check() {
     if (!images.isConfigured()) {

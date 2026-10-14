@@ -6,6 +6,7 @@ import Breadcrumb from '../components/Breadcrumb.jsx';
 import CtaPanel from '../components/CtaPanel.jsx';
 import NotFound from '../components/NotFound.jsx';
 import { PostCard, PostCover, PostMeta } from '../components/BlogCards.jsx';
+import { AuthorBio } from '../components/AuthorCards.jsx';
 import { IconArrowRight, SERVICE_ICONS } from '../components/Icons.jsx';
 import { blogPage as copy, getService } from '../data/content.js';
 import { getPost, relatedPosts } from '../blog/posts.js';
@@ -57,8 +58,9 @@ function ServiceCta({ service }) {
 }
 
 /**
- * The article itself: hero (breadcrumb, category, title, excerpt, meta),
- * cover, and the post HTML with the service box in the middle. Used by the
+ * The article itself: hero (breadcrumb, category, title, excerpt, meta with
+ * the author's byline), cover, the post HTML with the service box in the
+ * middle, and the author's bio box at the end. Used by the
  * post page and by the admin's Preview, so a preview looks exactly like the
  * live post.
  */
@@ -106,6 +108,7 @@ export function PostArticle({ post }) {
             {service && <ServiceCta service={service} />}
             {after && <div dangerouslySetInnerHTML={{ __html: after }} />}
           </div>
+          <AuthorBio author={post.author} />
         </div>
       </div>
     </article>

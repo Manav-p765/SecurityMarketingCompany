@@ -6,6 +6,7 @@ import DashboardPage from './pages/DashboardPage.jsx';
 import PostsPage from './pages/PostsPage.jsx';
 import PostEditorPage from './pages/PostEditorPage.jsx';
 import CategoriesPage from './pages/CategoriesPage.jsx';
+import AuthorsPage from './pages/AuthorsPage.jsx';
 import LeadsPage from './pages/LeadsPage.jsx';
 import UsersPage from './pages/UsersPage.jsx';
 import AccountPage from './pages/AccountPage.jsx';
@@ -80,6 +81,7 @@ function Shell({ children }) {
           </NavItem>
           <NavItem to="/admin/posts">Blog posts</NavItem>
           {isAdmin && <NavItem to="/admin/categories">Categories</NavItem>}
+          {isAdmin && <NavItem to="/admin/authors">Authors</NavItem>}
           {isAdmin && <NavItem to="/admin/leads">Leads</NavItem>}
           {isAdmin && <NavItem to="/admin/users">Users</NavItem>}
           <NavItem to="/admin/account">My account</NavItem>
@@ -167,6 +169,7 @@ export default function AdminApp() {
               <Route path="posts/new" element={<PostEditorPage />} />
               <Route path="posts/:id" element={<PostEditorPage />} />
               <Route path="categories" element={<AdminOnly><CategoriesPage /></AdminOnly>} />
+              <Route path="authors" element={<AdminOnly><AuthorsPage /></AdminOnly>} />
               <Route path="leads" element={<AdminOnly><LeadsPage /></AdminOnly>} />
               <Route path="users" element={<AdminOnly><UsersPage /></AdminOnly>} />
               <Route path="account" element={<AccountPage />} />

@@ -147,7 +147,7 @@ export default function UsersPage() {
         <Field
           label="Role"
           htmlFor="user-role"
-          hint="Editors can write and publish blog posts. Admins can also manage categories, users and leads."
+          hint="Editors can write and publish blog posts. Admins can also manage categories, authors, users and leads."
         >
           <select id="user-role" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
             <option value="editor">Editor</option>

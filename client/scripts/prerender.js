@@ -15,7 +15,9 @@
  *    home page index.html also gets their Review schema.
  *    dist/privacy.html and dist/terms.html; dist/thank-you.html with
  *    "noindex, nofollow"; dist/blog.html and dist/blog/<slug>.html for every
- *    published post (Article + BreadcrumbList schema). Posts come from the
+ *    published post (Article + BreadcrumbList schema), and
+ *    dist/blog/author/<slug>.html for every author with a published post
+ *    (ProfilePage + BreadcrumbList schema). Posts come from the
  *    API (scripts/blog-source.js) through the same loadPosts() the browser
  *    uses, loaded via Vite (ssrLoadModule), so a post published in /admin
  *    gets its page and sitemap entry on the next build with no other change.
@@ -72,8 +74,8 @@ const vite = await createServer({
   // No browser dependency pre-bundling: only Node-side module loading is needed.
   optimizeDeps: { noDiscovery: true, include: [] },
 });
-const { posts, postPath } = await vite.ssrLoadModule('/src/blog/posts.js');
-const { blogSchema, postMeta, postSchema } = await vite.ssrLoadModule('/src/blog/schema.js');
+const { authors, posts, postPath } = await vite.ssrLoadModule('/src/blog/posts.js');
+const { authorMeta, authorSchema, blogSchema, postMeta, postSchema } = await vite.ssrLoadModule('/src/blog/schema.js');
 await vite.close();
 if (!posts.length && process.env.ALLOW_EMPTY_BLOG !== '1') {
   throw new Error('prerender: no published blog posts were loaded — refusing to build an empty blog.');
@@ -141,6 +143,9 @@ writePage('blog.html', blogPage.meta, blogSchema());
 for (const post of posts) {
   writePage(`blog/${post.slug}.html`, postMeta(post), postSchema(post));
 }
+for (const author of authors) {
+  writePage(`blog/author/${author.slug}.html`, authorMeta(author), authorSchema(author));
+}
 
 // Home page Review schema — real reviews only, so this is skipped while every
 // review in content.js is a sample. Written last: the pages above are built
@@ -158,6 +163,7 @@ const PAGES = [
   contactPage.meta,
   blogPage.meta,
   ...posts.map((post) => ({ path: postPath(post), lastmod: post.date })),
+  ...authors.map(authorMeta),
   privacyPolicy.meta,
   termsPage.meta,
 ];
@@ -223,6 +229,6 @@ if (fs.existsSync(leadModel)) {
 
 console.log(
   `prerender: wrote 404.html, services.html, ${services.length} service pages, about, contact, ` +
-    `privacy, terms, thank-you, blog, ${posts.length} blog posts` +
+    `privacy, terms, thank-you, blog, ${posts.length} blog posts, ${authors.length} author pages` +
     `${homeReviews ? ', home Review schema' : ''} and sitemap.xml (${PAGES.length} URLs)`
 );
